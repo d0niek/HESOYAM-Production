@@ -14,4 +14,10 @@ Global
 		{DE1263FE-0738-4562-810A-4360C696A171}.Release|x86.ActiveCfg = Release|x86
 		{DE1263FE-0738-4562-810A-4360C696A171}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
+	GlobalSection(MonoDevelopProperties) = preSolution
+		Policies = $0
+		$0.DotNetNamingPolicy = $1
+		$1.DirectoryNamespaceAssociation = Hierarchical
+		$1.ResourceNamePolicy = FileFormatDefault
+	EndGlobalSection
 EndGlobal
