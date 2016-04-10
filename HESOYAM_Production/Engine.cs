@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Storage;
 using Microsoft.Xna.Framework.Input;
+using App.Render;
 
 namespace HESOYAM_Production
 {
@@ -14,9 +15,9 @@ namespace HESOYAM_Production
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+        //TODO: to remove
         Model myModel;
-        float aspectRatio;
-
+        Object3D testObject;
 
         public Engine ()
         {
@@ -48,7 +49,8 @@ namespace HESOYAM_Production
 
             //TODO: use this.Content to load your game content here
             myModel = Content.Load<Model> ("Cube");
-            aspectRatio = graphics.GraphicsDevice.Viewport.AspectRatio;
+            testObject = new Object3D (this, myModel);
+            Components.Add (testObject);
         }
 
         /// <summary>
@@ -68,18 +70,21 @@ namespace HESOYAM_Production
             // TODO: Add your update logic here
             // Allows the game to exit
             if (GamePad.GetState (PlayerIndex.One).Buttons.Back ==
-            ButtonState.Pressed)
+                ButtonState.Pressed)
                 this.Exit ();
 
-            modelRotation += (float)gameTime.ElapsedGameTime.TotalMilliseconds *
-            MathHelper.ToRadians (0.1f);
+            //TODO: to remove
+            testObject.Rotate (
+                GameTimeFloat(gameTime) * MathHelper.ToRadians (0.01f),
+                GameTimeFloat(gameTime) * MathHelper.ToRadians (0.1f),
+                0);
+            testObject.Move (
+                GameTimeFloat(gameTime) * 0.3f, 
+                GameTimeFloat(gameTime) * 0.1f,
+                GameTimeFloat(gameTime) * 2f);
 
             base.Update (gameTime);
         }
-
-        float modelRotation = 0.0f;
-        Vector3 modelPosition = Vector3.Zero;
-        Vector3 cameraPosition = new Vector3 (0.0f, 50.0f, 5000.0f);
 
         /// <summary>
         /// This is called when the game should draw itself.
@@ -88,36 +93,17 @@ namespace HESOYAM_Production
         protected override void Draw (GameTime gameTime)
         {
             graphics.GraphicsDevice.Clear (Color.CornflowerBlue);
-
-            //TODO: Add your drawing code here
-
-            graphics.GraphicsDevice.Clear (Color.CornflowerBlue);
-
-            // Copy any parent transforms.
-            Matrix[] transforms = new Matrix[myModel.Bones.Count];
-            myModel.CopyAbsoluteBoneTransformsTo (transforms);
-
-            // Draw the model. A model can have multiple meshes, so loop.
-            foreach (ModelMesh mesh in myModel.Meshes) {
-                // This is where the mesh orientation is set, as well 
-                // as our camera and projection.
-                foreach (BasicEffect effect in mesh.Effects) {
-                    effect.EnableDefaultLighting ();
-                    effect.World = transforms [
-                        mesh.ParentBone.Index] *
-                    Matrix.CreateRotationY (modelRotation)
-                    * Matrix.CreateTranslation (modelPosition);
-                    effect.View = Matrix.CreateLookAt (cameraPosition, 
-                                       Vector3.Zero, Vector3.Up);
-                    effect.Projection = Matrix.CreatePerspectiveFieldOfView (
-                        MathHelper.ToRadians (45.0f), aspectRatio, 
-                        1.0f, 10000.0f);
-                }
-                // Draw the mesh, using the effects set above.
-                mesh.Draw ();
-            }
-
             base.Draw (gameTime);
+        }
+
+        static float GameTimeFloat (GameTime gameTime)
+        {
+            return (float)gameTime.ElapsedGameTime.TotalMilliseconds;
+        }
+
+        public GraphicsDeviceManager Graphics ()
+        {
+            return this.graphics;
         }
     }
 }

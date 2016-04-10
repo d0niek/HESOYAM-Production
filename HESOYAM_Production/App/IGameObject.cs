@@ -8,7 +8,7 @@ namespace App
     {
         string name { get; set;}
         IGameObject parent { get; set;}
-        List<IGameObject> children { get; set;}
+        Dictionary<string, IGameObject> children { get; set;}
         List<Collider> colliders { get; set;}
 
         void AddChild(IGameObject component);
