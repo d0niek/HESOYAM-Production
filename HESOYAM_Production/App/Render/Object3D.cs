@@ -7,16 +7,17 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace App.Render
 {
+
     public class Object3D : DrawableGameComponent, IGameElement, IGameObject
     {
+        private Engine game;
+        private Model model;
+
         public Vector3 position { get; set; }
 
         public Vector3 rotation { get; set; }
 
         public string name { get; set; }
-
-        private Engine game;
-        private Model model;
 
         public IGameObject parent { get; set; }
 
@@ -24,95 +25,94 @@ namespace App.Render
 
         public List<Collider> colliders { get; set; }
 
-        public Object3D (Engine game, Model model)
-            : base (game)
+        public Object3D(Engine game, Model model) : base(game)
         {
             this.game = game;
             this.model = model;
             this.position = Vector3.Zero;
             this.rotation = Vector3.Zero;
-            this.children = new Dictionary<string, IGameObject> ();
-            this.colliders = new List<Collider> ();
+            this.children = new Dictionary<string, IGameObject>();
+            this.colliders = new List<Collider>();
         }
 
-        public void Move (float x, float y, float z)
+        public void Move(float x, float y, float z)
         {
-            Vector3 delta = new Vector3 (x, y, z);
-            position = Vector3.Add (delta, position);
+            Vector3 delta = new Vector3(x, y, z);
+            position = Vector3.Add(delta, position);
         }
 
-        public void Rotate (float x, float y, float z)
+        public void Rotate(float x, float y, float z)
         {
-            Vector3 delta = new Vector3 (x, y, z);
-            rotation = Vector3.Add (delta, rotation);
+            Vector3 delta = new Vector3(x, y, z);
+            rotation = Vector3.Add(delta, rotation);
         }
 
-        public bool Collision (IGameElement collider)
+        public bool Collision(IGameElement collider)
         {
             return false;
         }
 
-        public void AddChild (IGameObject component)
+        public void AddChild(IGameObject component)
         {
             component.parent = this;
-            children.Add (component.name, component);
+            children.Add(component.name, component);
         }
 
-        public void AddCollider (Collider collider)
+        public void AddCollider(Collider collider)
         {
-            colliders.Add (collider);
+            colliders.Add(collider);
         }
 
-        public IGameObject RemoveChild (IGameObject child)
+        public IGameObject RemoveChild(IGameObject child)
         {
-            return RemoveChild (child.name);
+            return RemoveChild(child.name);
         }
 
-        public IGameObject RemoveChild (string childName)
+        public IGameObject RemoveChild(string childName)
         {
-            IGameObject child = children [childName];
-            children.Remove (childName);
+            IGameObject child = children[
+                                    childName];
+            children.Remove(childName);
             return child;
         }
 
-        public Collider RemoveCollider (Collider collider)
+        public Collider RemoveCollider(Collider collider)
         {
-            colliders.Remove (collider);
+            colliders.Remove(collider);
             return collider;
         }
 
-        public override void Draw (GameTime gameTime)
+        public override void Draw(GameTime gameTime)
         {
             // Copy any parent transforms.
             Matrix[] transforms = new Matrix[model.Bones.Count];
-            model.CopyAbsoluteBoneTransformsTo (transforms);
+            model.CopyAbsoluteBoneTransformsTo(transforms);
             //TODO: zwrócić pozycję kamery
-            Vector3 cameraPosition = new Vector3 (0.0f, 50.0f, 5000.0f);
+            Vector3 cameraPosition = new Vector3(0.0f, 50.0f, 5000.0f);
 
             // Draw the model. A model can have multiple meshes, so loop.
             foreach (ModelMesh mesh in model.Meshes) {
                 // This is where the mesh orientation is set, as well 
                 // as our camera and projection.
                 foreach (BasicEffect effect in mesh.Effects) {
-                    effect.EnableDefaultLighting ();
-                    effect.World = transforms [
+                    effect.EnableDefaultLighting();
+                    effect.World = transforms[
                         mesh.ParentBone.Index]
-                    * Matrix.CreateRotationY (rotation.Y)
-                    * Matrix.CreateRotationX (rotation.X)
-                    * Matrix.CreateRotationZ (rotation.Z)
-                    * Matrix.CreateTranslation (position);
-                    effect.View = Matrix.CreateLookAt (cameraPosition, 
+                    * Matrix.CreateRotationY(rotation.Y)
+                    * Matrix.CreateRotationX(rotation.X)
+                    * Matrix.CreateRotationZ(rotation.Z)
+                    * Matrix.CreateTranslation(position);
+                    effect.View = Matrix.CreateLookAt(cameraPosition, 
                         Vector3.Zero, Vector3.Up);
-                    effect.Projection = Matrix.CreatePerspectiveFieldOfView (
-                        MathHelper.ToRadians (45.0f), game.Graphics().GraphicsDevice.Viewport.AspectRatio, 
+                    effect.Projection = Matrix.CreatePerspectiveFieldOfView(
+                        MathHelper.ToRadians(45.0f), game.Graphics().GraphicsDevice.Viewport.AspectRatio, 
                         1.0f, 10000.0f);
                 }
                 // Draw the mesh, using the effects set above.
-                mesh.Draw ();
+                mesh.Draw();
             }
 
-            base.Draw (gameTime);
+            base.Draw(gameTime);
         }
     }
 }
-

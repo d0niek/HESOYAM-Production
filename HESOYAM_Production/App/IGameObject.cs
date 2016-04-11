@@ -4,18 +4,25 @@ using System.Collections.Generic;
 
 namespace App
 {
+
     public interface IGameObject
     {
-        string name { get; set;}
-        IGameObject parent { get; set;}
-        Dictionary<string, IGameObject> children { get; set;}
-        List<Collider> colliders { get; set;}
+        string name { get; set; }
+
+        IGameObject parent { get; set; }
+
+        Dictionary<string, IGameObject> children { get; set; }
+
+        List<Collider> colliders { get; set; }
 
         void AddChild(IGameObject component);
+
         IGameObject RemoveChild(IGameObject child);
+
         IGameObject RemoveChild(string childName);
+
         void AddCollider(Collider colider);
+
         Collider RemoveCollider(Collider colider);
     }
 }
-
