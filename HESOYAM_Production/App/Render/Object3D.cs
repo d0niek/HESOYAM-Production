@@ -30,7 +30,7 @@ namespace App.Render
             this.game = game;
             this.model = model;
             this.position = p;
-            this.rotation = p;
+            this.rotation = r;
             this.children = new Dictionary<string, IGameObject>();
             this.colliders = new List<Collider>();
         }
@@ -88,7 +88,7 @@ namespace App.Render
             Matrix[] transforms = new Matrix[model.Bones.Count];
             model.CopyAbsoluteBoneTransformsTo(transforms);
             //TODO: zwrócić pozycję kamery
-            Vector3 cameraPosition = new Vector3(0.0f, 50.0f, 5000.0f);
+            Vector3 cameraPosition = this.game.camera.position;
 
             // Draw the model. A model can have multiple meshes, so loop.
             foreach (ModelMesh mesh in model.Meshes) {
@@ -96,17 +96,18 @@ namespace App.Render
                 // as our camera and projection.
                 foreach (BasicEffect effect in mesh.Effects) {
                     effect.EnableDefaultLighting();
-                    effect.World = transforms[
-                        mesh.ParentBone.Index]
+                    effect.World = transforms[mesh.ParentBone.Index]
                     * Matrix.CreateRotationY(rotation.Y)
                     * Matrix.CreateRotationX(rotation.X)
                     * Matrix.CreateRotationZ(rotation.Z)
                     * Matrix.CreateTranslation(position);
-                    effect.View = Matrix.CreateLookAt(cameraPosition, 
-                        Vector3.Zero, Vector3.Up);
+                    effect.View = Matrix.CreateLookAt(cameraPosition, Vector3.Zero, Vector3.Up);
                     effect.Projection = Matrix.CreatePerspectiveFieldOfView(
-                        MathHelper.ToRadians(45.0f), game.Graphics().GraphicsDevice.Viewport.AspectRatio, 
-                        1.0f, 10000.0f);
+                        MathHelper.ToRadians(45.0f), 
+                        game.Graphics().GraphicsDevice.Viewport.AspectRatio, 
+                        1.0f, 
+                        10000.0f
+                    );
                 }
                 // Draw the mesh, using the effects set above.
                 mesh.Draw();

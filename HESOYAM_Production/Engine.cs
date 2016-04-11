@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Storage;
 using Microsoft.Xna.Framework.Input;
 using App.Render;
+using App;
 
 namespace HESOYAM_Production
 {
@@ -18,7 +19,9 @@ namespace HESOYAM_Production
         SpriteBatch spriteBatch;
         //TODO: to remove
         Model myModel;
-        Object3D testObject;
+        Object3D[] testObjects = new Object3D[6];
+
+        public Camera camera;
 
         public Engine()
         {
@@ -48,10 +51,15 @@ namespace HESOYAM_Production
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
+            this.camera = new Camera(this, new Vector3(0.0f, 50.0f, 5000.0f));
+
             //TODO: use this.Content to load your game content here
             myModel = Content.Load<Model>("Cube");
-            testObject = new Object3D(this, myModel);
-            Components.Add(testObject);
+
+            for (int i = 0; i < 6; i++) {
+                testObjects[i] = new Object3D(this, myModel, new Vector3(2 * i, 5 + i, 0));
+                Components.Add(testObjects[i]);
+            }
         }
 
         /// <summary>
@@ -73,17 +81,23 @@ namespace HESOYAM_Production
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                 this.Exit();
 
+            this.camera.update();
+
             //TODO: to remove
-            testObject.Rotate(
-                GameTimeFloat(gameTime) * MathHelper.ToRadians(0.01f),
-                GameTimeFloat(gameTime) * MathHelper.ToRadians(0.1f),
-                0
-            );
-            testObject.Move(
-                GameTimeFloat(gameTime) * 0.3f, 
-                GameTimeFloat(gameTime) * 0.1f,
-                GameTimeFloat(gameTime) * 2f
-            );
+            for (int i = 0; i < 6; i++) {
+                testObjects[i].Rotate(
+                    GameTimeFloat(gameTime) * MathHelper.ToRadians(0.01f),
+                    GameTimeFloat(gameTime) * MathHelper.ToRadians(0.1f),
+                    0
+                );
+            }
+
+            testObjects[0].Move(2, 0, 0);
+            testObjects[1].Move(-2, 0, 0);
+            testObjects[2].Move(0, 2, 0);
+            testObjects[3].Move(0, -2, 0);
+            testObjects[4].Move(0, 0, 2);
+            testObjects[5].Move(0, 0, -2);
 
             base.Update(gameTime);
         }
