@@ -22,11 +22,11 @@ namespace App
 
         public List<Collider> colliders { get; set; }
 
-        public GameObject(Game game) : base(game)
+        public GameObject(Game game, Vector3 p = default(Vector3), Vector3 r = default(Vector3)) : base(game)
         {
             this.game = game;
-            this.position = Vector3.Zero;
-            this.rotation = Vector3.Zero;
+            this.position = p;
+            this.rotation = r;
             this.children = new Dictionary<string, IGameObject>();
             this.colliders = new List<Collider>();
         }

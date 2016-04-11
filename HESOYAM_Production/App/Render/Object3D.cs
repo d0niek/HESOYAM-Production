@@ -25,12 +25,12 @@ namespace App.Render
 
         public List<Collider> colliders { get; set; }
 
-        public Object3D(Engine game, Model model) : base(game)
+        public Object3D(Engine game, Model model, Vector3 p = default(Vector3), Vector3 r = default(Vector3)) : base(game)
         {
             this.game = game;
             this.model = model;
-            this.position = Vector3.Zero;
-            this.rotation = Vector3.Zero;
+            this.position = p;
+            this.rotation = p;
             this.children = new Dictionary<string, IGameObject>();
             this.colliders = new List<Collider>();
         }
