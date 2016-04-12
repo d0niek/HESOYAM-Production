@@ -1,11 +1,14 @@
 ﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Input;
 
 namespace App
 {
 
     public class Camera : GameObject
     {
+        public Vector3 cameraLookAt;
+
+        public IGameElement lookAtParent { get; set; }
+
         public Matrix ViewMatrix { get; set; }
 
         public Matrix ProjectionMatrix { get; set; }
@@ -17,13 +20,19 @@ namespace App
             Vector3 rotaion = default(Vector3)
         ) : base(game, name, position, rotaion)
         {
+            this.lookAtParent = null;
             this.ViewMatrix = Matrix.Identity;
             this.ProjectionMatrix = Matrix.Identity;
         }
 
         public void update(float aspectRatio)
         {
-            Vector3 cameraLookAt = Vector3.Zero;
+
+            if (this.lookAtParent != null) {
+                cameraLookAt = this.lookAtParent.position;
+            } else {
+                cameraLookAt = Vector3.Zero;
+            }
 
             this.ViewMatrix = Matrix.CreateLookAt(this.position, cameraLookAt, Vector3.Up);
             this.ProjectionMatrix = Matrix.CreatePerspectiveFieldOfView(
