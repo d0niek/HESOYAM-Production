@@ -8,13 +8,11 @@ namespace App
 
     public class GameObject : GameComponent, IGameElement, IGameObject
     {
-        private Game game;
+        public string name { get; set; }
 
         public Vector3 position { get; set; }
 
         public Vector3 rotation { get; set; }
-
-        public string name { get; set; }
 
         public IGameObject parent { get; set; }
 
@@ -22,11 +20,16 @@ namespace App
 
         public List<Collider> colliders { get; set; }
 
-        public GameObject(Game game, Vector3 p = default(Vector3), Vector3 r = default(Vector3)) : base(game)
+        public GameObject(
+            Game game,
+            string name,
+            Vector3 position = default(Vector3),
+            Vector3 rotation = default(Vector3)
+        ) : base(game)
         {
-            this.game = game;
-            this.position = p;
-            this.rotation = r;
+            this.name = name;
+            this.position = position;
+            this.rotation = rotation;
             this.children = new Dictionary<string, IGameObject>();
             this.colliders = new List<Collider>();
         }
@@ -35,12 +38,38 @@ namespace App
         {
             Vector3 delta = new Vector3(x, y, z);
             position = Vector3.Add(delta, position);
+
+            foreach (IGameElement child in children.Values) {
+                child.Move(x, y, z);
+            }
+
+            foreach (Collider collider in colliders) {
+                collider.Move(x, y, z);
+            }
         }
 
         public void Rotate(float x, float y, float z)
         {
             Vector3 delta = new Vector3(x, y, z);
             rotation = Vector3.Add(delta, rotation);
+
+            foreach (IGameElement child in children.Values) {
+                child.RotateAroundParent(x, y, z);
+            }
+
+            foreach (Collider collider in colliders) {
+                collider.RotateAroundParent(x, y, z);
+            }
+        }
+
+        public void RotateAroundParent(float x, float y, float z)
+        {
+            IGameElement par = parent as IGameElement;
+            this.position += Vector3.Transform(
+                par.position - this.position, 
+                Matrix.CreateRotationX(x)
+                * Matrix.CreateRotationZ(z)
+                * Matrix.CreateRotationY(y));
         }
 
         public bool Collision(IGameElement collider)
@@ -50,7 +79,8 @@ namespace App
 
         public void AddChild(IGameObject component)
         {
-            component.parent = this;
+            IGameElement com = component as IGameElement;
+            com.parent = this;
             children.Add(component.name, component);
         }
 

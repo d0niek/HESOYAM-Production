@@ -8,9 +8,10 @@ namespace App
     {
         public Player(
             Game game,
+            string name,
             Vector3 position = default(Vector3),
             Vector3 rotaion = default(Vector3)
-        ) : base(game, position, rotaion)
+        ) : base(game, name, position, rotaion)
         {
         }
 

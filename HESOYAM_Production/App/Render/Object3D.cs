@@ -5,6 +5,8 @@ using App.Collisions;
 using HESOYAM_Production;
 using Microsoft.Xna.Framework.Graphics;
 
+
+
 namespace App.Render
 {
 
@@ -13,11 +15,13 @@ namespace App.Render
         private Engine game;
         private Model model;
 
+        public string name { get; set; }
+
         public Vector3 position { get; set; }
 
         public Vector3 rotation { get; set; }
 
-        public string name { get; set; }
+        public Vector3 scale { get; set; }
 
         public IGameObject parent { get; set; }
 
@@ -25,12 +29,20 @@ namespace App.Render
 
         public List<Collider> colliders { get; set; }
 
-        public Object3D(Engine game, Model model, Vector3 p = default(Vector3), Vector3 r = default(Vector3)) : base(game)
+        public Object3D(
+            Engine game, 
+            Model model, 
+            string name,
+            Vector3 position = default(Vector3), 
+            Vector3 rotation = default(Vector3), 
+            Vector3? scale = null) : base(game)
         {
             this.game = game;
             this.model = model;
-            this.position = p;
-            this.rotation = r;
+            this.name = name;
+            this.position = position;
+            this.rotation = rotation;
+            this.scale = scale ?? Vector3.One;
             this.children = new Dictionary<string, IGameObject>();
             this.colliders = new List<Collider>();
         }
@@ -39,12 +51,38 @@ namespace App.Render
         {
             Vector3 delta = new Vector3(x, y, z);
             position = Vector3.Add(delta, position);
+
+            foreach (IGameElement child in children.Values) {
+                child.Move(x, y, z);
+            }
+
+            foreach (Collider collider in colliders) {
+                collider.Move(x, y, z);
+            }
         }
 
         public void Rotate(float x, float y, float z)
         {
             Vector3 delta = new Vector3(x, y, z);
             rotation = Vector3.Add(delta, rotation);
+
+            foreach (IGameElement child in children.Values) {
+                child.RotateAroundParent(x, y, z);
+            }
+
+            foreach (Collider collider in colliders) {
+                collider.RotateAroundParent(x, y, z);
+            }
+        }
+
+        public void RotateAroundParent(float x, float y, float z)
+        {
+            IGameElement par = parent as IGameElement;
+            this.position += Vector3.Transform(
+                par.position - this.position, 
+                Matrix.CreateRotationX(x)
+                * Matrix.CreateRotationZ(z)
+                * Matrix.CreateRotationY(y));
         }
 
         public bool Collision(IGameElement collider)
@@ -54,7 +92,8 @@ namespace App.Render
 
         public void AddChild(IGameObject component)
         {
-            component.parent = this;
+            IGameElement com = component as IGameElement;
+            com.parent = this;
             children.Add(component.name, component);
         }
 
@@ -87,8 +126,6 @@ namespace App.Render
             // Copy any parent transforms.
             Matrix[] transforms = new Matrix[model.Bones.Count];
             model.CopyAbsoluteBoneTransformsTo(transforms);
-            //TODO: zwrócić pozycję kamery
-            Vector3 cameraPosition = this.game.camera.position;
 
             // Draw the model. A model can have multiple meshes, so loop.
             foreach (ModelMesh mesh in model.Meshes) {
@@ -97,10 +134,11 @@ namespace App.Render
                 foreach (BasicEffect effect in mesh.Effects) {
                     effect.EnableDefaultLighting();
                     effect.World = transforms[mesh.ParentBone.Index]
-                    * Matrix.CreateRotationY(rotation.Y)
-                    * Matrix.CreateRotationX(rotation.X)
-                    * Matrix.CreateRotationZ(rotation.Z)
-                    * Matrix.CreateTranslation(position);
+                    * Matrix.CreateRotationY(this.rotation.Y)
+                    * Matrix.CreateRotationX(this.rotation.X)
+                    * Matrix.CreateRotationZ(this.rotation.Z)
+                    * Matrix.CreateScale(this.scale)
+                    * Matrix.CreateTranslation(this.position);
                     effect.View = this.game.camera.ViewMatrix;
                     effect.Projection = this.game.camera.ProjectionMatrix;
                 }

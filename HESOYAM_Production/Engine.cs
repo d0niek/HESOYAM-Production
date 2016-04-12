@@ -40,8 +40,7 @@ namespace HESOYAM_Production
         /// </summary>
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
-
+            graphics.IsFullScreen = true;
             base.Initialize();
         }
 
@@ -54,16 +53,19 @@ namespace HESOYAM_Production
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            this.camera = new Camera(this, new Vector3(2500.0f, 2000.0f, 2500.0f));
-            this.player = new Player(this);
+            this.camera = new Camera(this, "Kamera", new Vector3(2500.0f, 2000.0f, 2500.0f));
+            this.player = new Player(this, "Player");
 
             //TODO: use this.Content to load your game content here
             myModel = Content.Load<Model>("Cube");
 
             for (int i = 0; i < 6; i++) {
-                testObjects[i] = new Object3D(this, myModel);
+                testObjects[i] = new Object3D(this, myModel, "ObjectName_" + i);
                 Components.Add(testObjects[i]);
             }
+
+            this.player.AddChild(testObjects[0]);
+            testObjects[0].position = this.player.position;
         }
 
         /// <summary>
