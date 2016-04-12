@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+using System.Diagnostics;
 
 namespace App
 {
@@ -27,28 +28,31 @@ namespace App
                 Point mousePosition = input.CurrentMouseState.Position - input.LastMouseState.Position;
 
                 this.Rotate(
-                    GameTimeFloat(gameTime) * MathHelper.ToRadians(mousePosition.X) / 10.0f,
-                    GameTimeFloat(gameTime) * MathHelper.ToRadians(mousePosition.Y) / 10.0f,
+                    -GameTimeFloat(gameTime) * MathHelper.ToRadians(mousePosition.Y) / 40.0f,
+                    -GameTimeFloat(gameTime) * MathHelper.ToRadians(mousePosition.X) / 40.0f,
                     0
                 );
             }
 
+            Debug.WriteLine(this.rotation);
+
             Matrix rotationMatrixY = Matrix.CreateRotationY(this.rotation.Y);
-            Vector3 transformedReference = Vector3.Transform(this.cameraReference, rotationMatrixY);
+            Matrix rotationMatrixX = Matrix.CreateRotationX(this.rotation.X);
+            Vector3 transformedReference = Vector3.Transform(this.cameraReference, rotationMatrixX * rotationMatrixY);
 
             PlayerIndex pi;
             Vector3 v = Vector3.Zero;
 
-            if (input.IsUp(PlayerIndex.One) || input.IsKeyPressed(Keys.Up, PlayerIndex.One, out pi)) {
+            if (input.IsKeyPressed(Keys.W, PlayerIndex.One, out pi)) {
                 v.Z = 10;
                 v = Vector3.Transform(v, rotationMatrixY);
-            } else if (input.IsDown(PlayerIndex.One) || input.IsKeyPressed(Keys.Down, PlayerIndex.One, out pi)) {
+            } else if (input.IsKeyPressed(Keys.S, PlayerIndex.One, out pi)) {
                 v.Z = -10;
                 v = Vector3.Transform(v, rotationMatrixY);
-            } else if (input.IsLeft(PlayerIndex.One) || input.IsKeyPressed(Keys.Left, PlayerIndex.One, out pi)) {
+            } else if (input.IsKeyPressed(Keys.A, PlayerIndex.One, out pi)) {
                 v.X = 10;
                 v = Vector3.Transform(v, rotationMatrixY);
-            } else if (input.IsRight(PlayerIndex.One) || input.IsKeyPressed(Keys.Right, PlayerIndex.One, out pi)) {
+            } else if (input.IsKeyPressed(Keys.D, PlayerIndex.One, out pi)) {
                 v.X = -10;
                 v = Vector3.Transform(v, rotationMatrixY);
             }
