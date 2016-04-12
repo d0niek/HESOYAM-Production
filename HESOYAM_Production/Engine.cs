@@ -39,8 +39,7 @@ namespace HESOYAM_Production
         /// </summary>
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
-
+            graphics.IsFullScreen = true;
             base.Initialize();
         }
 
@@ -53,15 +52,18 @@ namespace HESOYAM_Production
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            this.camera = new Camera(this, new Vector3(20.0f, 20.0f, 20.0f));
+            this.camera = new Camera(this, new Vector3(0.0f, 200.0f, 200.0f));
 
             //TODO: use this.Content to load your game content here
             myModel = Content.Load<Model>("Cube");
-
-            for (int i = 0; i < 6; i++) {
-                testObjects[i] = new Object3D(this, myModel, new Vector3(2 * i, 5 + i, 0));
-                Components.Add(testObjects[i]);
-            }
+            Object3D parent = new Object3D(this, myModel, "Szymek");
+            Object3D child = new Object3D(this, myModel, "Bogdan");
+            child.Move(300f,0,0);
+            parent.AddChild(child);
+            parent.Move(0, 200f, 0);
+            Components.Add(child);
+            Components.Add(parent);
+            Components.Add(new Object3D(this, myModel, "podłoga", Vector3.Zero, Vector3.Zero, new Vector3(10f, 0.1f, 10f)));
         }
 
         /// <summary>
@@ -85,23 +87,7 @@ namespace HESOYAM_Production
             // Allows the game to exit
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                 this.Exit();
-
-            //TODO: to remove
-            for (int i = 0; i < 6; i++) {
-                testObjects[i].Rotate(
-                    GameTimeFloat(gameTime) * MathHelper.ToRadians(0.01f),
-                    GameTimeFloat(gameTime) * MathHelper.ToRadians(0.1f),
-         -           0
-                );
-            }
-
-            testObjects[0].Move(2, 0, 0);
-            testObjects[1].Move(-2, 0, 0);
-            testObjects[2].Move(0, 2, 0);
-            testObjects[3].Move(0, -2, 0);
-            testObjects[4].Move(0, 0, 2);
-            testObjects[5].Move(0, 0, -2);
-
+            
             base.Update(gameTime);
         }
 

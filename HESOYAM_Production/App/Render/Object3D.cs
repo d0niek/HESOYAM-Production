@@ -32,12 +32,14 @@ namespace App.Render
         public Object3D(
             Engine game, 
             Model model, 
+            string name,
             Vector3 position = default(Vector3), 
             Vector3 rotation = default(Vector3), 
             Vector3? scale = null) : base(game)
         {
             this.game = game;
             this.model = model;
+            this.name = name;
             this.position = position;
             this.rotation = rotation;
             this.scale = scale ?? Vector3.One;
