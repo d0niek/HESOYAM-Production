@@ -1,6 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
-using System.Diagnostics;
 
 namespace App
 {
@@ -33,8 +32,6 @@ namespace App
                     0
                 );
             }
-
-            Debug.WriteLine(this.rotation);
 
             Matrix rotationMatrixY = Matrix.CreateRotationY(this.rotation.Y);
             Matrix rotationMatrixX = Matrix.CreateRotationX(this.rotation.X);
