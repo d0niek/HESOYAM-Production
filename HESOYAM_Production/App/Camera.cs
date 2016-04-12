@@ -44,16 +44,16 @@ namespace App
             Vector3 v = Vector3.Zero;
 
             if (input.IsKeyPressed(Keys.W, PlayerIndex.One, out pi)) {
-                v.Z = 10;
-                v = Vector3.Transform(v, rotationMatrixY);
-            } else if (input.IsKeyPressed(Keys.S, PlayerIndex.One, out pi)) {
                 v.Z = -10;
                 v = Vector3.Transform(v, rotationMatrixY);
+            } else if (input.IsKeyPressed(Keys.S, PlayerIndex.One, out pi)) {
+                v.Z = 10;
+                v = Vector3.Transform(v, rotationMatrixY);
             } else if (input.IsKeyPressed(Keys.A, PlayerIndex.One, out pi)) {
-                v.X = 10;
+                v.X = -10;
                 v = Vector3.Transform(v, rotationMatrixY);
             } else if (input.IsKeyPressed(Keys.D, PlayerIndex.One, out pi)) {
-                v.X = -10;
+                v.X = 10;
                 v = Vector3.Transform(v, rotationMatrixY);
             }
 
