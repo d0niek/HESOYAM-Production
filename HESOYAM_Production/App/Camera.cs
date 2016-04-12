@@ -1,6 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
-using System.Diagnostics;
 
 namespace App
 {
@@ -34,8 +33,6 @@ namespace App
                 );
             }
 
-            Debug.WriteLine(this.rotation);
-
             Matrix rotationMatrixY = Matrix.CreateRotationY(this.rotation.Y);
             Matrix rotationMatrixX = Matrix.CreateRotationX(this.rotation.X);
             Vector3 transformedReference = Vector3.Transform(this.cameraReference, rotationMatrixX * rotationMatrixY);
@@ -44,16 +41,16 @@ namespace App
             Vector3 v = Vector3.Zero;
 
             if (input.IsKeyPressed(Keys.W, PlayerIndex.One, out pi)) {
-                v.Z = 10;
-                v = Vector3.Transform(v, rotationMatrixY);
-            } else if (input.IsKeyPressed(Keys.S, PlayerIndex.One, out pi)) {
                 v.Z = -10;
                 v = Vector3.Transform(v, rotationMatrixY);
+            } else if (input.IsKeyPressed(Keys.S, PlayerIndex.One, out pi)) {
+                v.Z = 10;
+                v = Vector3.Transform(v, rotationMatrixY);
             } else if (input.IsKeyPressed(Keys.A, PlayerIndex.One, out pi)) {
-                v.X = 10;
+                v.X = -10;
                 v = Vector3.Transform(v, rotationMatrixY);
             } else if (input.IsKeyPressed(Keys.D, PlayerIndex.One, out pi)) {
-                v.X = -10;
+                v.X = 10;
                 v = Vector3.Transform(v, rotationMatrixY);
             }
 
