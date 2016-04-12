@@ -91,7 +91,7 @@ namespace HESOYAM_Production
                 testObjects[i].Rotate(
                     GameTimeFloat(gameTime) * MathHelper.ToRadians(0.01f),
                     GameTimeFloat(gameTime) * MathHelper.ToRadians(0.1f),
-                    0
+         -           0
                 );
             }
 

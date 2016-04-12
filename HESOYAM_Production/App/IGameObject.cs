@@ -9,8 +9,6 @@ namespace App
     {
         string name { get; set; }
 
-        IGameObject parent { get; set; }
-
         Dictionary<string, IGameObject> children { get; set; }
 
         List<Collider> colliders { get; set; }
