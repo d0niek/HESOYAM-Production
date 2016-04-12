@@ -15,6 +15,7 @@ namespace HESOYAM_Production
     /// </summary>
     public class Engine : Game
     {
+        private InputState inputState;
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         //TODO: to remove
@@ -27,6 +28,7 @@ namespace HESOYAM_Production
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
+            this.inputState = new InputState();
         }
 
         /// <summary>
@@ -51,7 +53,7 @@ namespace HESOYAM_Production
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            this.camera = new Camera(this, new Vector3(0.0f, 50.0f, 5000.0f));
+            this.camera = new Camera(this, new Vector3(20.0f, 20.0f, 20.0f));
 
             //TODO: use this.Content to load your game content here
             myModel = Content.Load<Model>("Cube");
@@ -69,6 +71,9 @@ namespace HESOYAM_Production
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
+            this.inputState.Update();
+            this.camera.update(this.inputState, gameTime, GraphicsDevice.Viewport.AspectRatio);
+
             // For Mobile devices, this logic will close the Game when the Back button is pressed
             // Exit() is obsolete on iOS
             #if !__IOS__ &&  !__TVOS__
@@ -80,8 +85,6 @@ namespace HESOYAM_Production
             // Allows the game to exit
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                 this.Exit();
-
-            this.camera.update();
 
             //TODO: to remove
             for (int i = 0; i < 6; i++) {

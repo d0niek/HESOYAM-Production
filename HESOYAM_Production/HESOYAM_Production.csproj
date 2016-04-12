@@ -55,6 +55,7 @@
     <Compile Include="App\GameObject.cs" />
     <Compile Include="App\Camera.cs" />
     <Compile Include="Engine.cs" />
+    <Compile Include="App\InputState.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Icon.png" />

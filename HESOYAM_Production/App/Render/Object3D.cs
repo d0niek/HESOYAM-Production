@@ -101,13 +101,8 @@ namespace App.Render
                     * Matrix.CreateRotationX(rotation.X)
                     * Matrix.CreateRotationZ(rotation.Z)
                     * Matrix.CreateTranslation(position);
-                    effect.View = Matrix.CreateLookAt(cameraPosition, Vector3.Zero, Vector3.Up);
-                    effect.Projection = Matrix.CreatePerspectiveFieldOfView(
-                        MathHelper.ToRadians(45.0f), 
-                        game.Graphics().GraphicsDevice.Viewport.AspectRatio, 
-                        1.0f, 
-                        10000.0f
-                    );
+                    effect.View = this.game.camera.ViewMatrix;
+                    effect.Projection = this.game.camera.ProjectionMatrix;
                 }
                 // Draw the mesh, using the effects set above.
                 mesh.Draw();
