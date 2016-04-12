@@ -53,8 +53,8 @@ namespace HESOYAM_Production
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            this.camera = new Camera(this, "Kamera", new Vector3(2500.0f, 2000.0f, 2500.0f));
             this.player = new Player(this, "Player");
+            this.camera = new Camera(this, "Kamera", new Vector3(-2500.0f, 2000.0f, -2500.0f));
 
             //TODO: use this.Content to load your game content here
             myModel = Content.Load<Model>("Cube");
@@ -76,6 +76,7 @@ namespace HESOYAM_Production
         protected override void Update(GameTime gameTime)
         {
             this.inputState.Update();
+            this.player.update(this.inputState);
             this.camera.update(GraphicsDevice.Viewport.AspectRatio);
 
             // For Mobile devices, this logic will close the Game when the Back button is pressed
