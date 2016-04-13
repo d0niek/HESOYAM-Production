@@ -42,6 +42,7 @@ namespace HESOYAM_Production
         /// </summary>
         protected override void Initialize()
         {
+            this.IsMouseVisible = true;
             base.Initialize();
         }
 
@@ -55,7 +56,7 @@ namespace HESOYAM_Production
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             this.player = new Player(this, "Player");
-            this.camera = new Camera(this, "Kamera", new Vector3(-2500.0f, 2000.0f, -2500.0f));
+            this.camera = new Camera(this, "Kamera", new Vector3(-1500.0f, 2000.0f, 1500.0f));
 
             this.player.AddChild(this.camera);
             this.camera.lookAtParent = this.player;
@@ -63,15 +64,12 @@ namespace HESOYAM_Production
             //TODO: use this.Content to load your game content here
             myModel = Content.Load<Model>("Cube");
 
-            for (int i = 0; i < 100; i++) {
+            for (int i = 0; i < 101; i++) {
                 testObjects[i] = new Object3D(
                     this, myModel, "ObjectName_" + i, new Vector3(300 * (i / 10), -300, 300 * (i % 10))
                 );
                 Components.Add(testObjects[i]);
             }
-
-            testObjects[100] = new Object3D(this, myModel, "ObjectName_" + 100);
-            Components.Add(testObjects[100]);
 
             this.player.AddChild(testObjects[100]);
             testObjects[100].position = this.player.position;
