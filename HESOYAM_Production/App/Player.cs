@@ -28,19 +28,19 @@ namespace App
             Vector3 vector = Vector3.Zero;
 
             if (input.IsKeyPressed(Keys.W, PlayerIndex.One, out playerIndex)) {
-                vector.Z = 10;
-            }
-
-            if (input.IsKeyPressed(Keys.S, PlayerIndex.One, out playerIndex)) {
                 vector.Z = -10;
             }
 
+            if (input.IsKeyPressed(Keys.S, PlayerIndex.One, out playerIndex)) {
+                vector.Z = 10;
+            }
+
             if (input.IsKeyPressed(Keys.A, PlayerIndex.One, out playerIndex)) {
-                vector.X = 10;
+                vector.X = -10;
             }
 
             if (input.IsKeyPressed(Keys.D, PlayerIndex.One, out playerIndex)) {
-                vector.X = -10;
+                vector.X = 10;
             }
 
             vector = Vector3.Transform(vector, rotationMatrixY);
