@@ -2,12 +2,15 @@
 using Microsoft.Xna.Framework;
 using System.Collections.Generic;
 using App.Collisions;
+using HESOYAM_Production;
 
 namespace App
 {
 
     public class GameObject : GameComponent, IGameElement, IGameObject
     {
+        protected Engine game;
+
         public string name { get; set; }
 
         public Vector3 position { get; set; }
@@ -21,12 +24,13 @@ namespace App
         public List<Collider> colliders { get; set; }
 
         public GameObject(
-            Game game,
+            Engine game,
             string name,
             Vector3 position = default(Vector3),
             Vector3 rotation = default(Vector3)
         ) : base(game)
         {
+            this.game = game;
             this.name = name;
             this.position = position;
             this.rotation = rotation;

@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using HESOYAM_Production;
 
 namespace App
 {
@@ -7,6 +8,8 @@ namespace App
     {
         public Vector3 cameraLookAt;
 
+        public Vector3 startPosition;
+
         public IGameElement lookAtParent { get; set; }
 
         public Matrix ViewMatrix { get; set; }
@@ -14,13 +17,14 @@ namespace App
         public Matrix ProjectionMatrix { get; set; }
 
         public Camera(
-            Game game,
+            Engine game,
             string name,
             Vector3 position = default(Vector3),
             Vector3 rotaion = default(Vector3)
         ) : base(game, name, position, rotaion)
         {
             this.lookAtParent = null;
+            this.startPosition = this.position;
             this.ViewMatrix = Matrix.Identity;
             this.ProjectionMatrix = Matrix.Identity;
         }
