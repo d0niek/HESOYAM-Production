@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework.Storage;
 using Microsoft.Xna.Framework.Input;
 using App.Render;
 using App;
+using System.Diagnostics;
 
 namespace HESOYAM_Production
 {
@@ -16,14 +17,15 @@ namespace HESOYAM_Production
     public class Engine : Game
     {
         private InputState inputState;
+
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
-        //TODO: to remove
-        Model myModel;
-        Object3D[] testObjects = new Object3D[6];
-
         public Camera camera;
         public Player player;
+
+        //TODO: to remove
+        Model myModel;
+        Object3D[] testObjects = new Object3D[101];
 
         public Engine()
         {
@@ -40,7 +42,6 @@ namespace HESOYAM_Production
         /// </summary>
         protected override void Initialize()
         {
-            graphics.IsFullScreen = true;
             base.Initialize();
         }
 
@@ -56,16 +57,24 @@ namespace HESOYAM_Production
             this.player = new Player(this, "Player");
             this.camera = new Camera(this, "Kamera", new Vector3(-2500.0f, 2000.0f, -2500.0f));
 
+            this.player.AddChild(this.camera);
+            this.camera.lookAtParent = this.player;
+
             //TODO: use this.Content to load your game content here
             myModel = Content.Load<Model>("Cube");
 
-            for (int i = 0; i < 6; i++) {
-                testObjects[i] = new Object3D(this, myModel, "ObjectName_" + i);
+            for (int i = 0; i < 100; i++) {
+                testObjects[i] = new Object3D(
+                    this, myModel, "ObjectName_" + i, new Vector3(300 * (i / 10), -300, 300 * (i % 10))
+                );
                 Components.Add(testObjects[i]);
             }
 
-            this.player.AddChild(testObjects[0]);
-            testObjects[0].position = this.player.position;
+            testObjects[100] = new Object3D(this, myModel, "ObjectName_" + 100);
+            Components.Add(testObjects[100]);
+
+            this.player.AddChild(testObjects[100]);
+            testObjects[100].position = this.player.position;
         }
 
         /// <summary>
@@ -76,7 +85,8 @@ namespace HESOYAM_Production
         protected override void Update(GameTime gameTime)
         {
             this.inputState.Update();
-            this.player.update(this.inputState);
+
+            this.player.update(gameTime, this.inputState);
             this.camera.update(GraphicsDevice.Viewport.AspectRatio);
 
             // For Mobile devices, this logic will close the Game when the Back button is pressed
