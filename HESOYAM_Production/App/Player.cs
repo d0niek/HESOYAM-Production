@@ -1,15 +1,15 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using System;
-using App.Collisions;
 using HESOYAM_Production;
-using System.Diagnostics;
 
 namespace App
 {
 
     public class Player : GameObject
     {
+        private float cameraAngle;
+
         public Player(
             Engine game,
             string name,
@@ -17,6 +17,9 @@ namespace App
             Vector3 rotaion = default(Vector3)
         ) : base(game, name, position, rotaion)
         {
+            this.cameraAngle = (float) (Math.Atan2(
+                this.game.camera.startPosition.X, this.game.camera.startPosition.Z
+            ));
         }
 
         public void update(GameTime gameTime, InputState input)
@@ -25,7 +28,7 @@ namespace App
 
             this.Rotate(0, angle, 0);
 
-            Matrix rotationMatrixY = Matrix.CreateRotationY(this.rotation.Y);
+            Matrix rotationMatrixY = Matrix.CreateRotationY(this.rotation.Y + cameraAngle);
             PlayerIndex playerIndex;
             Vector3 vector = Vector3.Zero;
 
@@ -75,8 +78,7 @@ namespace App
                 mousePos.X -= windowSize.X / 2;
                 mousePos.Y -= windowSize.Y / 2;
 
-                angle = (float) (Math.Atan2(mousePos.X, mousePos.Y));
-                angle += (float) (Math.Atan2(this.game.camera.startPosition.X, this.game.camera.startPosition.Z));
+                angle = (float) (Math.Atan2(mousePos.X, mousePos.Y)) + cameraAngle;
             }
 
             return angle;
