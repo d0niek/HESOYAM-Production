@@ -25,7 +25,7 @@ namespace HESOYAM_Production
 
         //TODO: to remove
         Model myModel;
-        Object3D[] testObjects = new Object3D[101];
+        Object3D[] testObjects = new Object3D[102];
 
         public Engine()
         {
@@ -64,7 +64,7 @@ namespace HESOYAM_Production
             //TODO: use this.Content to load your game content here
             myModel = Content.Load<Model>("Cube");
 
-            for (int i = 0; i < 101; i++) {
+            for (int i = 0; i < 102; i++) {
                 testObjects[i] = new Object3D(
                     this, myModel, "ObjectName_" + i, new Vector3(300 * (i / 10), -300, 300 * (i % 10))
                 );
@@ -72,7 +72,10 @@ namespace HESOYAM_Production
             }
 
             this.player.AddChild(testObjects[100]);
+            testObjects[100].AddChild(testObjects[101]);
             testObjects[100].position = this.player.position;
+            testObjects[101].position = this.player.position;
+            testObjects[101].Move(200f,0,0);
         }
 
         /// <summary>

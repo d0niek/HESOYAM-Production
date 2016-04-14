@@ -12,6 +12,10 @@ namespace App
 
         Vector3 rotation { get; set; }
 
+        Vector3 scale { get; set; }
+
+        void Scale(float x, float y, float z);
+
         void Move(float x, float y, float z);
 
         void Rotate(float x, float y, float z);

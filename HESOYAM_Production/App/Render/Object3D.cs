@@ -78,11 +78,28 @@ namespace App.Render
         public void RotateAroundParent(float x, float y, float z)
         {
             IGameElement par = parent as IGameElement;
-            this.position += Vector3.Transform(
+            this.position = Vector3.Transform(
                 par.position - this.position, 
-                Matrix.CreateRotationX(x)
-                * Matrix.CreateRotationZ(z)
-                * Matrix.CreateRotationY(y));
+                Matrix.CreateRotationX(x));
+
+            this.position = Vector3.Transform(
+                par.position - this.position, 
+                Matrix.CreateRotationY(y));
+
+            this.position = Vector3.Transform(
+                par.position - this.position, 
+                Matrix.CreateRotationZ(z));
+
+            this.Rotate(x, y, z);
+        }
+
+        public void Scale(float x, float y, float z)
+        {
+            this.scale = new Vector3(x, y, z);
+
+            foreach (IGameElement child in children.Values) {
+                child.Scale(x, y, z);
+            }
         }
 
         public bool Collision(IGameElement collider)

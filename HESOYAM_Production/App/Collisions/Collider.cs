@@ -12,6 +12,8 @@ namespace App.Collisions
 
         public Vector3 rotation { get; set; }
 
+        public Vector3 scale { get; set; }
+
         public Collider()
         {
             
@@ -23,6 +25,11 @@ namespace App.Collisions
         }
 
         public void Rotate(float x, float y, float z)
+        {
+
+        }
+
+        public void Scale(float x, float y, float z)
         {
 
         }

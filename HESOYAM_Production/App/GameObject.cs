@@ -17,6 +17,8 @@ namespace App
 
         public Vector3 rotation { get; set; }
 
+        public Vector3 scale { get; set; }
+
         public IGameObject parent { get; set; }
 
         public Dictionary<string, IGameObject> children { get; set; }
@@ -74,6 +76,15 @@ namespace App
                 Matrix.CreateRotationX(x)
                 * Matrix.CreateRotationZ(z)
                 * Matrix.CreateRotationY(y));
+        }
+
+        public void Scale(float x, float y, float z)
+        {
+            this.scale = new Vector3(x, y, z);
+
+            foreach (IGameElement child in children.Values) {
+                child.Scale(x, y, z);
+            }
         }
 
         public bool Collision(IGameElement collider)
