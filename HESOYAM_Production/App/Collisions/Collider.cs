@@ -29,6 +29,11 @@ namespace App.Collisions
 
         }
 
+        public void SetRotation(float x, float y, float z)
+        {
+
+        }
+
         public void Scale(float x, float y, float z)
         {
 

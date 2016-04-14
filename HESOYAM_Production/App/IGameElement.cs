@@ -22,6 +22,8 @@ namespace App
 
         void RotateAroundParent(float x, float y, float z);
 
+        void SetRotation(float x, float y, float z);
+
         bool Collision(IGameElement collider);
     }
 }

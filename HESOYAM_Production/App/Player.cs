@@ -52,12 +52,8 @@ namespace App
         public new void Rotate(float x, float y, float z)
         {
             foreach (IGameElement child in children.Values) {
-                if (!(child is Camera)) {
-                    if (child.rotation.Y != y) {
-                        child.Rotate(0, -child.rotation.Y, 0);
-                    }
-
-                    child.Rotate(x, y - 0.000001f, z);
+                if (!(child is Camera) && ((rotation.Y - y) > 1f || (rotation.Y - y) < - 1f)) {
+                    child.SetRotation(x,y,z);
                 }
             }
         }

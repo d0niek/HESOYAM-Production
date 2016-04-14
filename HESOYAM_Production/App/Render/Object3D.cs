@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using App.Collisions;
 using HESOYAM_Production;
 using Microsoft.Xna.Framework.Graphics;
+using System.Diagnostics;
 
 
 
@@ -77,7 +78,7 @@ namespace App.Render
 
         public void RotateAroundParent(float x, float y, float z)
         {
-            IGameElement par = parent as IGameElement;
+            IGameElement par = this.parent as IGameElement;
             this.position = Vector3.Transform(
                 par.position - this.position, 
                 Matrix.CreateRotationX(x));
@@ -91,6 +92,16 @@ namespace App.Render
                 Matrix.CreateRotationZ(z));
 
             this.Rotate(x, y, z);
+        }
+
+        public void SetRotation(float x, float y, float z)
+        {
+            foreach (IGameElement child in children.Values) {
+                child.RotateAroundParent(-this.rotation.X, -this.rotation.Y, -this.rotation.Z);
+                child.RotateAroundParent(x, y, z);
+            }
+
+            this.rotation = new Vector3(x, y, z);
         }
 
         public void Scale(float x, float y, float z)
