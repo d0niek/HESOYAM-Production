@@ -55,8 +55,8 @@ namespace HESOYAM_Production
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            this.player = new Player(this, "Player");
             this.camera = new Camera(this, "Kamera", new Vector3(-1500.0f, 2000.0f, 1500.0f));
+            this.player = new Player(this, "Player");
 
             this.player.AddChild(this.camera);
             this.camera.lookAtParent = this.player;
