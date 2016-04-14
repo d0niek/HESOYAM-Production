@@ -29,19 +29,19 @@ namespace App
             Vector3 vector = Vector3.Zero;
 
             if (input.IsKeyPressed(Keys.W, PlayerIndex.One, out playerIndex)) {
-                vector.Z = 10;
-            }
-
-            if (input.IsKeyPressed(Keys.S, PlayerIndex.One, out playerIndex)) {
                 vector.Z = -10;
             }
 
+            if (input.IsKeyPressed(Keys.S, PlayerIndex.One, out playerIndex)) {
+                vector.Z = 10;
+            }
+
             if (input.IsKeyPressed(Keys.A, PlayerIndex.One, out playerIndex)) {
-                vector.X = 10;
+                vector.X = -10;
             }
 
             if (input.IsKeyPressed(Keys.D, PlayerIndex.One, out playerIndex)) {
-                vector.X = -10;
+                vector.X = 10;
             }
 
             vector = Vector3.Transform(vector, rotationMatrixY);
@@ -50,19 +50,13 @@ namespace App
 
         public new void Rotate(float x, float y, float z)
         {
-            Vector3 newRotation = new Vector3(x, y, z);
-
-            if (this.rotation != newRotation) {
-                rotation = newRotation;
-
-                foreach (IGameElement child in children.Values) {
-                    if (!(child is Camera)) {
-                        child.Rotate(x, y, z);
+            foreach (IGameElement child in children.Values) {
+                if (!(child is Camera)) {
+                    if (child.rotation.Y != y) {
+                        y -= child.rotation.Y;
                     }
-                }
 
-                foreach (Collider collider in colliders) {
-                    collider.RotateAroundParent(x, y, z);
+                    child.Rotate(x, y, z);
                 }
             }
         }
