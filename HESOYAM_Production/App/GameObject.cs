@@ -2,17 +2,20 @@
 using Microsoft.Xna.Framework;
 using System.Collections.Generic;
 using App.Collisions;
+using HESOYAM_Production;
 
 namespace App
 {
 
     public class GameObject : GameComponent, IGameElement, IGameObject
     {
+        protected Engine game;
+
+        public string name { get; set; }
+
         public Vector3 position { get; set; }
 
         public Vector3 rotation { get; set; }
-
-        public string name { get; set; }
 
         public IGameObject parent { get; set; }
 
@@ -20,10 +23,17 @@ namespace App
 
         public List<Collider> colliders { get; set; }
 
-        public GameObject(Game game, Vector3 p = default(Vector3), Vector3 r = default(Vector3)) : base(game)
+        public GameObject(
+            Engine game,
+            string name,
+            Vector3 position = default(Vector3),
+            Vector3 rotation = default(Vector3)
+        ) : base(game)
         {
-            this.position = p;
-            this.rotation = r;
+            this.game = game;
+            this.name = name;
+            this.position = position;
+            this.rotation = rotation;
             this.children = new Dictionary<string, IGameObject>();
             this.colliders = new List<Collider>();
         }
@@ -48,7 +58,7 @@ namespace App
             rotation = Vector3.Add(delta, rotation);
 
             foreach (IGameElement child in children.Values) {
-                child.RotateAroundParent(x,y,z);
+                child.RotateAroundParent(x, y, z);
             }
 
             foreach (Collider collider in colliders) {

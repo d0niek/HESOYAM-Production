@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework.Storage;
 using Microsoft.Xna.Framework.Input;
 using App.Render;
 using App;
+using System.Diagnostics;
 
 namespace HESOYAM_Production
 {
@@ -16,13 +17,15 @@ namespace HESOYAM_Production
     public class Engine : Game
     {
         private InputState inputState;
+
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+        public Camera camera;
+        public Player player;
+
         //TODO: to remove
         Model myModel;
-        Object3D[] testObjects = new Object3D[6];
-
-        public Camera camera;
+        Object3D[] testObjects = new Object3D[101];
 
         public Engine()
         {
@@ -39,7 +42,7 @@ namespace HESOYAM_Production
         /// </summary>
         protected override void Initialize()
         {
-            graphics.IsFullScreen = true;
+            this.IsMouseVisible = true;
             base.Initialize();
         }
 
@@ -52,18 +55,24 @@ namespace HESOYAM_Production
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            this.camera = new Camera(this, new Vector3(0.0f, 200.0f, 200.0f));
+            this.player = new Player(this, "Player");
+            this.camera = new Camera(this, "Kamera", new Vector3(-1500.0f, 2000.0f, 1500.0f));
+
+            this.player.AddChild(this.camera);
+            this.camera.lookAtParent = this.player;
 
             //TODO: use this.Content to load your game content here
             myModel = Content.Load<Model>("Cube");
-            Object3D parent = new Object3D(this, myModel, "Szymek");
-            Object3D child = new Object3D(this, myModel, "Bogdan");
-            child.Move(300f,0,0);
-            parent.AddChild(child);
-            parent.Move(0, 200f, 0);
-            Components.Add(child);
-            Components.Add(parent);
-            Components.Add(new Object3D(this, myModel, "podłoga", Vector3.Zero, Vector3.Zero, new Vector3(10f, 0.1f, 10f)));
+
+            for (int i = 0; i < 101; i++) {
+                testObjects[i] = new Object3D(
+                    this, myModel, "ObjectName_" + i, new Vector3(300 * (i / 10), -300, 300 * (i % 10))
+                );
+                Components.Add(testObjects[i]);
+            }
+
+            this.player.AddChild(testObjects[100]);
+            testObjects[100].position = this.player.position;
         }
 
         /// <summary>
@@ -74,7 +83,9 @@ namespace HESOYAM_Production
         protected override void Update(GameTime gameTime)
         {
             this.inputState.Update();
-            this.camera.update(this.inputState, gameTime, GraphicsDevice.Viewport.AspectRatio);
+
+            this.player.update(gameTime, this.inputState);
+            this.camera.update(GraphicsDevice.Viewport.AspectRatio);
 
             // For Mobile devices, this logic will close the Game when the Back button is pressed
             // Exit() is obsolete on iOS
@@ -87,7 +98,7 @@ namespace HESOYAM_Production
             // Allows the game to exit
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                 this.Exit();
-            
+
             base.Update(gameTime);
         }
 

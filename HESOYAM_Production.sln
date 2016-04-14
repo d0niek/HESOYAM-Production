@@ -44,7 +44,9 @@ Global
 		$3.BlankLinesBeforeFirstDeclaration = 1
 		$3.MethodCallArgumentWrapping = WrapIfTooLong
 		$3.MethodDeclarationParameterWrapping = WrapIfTooLong
+		$3.AlignToFirstMethodDeclarationParameter = False
 		$3.IndexerDeclarationParameterWrapping = WrapIfTooLong
+		$3.AlignToFirstIndexerDeclarationParameter = False
 		$3.IndexerArgumentWrapping = WrapIfTooLong
 		$3.inheritsSet = Mono
 		$3.inheritsScope = text/x-csharp

@@ -15,13 +15,13 @@ namespace App.Render
         private Engine game;
         private Model model;
 
+        public string name { get; set; }
+
         public Vector3 position { get; set; }
 
         public Vector3 rotation { get; set; }
 
         public Vector3 scale { get; set; }
-
-        public string name { get; set; }
 
         public IGameObject parent { get; set; }
 
@@ -67,7 +67,7 @@ namespace App.Render
             rotation = Vector3.Add(delta, rotation);
 
             foreach (IGameElement child in children.Values) {
-                child.RotateAroundParent(x,y,z);
+                child.RotateAroundParent(x, y, z);
             }
 
             foreach (Collider collider in colliders) {
