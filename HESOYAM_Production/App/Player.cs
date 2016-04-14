@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Input;
 using System;
 using App.Collisions;
 using HESOYAM_Production;
+using System.Diagnostics;
 
 namespace App
 {
@@ -53,10 +54,10 @@ namespace App
             foreach (IGameElement child in children.Values) {
                 if (!(child is Camera)) {
                     if (child.rotation.Y != y) {
-                        y -= child.rotation.Y;
+                        child.Rotate(0, -child.rotation.Y, 0);
                     }
 
-                    child.Rotate(x, y, z);
+                    child.Rotate(x, y - 0.000001f, z);
                 }
             }
         }
