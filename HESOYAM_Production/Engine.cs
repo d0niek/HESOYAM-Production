@@ -7,6 +7,8 @@ using Microsoft.Xna.Framework.Input;
 using App.Render;
 using App;
 using System.Diagnostics;
+using System.IO;
+
 
 namespace HESOYAM_Production
 {
@@ -63,6 +65,9 @@ namespace HESOYAM_Production
 
             //TODO: use this.Content to load your game content here
             myModel = Content.Load<Model>("Cube");
+            string parentDir = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName;
+
+            Scene scene = new Scene(this, "Scene01", parentDir + "/Content/walls16x16.bmp", myModel);
 
             for (int i = 0; i < 102; i++) {
                 testObjects[i] = new Object3D(
@@ -77,6 +82,11 @@ namespace HESOYAM_Production
             testObjects[101].Move(100f,-100f,200f);
             testObjects[100].Move(200f,0,200f);
             testObjects[100].Rotate(MathHelper.ToRadians(15f),MathHelper.ToRadians(30f),MathHelper.ToRadians(10f));
+        }
+
+        public void AddComponent(IGameComponent item)
+        {
+            Components.Add(item);
         }
 
         /// <summary>
