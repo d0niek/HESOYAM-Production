@@ -79,19 +79,36 @@ namespace App.Render
         public void RotateAroundParent(float x, float y, float z)
         {
             IGameElement par = this.parent as IGameElement;
-            this.position = Vector3.Transform(
-                par.position - this.position, 
-                Matrix.CreateRotationX(x));
+            float s = (float)Math.Sin(-y);
+            float c = (float)Math.Cos(y);
 
-            this.position = Vector3.Transform(
-                par.position - this.position, 
-                Matrix.CreateRotationY(y));
+            // translate point back to origin:
+            this.position = this.position - par.position;
 
-            this.position = Vector3.Transform(
-                par.position - this.position, 
-                Matrix.CreateRotationZ(z));
+            // rotate point
+            float xnew = this.position.X * c - this.position.Z * s;
+            float znew = this.position.X * s + this.position.Z * c;
+            float ynew = this.position.Y;
+
+            s = (float)Math.Sin(-x);
+            c = (float)Math.Cos(x);
+////
+            // rotate point
+            znew = znew * c - this.position.Y * s;
+            ynew = znew * s + this.position.Y * c;
+////
+            s = (float)Math.Sin(-z);
+            c = (float)Math.Cos(z);
+//
+////            // rotate point
+            ynew = ynew * c - xnew * s;
+            xnew = ynew * s + xnew * c;
+
+            // translate point back:
+            this.position = new Vector3(xnew,ynew,znew) + par.position;
 
             this.Rotate(x, y, z);
+
         }
 
         public void SetRotation(float x, float y, float z)

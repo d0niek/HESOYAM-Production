@@ -71,11 +71,12 @@ namespace HESOYAM_Production
                 Components.Add(testObjects[i]);
             }
 
-            this.player.AddChild(testObjects[100]);
             testObjects[100].AddChild(testObjects[101]);
             testObjects[100].position = this.player.position;
             testObjects[101].position = this.player.position;
-            testObjects[101].Move(200f,0,0);
+            testObjects[101].Move(100f,-100f,200f);
+            testObjects[100].Move(200f,0,200f);
+            testObjects[100].Rotate(MathHelper.ToRadians(15f),MathHelper.ToRadians(30f),MathHelper.ToRadians(10f));
         }
 
         /// <summary>
@@ -102,6 +103,9 @@ namespace HESOYAM_Production
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                 this.Exit();
 
+            //testObjects[100].Rotate(0,0,0.1f);
+            testObjects[100].Rotate(0,0,MathHelper.ToRadians(0.1f)*Engine.GameTimeFloat(gameTime));
+            testObjects[100].Move(1f,0,0);
             base.Update(gameTime);
         }
 
