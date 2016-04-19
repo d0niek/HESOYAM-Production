@@ -24,6 +24,7 @@ namespace HESOYAM_Production
         SpriteBatch spriteBatch;
         public Camera camera;
         public Player player;
+        public bool playMode;
 
         //TODO: to remove
         Model myModel;
@@ -34,6 +35,7 @@ namespace HESOYAM_Production
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             this.inputState = new InputState();
+            this.playMode = false;
         }
 
         /// <summary>
@@ -90,6 +92,10 @@ namespace HESOYAM_Production
         protected override void Update(GameTime gameTime)
         {
             this.inputState.Update();
+
+            if (this.inputState.IsSpace(PlayerIndex.One)) {
+                this.playMode = !this.playMode;
+            }
 
             this.player.update(gameTime, this.inputState);
             this.camera.update(GraphicsDevice.Viewport.AspectRatio);

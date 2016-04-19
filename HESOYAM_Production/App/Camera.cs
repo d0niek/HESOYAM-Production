@@ -6,9 +6,9 @@ namespace App
 
     public class Camera : GameObject
     {
-        public Vector3 cameraLookAt;
+        private Vector3 playModePosition;
 
-        public Vector3 startPosition;
+        public Vector3 cameraLookAt;
 
         public IGameElement lookAtParent { get; set; }
 
@@ -24,14 +24,13 @@ namespace App
         ) : base(game, name, position, rotaion)
         {
             this.lookAtParent = null;
-            this.startPosition = this.position;
             this.ViewMatrix = Matrix.Identity;
             this.ProjectionMatrix = Matrix.Identity;
+            this.playModePosition = this.position;
         }
 
         public void update(float aspectRatio)
         {
-
             if (this.lookAtParent != null) {
                 cameraLookAt = this.lookAtParent.position;
             } else {
