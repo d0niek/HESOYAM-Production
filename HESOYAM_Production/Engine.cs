@@ -27,7 +27,7 @@ namespace HESOYAM_Production
 
         //TODO: to remove
         Model myModel;
-        Object3D[] testObjects = new Object3D[102];
+        Object3D testObjects;
 
         public Engine()
         {
@@ -70,19 +70,11 @@ namespace HESOYAM_Production
 
             Scene scene = new Scene(this, "Scene01", parentDir + "/Content/walls32x32.bmp", myModel);
 
-            for (int i = 0; i < 102; i++) {
-                testObjects[i] = new Object3D(
-                    this, myModel, "ObjectName_" + i, new Vector3(300 * (i / 10), -300, 300 * (i % 10))
-                );
-                Components.Add(testObjects[i]);
-            }
+            testObjects = new Object3D(this, myModel, "ObjectName_");
+            Components.Add(testObjects);
 
-            testObjects[100].AddChild(testObjects[101]);
-            testObjects[100].position = this.player.position;
-            testObjects[101].position = this.player.position;
-            testObjects[101].Move(100f,-100f,200f);
-            testObjects[100].Move(200f,0,200f);
-            testObjects[100].Rotate(MathHelper.ToRadians(15f),MathHelper.ToRadians(30f),MathHelper.ToRadians(10f));
+            player.AddChild(testObjects);
+            testObjects.position = this.player.position;
         }
 
         public void AddComponent(IGameComponent item)
@@ -114,9 +106,6 @@ namespace HESOYAM_Production
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                 this.Exit();
 
-            //testObjects[100].Rotate(0,0,0.1f);
-            testObjects[100].Rotate(0,0,MathHelper.ToRadians(0.1f)*Engine.GameTimeFloat(gameTime));
-            testObjects[100].Move(1f,0,0);
             base.Update(gameTime);
         }
 
