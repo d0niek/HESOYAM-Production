@@ -2,6 +2,8 @@
 using Microsoft.Xna.Framework.Input;
 using System;
 using HESOYAM_Production;
+using System.Xml;
+using App.Collisions;
 
 namespace App
 {
@@ -9,6 +11,7 @@ namespace App
     public class Player : GameObject
     {
         private float cameraAngle;
+        private Vector3 playModePosition;
 
         public Player(
             Engine game,
@@ -18,15 +21,20 @@ namespace App
         ) : base(game, name, position, rotaion)
         {
             this.cameraAngle = (float) (Math.Atan2(
-                this.game.camera.startPosition.X, this.game.camera.startPosition.Z
+                this.game.camera.position.X, this.game.camera.position.Z
             ));
+            this.playModePosition = this.position;
         }
 
         public void update(GameTime gameTime, InputState input)
         {
-            float angle = this.getAngleFromMouse(input);
+            if (this.game.playMode) {
+                this.position = this.playModePosition;
 
-            this.Rotate(0, angle, 0);
+                float angle = this.getAngleFromMouse(input);
+
+                this.Rotate(0, angle, 0);
+            }
 
             Matrix rotationMatrixY = Matrix.CreateRotationY(this.rotation.Y + cameraAngle);
             PlayerIndex playerIndex;
@@ -52,11 +60,33 @@ namespace App
             this.Move(vector.X, 0, vector.Z);
         }
 
+        public new void Move(float x, float y, float z)
+        {
+            Vector3 delta = new Vector3(x, y, z);
+            position = Vector3.Add(delta, position);
+
+            foreach (IGameElement child in children.Values) {
+                if (this.game.playMode || child is Camera) {
+                    child.Move(x, y, z);
+                }
+            }
+
+            foreach (Collider collider in colliders) {
+                if (this.game.playMode) {
+                    collider.Move(x, y, z);
+                }
+            }
+
+            if (this.game.playMode) {
+                this.playModePosition = this.position;
+            }
+        }
+
         public new void Rotate(float x, float y, float z)
         {
             foreach (IGameElement child in children.Values) {
                 if (!(child is Camera)) {
-                    child.SetRotation(x,y,z);
+                    child.SetRotation(x, y, z);
                 }
             }
         }
