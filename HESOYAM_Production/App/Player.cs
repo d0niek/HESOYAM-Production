@@ -80,30 +80,17 @@ namespace App
         private float getAngleFromMouse(InputState input)
         {
             float angle = this.rotation.Y;
-            Vector2 windowSize = new Vector2(
-                                     this.Game.GraphicsDevice.Viewport.Width,
-                                     this.Game.GraphicsDevice.Viewport.Height
-                                 );
-            Vector2 mousePos = new Vector2(input.CurrentMouseState.X, input.CurrentMouseState.Y);
 
-            if (this.isMouseInGameWindow(mousePos, windowSize)) {
-                mousePos.X -= windowSize.X / 2;
-                mousePos.Y -= windowSize.Y / 2;
+            if (this.game.isMouseInGameWindow()) {
+                Vector2 mousePos = new Vector2(input.CurrentMouseState.X, input.CurrentMouseState.Y);
 
-                angle = (float) (Math.Atan2(mousePos.X, mousePos.Y)) + cameraAngle;
+                mousePos.X -= this.Game.GraphicsDevice.Viewport.Width / 2;
+                mousePos.Y -= this.Game.GraphicsDevice.Viewport.Height / 2;
+
+                angle = (float) (Math.Atan2(mousePos.X, mousePos.Y)) + this.cameraAngle;
             }
 
             return angle;
-        }
-
-        private bool isMouseInGameWindow(Vector2 mouse, Vector2 window)
-        {
-            bool leftBorder = mouse.X >= 0;
-            bool topBorder = mouse.Y >= 0;
-            bool rightBorder = mouse.X <= window.X;
-            bool bottomBorder = mouse.Y <= window.Y;
-
-            return leftBorder && topBorder && rightBorder && bottomBorder;
         }
     }
 }

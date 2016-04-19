@@ -134,5 +134,15 @@ namespace HESOYAM_Production
         {
             return this.graphics;
         }
+
+        public bool isMouseInGameWindow()
+        {
+            bool leftBorder = this.inputState.CurrentMouseState.X >= 0;
+            bool topBorder = this.inputState.CurrentMouseState.Y >= 0;
+            bool rightBorder = this.inputState.CurrentMouseState.X <= this.GraphicsDevice.Viewport.Width;
+            bool bottomBorder = this.inputState.CurrentMouseState.Y <= this.GraphicsDevice.Viewport.Height;
+
+            return leftBorder && topBorder && rightBorder && bottomBorder;
+        }
     }
 }
