@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using HESOYAM_Production;
 using System;
+using System.Diagnostics;
 
 namespace App
 {
@@ -87,7 +88,7 @@ namespace App
 
         public new void Move(float x, float y, float z)
         {
-            Vector3 newLookAt = this.position - this.cameraLookAt;
+            Vector3 newLookAt = this.cameraLookAt - this.position;
 
             base.Move(x, y, z);
 
