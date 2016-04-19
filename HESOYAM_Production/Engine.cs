@@ -47,6 +47,7 @@ namespace HESOYAM_Production
         protected override void Initialize()
         {
             this.IsMouseVisible = true;
+            this.graphics.IsFullScreen = true;
             base.Initialize();
         }
 
@@ -69,7 +70,7 @@ namespace HESOYAM_Production
             myModel = Content.Load<Model>("Cube");
             string parentDir = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName;
 
-            Scene scene = new Scene(this, "Scene01", parentDir + "/Content/walls16x16.bmp", myModel);
+            Scene scene = new Scene(this, "Scene01", parentDir + "/Content/walls32x32.bmp", myModel);
 
             testObjects = new Object3D(this, myModel, "ObjectName_");
             Components.Add(testObjects);
