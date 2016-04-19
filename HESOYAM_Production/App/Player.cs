@@ -11,7 +11,6 @@ namespace App
     public class Player : GameObject
     {
         private float cameraAngle;
-        private Vector3 playModePosition;
 
         public Player(
             Engine game,
@@ -23,18 +22,13 @@ namespace App
             this.cameraAngle = (float) (Math.Atan2(
                 this.game.camera.position.X, this.game.camera.position.Z
             ));
-            this.playModePosition = this.position;
         }
 
         public void update(GameTime gameTime, InputState input)
         {
-            if (this.game.playMode) {
-                this.position = this.playModePosition;
+            float angle = this.getAngleFromMouse(input);
 
-                float angle = this.getAngleFromMouse(input);
-
-                this.Rotate(0, angle, 0);
-            }
+            this.Rotate(0, angle, 0);
 
             Matrix rotationMatrixY = Matrix.CreateRotationY(this.rotation.Y + cameraAngle);
             PlayerIndex playerIndex;
@@ -66,19 +60,11 @@ namespace App
             position = Vector3.Add(delta, position);
 
             foreach (IGameElement child in children.Values) {
-                if (this.game.playMode || child is Camera) {
-                    child.Move(x, y, z);
-                }
+                child.Move(x, y, z);
             }
 
             foreach (Collider collider in colliders) {
-                if (this.game.playMode) {
-                    collider.Move(x, y, z);
-                }
-            }
-
-            if (this.game.playMode) {
-                this.playModePosition = this.position;
+                collider.Move(x, y, z);
             }
         }
 
