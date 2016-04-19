@@ -97,8 +97,12 @@ namespace HESOYAM_Production
                 this.playMode = !this.playMode;
             }
 
-            this.player.update(gameTime, this.inputState);
-            this.camera.update(GraphicsDevice.Viewport.AspectRatio);
+            if (this.playMode) {
+                this.camera.position = this.camera.playModePosition;
+                this.player.update(gameTime, this.inputState);
+            }
+
+            this.camera.update(this.inputState, GraphicsDevice.Viewport.AspectRatio);
 
             // For Mobile devices, this logic will close the Game when the Back button is pressed
             // Exit() is obsolete on iOS
