@@ -2,7 +2,6 @@
 using Microsoft.Xna.Framework.Input;
 using System;
 using HESOYAM_Production;
-using System.Xml;
 using App.Collisions;
 
 namespace App

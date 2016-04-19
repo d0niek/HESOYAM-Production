@@ -1,7 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
 using HESOYAM_Production;
-using System;
-using System.Diagnostics;
 
 namespace App
 {

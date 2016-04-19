@@ -2,11 +2,9 @@
 
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Storage;
 using Microsoft.Xna.Framework.Input;
 using App.Render;
 using App;
-using System.Diagnostics;
 using System.IO;
 
 
