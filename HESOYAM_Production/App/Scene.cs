@@ -25,7 +25,7 @@ namespace App
                         Object3D newChild = new Object3D(
                                                 game,
                                                 wall,
-                                                j + "x" + i,
+                                                "Wall" + j + "x" + i,
                                                 new Vector3(i * 200f, 0f, j * 200f),
                                                 Vector3.Zero,
                                                 new Vector3(1f, 4f, 1f)
@@ -38,21 +38,13 @@ namespace App
             Object3D floor = new Object3D(
                                  game,
                                  wall,
-                                 "floor",
+                                 "Floor",
                                  new Vector3((float) bmp.Height * 100f, -400f, (float) bmp.Width * 100f),
                                  Vector3.Zero,
-                                 new Vector3((float) bmp.Height, 0f, (float) bmp.Width)
+                                 new Vector3((float) bmp.Height, 0.1f, (float) bmp.Width)
                              );
 
-            game.AddComponent(floor);
-
-            foreach (GameObject child in this.children.Values) {
-                game.AddComponent(child);
-
-                foreach (Object3D grandChild in child.children.Values) {
-                    game.AddComponent(grandChild);
-                }
-            }
+            this.AddChildrenToGame(true);
         }
     }
 }

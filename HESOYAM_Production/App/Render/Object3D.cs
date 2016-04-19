@@ -142,6 +142,19 @@ namespace App.Render
             children.Add(component.name, component);
         }
 
+        public void AddChildrenToGame(bool recursively)
+        {
+            foreach (IGameComponent child in this.children.Values) {
+                game.AddComponent(child);
+
+                if (recursively) {
+                    IGameObject ch = child as IGameObject;
+                    ch.AddChildrenToGame(true);
+                }
+            }
+        }
+
+
         public void AddCollider(Collider collider)
         {
             colliders.Add(collider);
