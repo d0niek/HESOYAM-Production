@@ -44,6 +44,7 @@ namespace App
                                  new Vector3((float) bmp.Height, 0.1f, (float) bmp.Width)
                              );
 
+            this.AddChild(floor);
             this.AddChildrenToGame(true);
         }
     }
