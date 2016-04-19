@@ -19,7 +19,7 @@ namespace App
 
             for (int i = 0; i < bmp.Height; i++) {
                 for (int j = 0; j < bmp.Width; j++) {
-                    System.Drawing.Color color = bmp.GetPixel(j, i);
+                    System.Drawing.Color color = bmp.GetPixel(i, j);
 
                     if (color.R == 0 && color.G == 0 && color.B == 0) {
                         Object3D newChild = new Object3D(
