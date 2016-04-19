@@ -31,11 +31,7 @@ namespace App
 
         public void update(float aspectRatio)
         {
-            if (this.lookAtParent != null) {
-                cameraLookAt = this.lookAtParent.position;
-            } else {
-                cameraLookAt = Vector3.Zero;
-            }
+            cameraLookAt = this.lookAtParent != null ? this.lookAtParent.position : Vector3.Zero;
 
             this.ViewMatrix = Matrix.CreateLookAt(this.position, cameraLookAt, Vector3.Up);
             this.ProjectionMatrix = Matrix.CreatePerspectiveFieldOfView(
