@@ -9,7 +9,7 @@ namespace App
 
     public class Player : GameObject
     {
-        private float cameraAngle;
+        public float cameraAngle { get; set; }
 
         public Player(
             Engine game,
@@ -18,9 +18,6 @@ namespace App
             Vector3 rotaion = default(Vector3)
         ) : base(game, name, position, rotaion)
         {
-            this.cameraAngle = (float) (Math.Atan2(
-                this.game.camera.position.X, this.game.camera.position.Z
-            ));
         }
 
         public void update(GameTime gameTime, InputState input)

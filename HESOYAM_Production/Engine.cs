@@ -33,7 +33,7 @@ namespace HESOYAM_Production
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             this.inputState = new InputState();
-            this.playMode = false;
+            this.playMode = true;
         }
 
         /// <summary>
@@ -58,8 +58,12 @@ namespace HESOYAM_Production
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            this.camera = new Camera(this, "Kamera", new Vector3(-1500.0f, 2000.0f, 1500.0f));
-            this.player = new Player(this, "Player");
+            Vector3 cameraMove = new Vector3(-1500.0f, 2000.0f, 1500.0f);
+
+            this.player = new Player(this, "Player", new Vector3(-1500.0f, 0.0f, 5000.0f));
+            this.camera = new Camera(this, "Kamera", Vector3.Add(this.player.position, cameraMove));
+
+            this.player.cameraAngle = (float) (Math.Atan2(cameraMove.X, cameraMove.Z));
 
             this.player.AddChild(this.camera);
             this.camera.lookAtParent = this.player;
@@ -68,7 +72,7 @@ namespace HESOYAM_Production
             myModel = Content.Load<Model>("Cube");
             string parentDir = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName;
 
-            Scene scene = new Scene(this, "Scene01", parentDir + "/Content/walls32x32.bmp", myModel);
+            Scene scene = new Scene(this, "Scene01", parentDir + "/Content/walls16x16.bmp", myModel);
 
             testObjects = new Object3D(this, myModel, "ObjectName_");
             Components.Add(testObjects);
