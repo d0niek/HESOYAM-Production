@@ -3,12 +3,15 @@ using Microsoft.Xna.Framework;
 using System.Collections.Generic;
 using App.Collisions;
 using HESOYAM_Production;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace App
 {
 
-    public class GameObject : GameComponent, IGameElement, IGameObject
+    public class GameObject : DrawableGameComponent, IGameElement, IGameObject
     {
+        private Model model;
+
         protected Engine game;
 
         public string name { get; set; }
@@ -28,14 +31,34 @@ namespace App
         public GameObject(
             Engine game,
             string name,
-            Vector3 position = default(Vector3),
-            Vector3 rotation = default(Vector3)
-        ) : base(game)
+            Model model,
+            Vector3 position = default(Vector3), 
+            Vector3 rotation = default(Vector3), 
+            Vector3? scale = null) : base(game)
         {
             this.game = game;
             this.name = name;
+            this.model = model;
             this.position = position;
             this.rotation = rotation;
+            this.scale = scale ?? Vector3.One;
+            this.children = new Dictionary<string, IGameObject>();
+            this.colliders = new List<Collider>();
+        }
+
+        public GameObject(
+            Engine game,
+            string name,
+            Vector3 position = default(Vector3), 
+            Vector3 rotation = default(Vector3), 
+            Vector3? scale = null) : base(game)
+        {
+            this.game = game;
+            this.name = name;
+            this.model = null;
+            this.position = position;
+            this.rotation = rotation;
+            this.scale = scale ?? Vector3.One;
             this.children = new Dictionary<string, IGameObject>();
             this.colliders = new List<Collider>();
         }
@@ -71,8 +94,8 @@ namespace App
         public void RotateAroundParent(float x, float y, float z)
         {
             IGameElement par = this.parent as IGameElement;
-            float s = (float)Math.Sin(-y);
-            float c = (float)Math.Cos(y);
+            float s = (float) Math.Sin(-y);
+            float c = (float) Math.Cos(y);
 
             // translate point back to origin:
             this.position = this.position - par.position;
@@ -82,22 +105,22 @@ namespace App
             float znew = this.position.X * s + this.position.Z * c;
             float ynew = this.position.Y;
 
-            s = (float)Math.Sin(-x);
-            c = (float)Math.Cos(x);
-////
+            s = (float) Math.Sin(-x);
+            c = (float) Math.Cos(x);
+
             // rotate point
             znew = znew * c - this.position.Y * s;
             ynew = znew * s + this.position.Y * c;
-////
-            s = (float)Math.Sin(-z);
-            c = (float)Math.Cos(z);
-//
-////            // rotate point
+
+            s = (float) Math.Sin(-z);
+            c = (float) Math.Cos(z);
+
+            // rotate point
             ynew = ynew * c - xnew * s;
             xnew = ynew * s + xnew * c;
 
             // translate point back:
-            this.position = new Vector3(xnew,ynew,znew) + par.position;
+            this.position = new Vector3(xnew, ynew, znew) + par.position;
 
             this.Rotate(x, y, z);
         }
@@ -105,11 +128,11 @@ namespace App
         public void SetRotation(float x, float y, float z)
         {
             foreach (IGameElement child in children.Values) {
-                child.RotateAroundParent(-this.rotation.X,-this.rotation.Y, -this.rotation.Z);
-                child.RotateAroundParent(x,y,z);
+                child.RotateAroundParent(-this.rotation.X, -this.rotation.Y, -this.rotation.Z);
+                child.RotateAroundParent(x, y, z);
             }
 
-            this.rotation = new Vector3(x,y,z);
+            this.rotation = new Vector3(x, y, z);
         }
 
         public void Scale(float x, float y, float z)
@@ -136,7 +159,7 @@ namespace App
         public void AddChildrenToGame(bool recursively)
         {
             foreach (IGameComponent child in this.children.Values) {
-                game.AddComponent(child);
+                this.game.AddComponent(child);
 
                 if (recursively) {
                     IGameObject ch = child as IGameObject;
@@ -166,6 +189,36 @@ namespace App
         {
             colliders.Remove(collider);
             return collider;
+        }
+
+        public override void Draw(GameTime gameTime)
+        {
+            // Copy any parent transforms.
+            if (model != null) {
+                Matrix[] transforms = new Matrix[model.Bones.Count];
+                model.CopyAbsoluteBoneTransformsTo(transforms);
+
+                // Draw the model. A model can have multiple meshes, so loop.
+                foreach (ModelMesh mesh in model.Meshes) {
+                    // This is where the mesh orientation is set, as well 
+                    // as our camera and projection.
+                    foreach (BasicEffect effect in mesh.Effects) {
+                        effect.EnableDefaultLighting();
+                        effect.World = transforms[mesh.ParentBone.Index]
+                        * Matrix.CreateRotationY(this.rotation.Y)
+                        * Matrix.CreateRotationX(this.rotation.X)
+                        * Matrix.CreateRotationZ(this.rotation.Z)
+                        * Matrix.CreateScale(this.scale)
+                        * Matrix.CreateTranslation(this.position);
+                        effect.View = this.game.camera.ViewMatrix;
+                        effect.Projection = this.game.camera.ProjectionMatrix;
+                    }
+                    // Draw the mesh, using the effects set above.
+                    mesh.Draw();
+                }
+
+                base.Draw(gameTime);
+            }
         }
     }
 }

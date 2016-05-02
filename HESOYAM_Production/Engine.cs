@@ -3,7 +3,6 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using App.Render;
 using App;
 using System.IO;
 
@@ -26,7 +25,7 @@ namespace HESOYAM_Production
 
         //TODO: to remove
         Model myModel;
-        Object3D testObjects;
+        GameObject testObjects;
 
         public Engine()
         {
@@ -45,7 +44,7 @@ namespace HESOYAM_Production
         protected override void Initialize()
         {
             this.IsMouseVisible = true;
-            this.graphics.IsFullScreen = true;
+            this.graphics.IsFullScreen = false;
             base.Initialize();
         }
 
@@ -74,7 +73,7 @@ namespace HESOYAM_Production
 
             Scene scene = new Scene(this, "Scene01", parentDir + "/Content/walls16x16.bmp", myModel);
 
-            testObjects = new Object3D(this, myModel, "ObjectName_");
+            testObjects = new GameObject(this, "ObjectName_", myModel);
             Components.Add(testObjects);
 
             player.AddChild(testObjects);

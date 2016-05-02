@@ -1,5 +1,4 @@
-﻿using System;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 
 namespace App
 {
@@ -14,8 +13,6 @@ namespace App
 
         Vector3 scale { get; set; }
 
-        void Scale(float x, float y, float z);
-
         void Move(float x, float y, float z);
 
         void Rotate(float x, float y, float z);
@@ -23,6 +20,8 @@ namespace App
         void RotateAroundParent(float x, float y, float z);
 
         void SetRotation(float x, float y, float z);
+
+        void Scale(float x, float y, float z);
 
         bool Collision(IGameElement collider);
     }

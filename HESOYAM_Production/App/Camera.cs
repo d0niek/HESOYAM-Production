@@ -93,6 +93,10 @@ namespace App
             this.cameraLookAt = Vector3.Add(this.position, newLookAt);
         }
 
+        public override void Draw(GameTime gameTime)
+        {
+        }
+
         private bool isMouseCloseToLeftBorder(Vector2 mousePosition)
         {
             return mousePosition.X >= 0 && mousePosition.X < borderWidth;
