@@ -73,10 +73,6 @@ namespace App
             }
         }
 
-        public override void Draw(GameTime gameTime)
-        {
-        }
-
         private float getAngleFromMouse(InputState input)
         {
             float angle = this.rotation.Y;

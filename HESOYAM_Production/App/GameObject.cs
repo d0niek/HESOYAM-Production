@@ -193,31 +193,35 @@ namespace App
 
         public override void Draw(GameTime gameTime)
         {
-            // Copy any parent transforms.
-            if (model != null) {
-                Matrix[] transforms = new Matrix[model.Bones.Count];
-                model.CopyAbsoluteBoneTransformsTo(transforms);
+            if (this.model != null) {
+                this.DrawModel(this.model);
+            }
+        }
 
-                // Draw the model. A model can have multiple meshes, so loop.
-                foreach (ModelMesh mesh in model.Meshes) {
-                    // This is where the mesh orientation is set, as well 
-                    // as our camera and projection.
-                    foreach (BasicEffect effect in mesh.Effects) {
-                        effect.EnableDefaultLighting();
-                        effect.World = transforms[mesh.ParentBone.Index]
-                        * Matrix.CreateRotationY(this.rotation.Y)
-                        * Matrix.CreateRotationX(this.rotation.X)
-                        * Matrix.CreateRotationZ(this.rotation.Z)
-                        * Matrix.CreateScale(this.scale)
-                        * Matrix.CreateTranslation(this.position);
-                        effect.View = this.game.camera.ViewMatrix;
-                        effect.Projection = this.game.camera.ProjectionMatrix;
-                    }
-                    // Draw the mesh, using the effects set above.
-                    mesh.Draw();
+        private void DrawModel(Model model)
+        {
+            // Copy any parent transforms.
+            Matrix[] transforms = new Matrix[model.Bones.Count];
+            model.CopyAbsoluteBoneTransformsTo(transforms);
+
+            // Draw the model. A model can have multiple meshes, so loop.
+            foreach (ModelMesh mesh in model.Meshes) {
+                // This is where the mesh orientation is set, as well
+                // as our camera and projection.
+                foreach (BasicEffect effect in mesh.Effects) {
+                    effect.EnableDefaultLighting();
+                    effect.World = transforms[mesh.ParentBone.Index]
+                    * Matrix.CreateRotationY(this.rotation.Y)
+                    * Matrix.CreateRotationX(this.rotation.X)
+                    * Matrix.CreateRotationZ(this.rotation.Z)
+                    * Matrix.CreateScale(this.scale)
+                    * Matrix.CreateTranslation(this.position);
+                    effect.View = this.game.camera.ViewMatrix;
+                    effect.Projection = this.game.camera.ProjectionMatrix;
                 }
 
-                base.Draw(gameTime);
+                // Draw the mesh, using the effects set above.
+                mesh.Draw();
             }
         }
     }

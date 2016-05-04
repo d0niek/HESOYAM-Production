@@ -81,7 +81,6 @@
   <Import Project="$(MSBuildExtensionsPath)\MonoGame\v3.0\MonoGame.Content.Builder.targets" />
   <ItemGroup>
     <Folder Include="App\" />
-    <Folder Include="App\Render\" />
     <Folder Include="App\Collisions\" />
   </ItemGroup>
 </Project>

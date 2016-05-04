@@ -44,10 +44,5 @@ namespace App
             this.AddChild(floor);
             this.AddChildrenToGame(true);
         }
-
-        public override void Draw(GameTime gameTime)
-        {
-        }
     }
 }
-
