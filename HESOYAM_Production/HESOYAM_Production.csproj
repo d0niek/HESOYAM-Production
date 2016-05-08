@@ -58,6 +58,7 @@
     <Compile Include="App\InputState.cs" />
     <Compile Include="App\Player.cs" />
     <Compile Include="App\Scene.cs" />
+    <Compile Include="App\Util\Mouse.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Icon.png" />
@@ -82,5 +83,6 @@
   <ItemGroup>
     <Folder Include="App\" />
     <Folder Include="App\Collisions\" />
+    <Folder Include="App\Util\" />
   </ItemGroup>
 </Project>

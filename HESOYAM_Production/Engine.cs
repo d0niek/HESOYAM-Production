@@ -6,7 +6,6 @@ using Microsoft.Xna.Framework.Input;
 using App;
 using System.IO;
 
-
 namespace HESOYAM_Production
 {
 
@@ -30,8 +29,8 @@ namespace HESOYAM_Production
         public Engine()
         {
             graphics = new GraphicsDeviceManager(this);
+
             Content.RootDirectory = "Content";
-            this.inputState = new InputState();
             this.playMode = true;
         }
 
@@ -56,6 +55,8 @@ namespace HESOYAM_Production
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
+
+            this.inputState = new InputState(this.GraphicsDevice);
 
             Vector3 cameraMove = new Vector3(-1500.0f, 2000.0f, 1500.0f);
 
@@ -138,16 +139,6 @@ namespace HESOYAM_Production
         public GraphicsDeviceManager Graphics()
         {
             return this.graphics;
-        }
-
-        public bool isMouseInGameWindow()
-        {
-            bool leftBorder = this.inputState.CurrentMouseState.X >= 0;
-            bool topBorder = this.inputState.CurrentMouseState.Y >= 0;
-            bool rightBorder = this.inputState.CurrentMouseState.X <= this.GraphicsDevice.Viewport.Width;
-            bool bottomBorder = this.inputState.CurrentMouseState.Y <= this.GraphicsDevice.Viewport.Height;
-
-            return leftBorder && topBorder && rightBorder && bottomBorder;
         }
     }
 }

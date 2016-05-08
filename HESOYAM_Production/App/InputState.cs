@@ -2,6 +2,7 @@
 
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace App
 {
@@ -23,7 +24,7 @@ namespace App
         public readonly GamePadState[] LastGamePadStates;
         public readonly KeyboardState[] LastKeyboardStates;
 
-        public InputState()
+        public InputState(GraphicsDevice GraphicsDevice)
         {
             CurrentKeyboardStates = new KeyboardState[MaxInputs];
             CurrentGamePadStates = new GamePadState[MaxInputs];
@@ -31,18 +32,12 @@ namespace App
             LastKeyboardStates = new KeyboardState[MaxInputs];
             LastGamePadStates = new GamePadState[MaxInputs];
 
-            CurrentMouseState = new MouseState();
-            LastMouseState = new MouseState();
+            Mouse = new App.Util.Mouse(GraphicsDevice);
 
             GamePadWasConnected = new bool[MaxInputs];
         }
 
-        public MouseState CurrentMouseState {
-            get;
-            private set;
-        }
-
-        public MouseState LastMouseState {
+        public App.Util.Mouse Mouse {
             get;
             private set;
         }
@@ -66,38 +61,37 @@ namespace App
                 }
             }
 
-            LastMouseState = CurrentMouseState;
-            CurrentMouseState = Mouse.GetState();
+            Mouse.Update();
         }
 
         public bool IsNewLeftMouseClick(out MouseState mouseState)
         {
-            mouseState = CurrentMouseState;
-            return (CurrentMouseState.LeftButton == ButtonState.Released && LastMouseState.LeftButton == ButtonState.Pressed);
+            mouseState = Mouse.CurrentMouseState;
+            return (Mouse.CurrentMouseState.LeftButton == ButtonState.Released && Mouse.LastMouseState.LeftButton == ButtonState.Pressed);
         }
 
         public bool IsNewRightMouseClick(out MouseState mouseState)
         {
-            mouseState = CurrentMouseState;
-            return (CurrentMouseState.RightButton == ButtonState.Released && LastMouseState.RightButton == ButtonState.Pressed);
+            mouseState = Mouse.CurrentMouseState;
+            return (Mouse.CurrentMouseState.RightButton == ButtonState.Released && Mouse.LastMouseState.RightButton == ButtonState.Pressed);
         }
 
         public bool IsNewThirdMouseClick(out MouseState mouseState)
         {
-            mouseState = CurrentMouseState;
-            return (CurrentMouseState.MiddleButton == ButtonState.Pressed && LastMouseState.MiddleButton == ButtonState.Released);
+            mouseState = Mouse.CurrentMouseState;
+            return (Mouse.CurrentMouseState.MiddleButton == ButtonState.Pressed && Mouse.LastMouseState.MiddleButton == ButtonState.Released);
         }
 
         public bool IsNewMouseScrollUp(out MouseState mouseState)
         {
-            mouseState = CurrentMouseState;
-            return (CurrentMouseState.ScrollWheelValue > LastMouseState.ScrollWheelValue);
+            mouseState = Mouse.CurrentMouseState;
+            return (Mouse.CurrentMouseState.ScrollWheelValue > Mouse.LastMouseState.ScrollWheelValue);
         }
 
         public bool IsNewMouseScrollDown(out MouseState mouseState)
         {
-            mouseState = CurrentMouseState;
-            return (CurrentMouseState.ScrollWheelValue < LastMouseState.ScrollWheelValue);
+            mouseState = Mouse.CurrentMouseState;
+            return (Mouse.CurrentMouseState.ScrollWheelValue < Mouse.LastMouseState.ScrollWheelValue);
         }
 
         /// <summary>
@@ -117,8 +111,14 @@ namespace App
                 return (CurrentKeyboardStates[i].IsKeyDown(key) && LastKeyboardStates[i].IsKeyUp(key));
             } else {
                 // Accept input from any player.
-                return (IsNewKeyPress(key, PlayerIndex.One, out playerIndex) || IsNewKeyPress(key, PlayerIndex.Two, out playerIndex )
-                    || IsNewKeyPress( key, PlayerIndex.Three, out playerIndex ) || IsNewKeyPress( key, PlayerIndex.Four, out playerIndex ) );
+                return (IsNewKeyPress(key, PlayerIndex.One, out playerIndex) || IsNewKeyPress(
+                    key,
+                    PlayerIndex.Two,
+                    out playerIndex)
+                || IsNewKeyPress(key, PlayerIndex.Three, out playerIndex) || IsNewKeyPress(
+                    key,
+                    PlayerIndex.Four,
+                    out playerIndex ));
             }
         }
 
@@ -128,21 +128,18 @@ namespace App
         ///    If this is null, it will accept input from any player. When a button press
         ///    is detected, the output playerIndex reports which player pressed it.
         /// </summary>
-        public bool IsNewButtonPress( Buttons button, PlayerIndex? controllingPlayer, out PlayerIndex playerIndex )
+        public bool IsNewButtonPress(Buttons button, PlayerIndex? controllingPlayer, out PlayerIndex playerIndex)
         {
-            if ( controllingPlayer.HasValue )
-            {
+            if (controllingPlayer.HasValue) {
                 // Read input from the specified player.
                 playerIndex = controllingPlayer.Value;
 
                 var i = (int) playerIndex;
 
-                return ( CurrentGamePadStates[i].IsButtonDown( button ) && LastGamePadStates[i].IsButtonUp( button ) );
-            }
-            else
-            {
+                return (CurrentGamePadStates[i].IsButtonDown(button) && LastGamePadStates[i].IsButtonUp(button));
+            } else {
                 // Accept input from any player.
-                return ( IsNewButtonPress( button, PlayerIndex.One, out playerIndex ) || IsNewButtonPress( button, PlayerIndex.Two, out playerIndex )
+                return (IsNewButtonPress(button, PlayerIndex.One, out playerIndex) || IsNewButtonPress(button, PlayerIndex.Two, out playerIndex )
                     || IsNewButtonPress( button, PlayerIndex.Three, out playerIndex ) || IsNewButtonPress( button, PlayerIndex.Four, out playerIndex ) );
             }
         }
