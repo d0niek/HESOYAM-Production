@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using App;
+using App.Collisions;
 using System.IO;
 
 namespace HESOYAM_Production
@@ -60,7 +61,8 @@ namespace HESOYAM_Production
 
             Vector3 cameraMove = new Vector3(-1500.0f, 2000.0f, 1500.0f);
 
-            this.player = new Player(this, "Player", new Vector3(-1500.0f, 0.0f, 5000.0f));
+            this.player = new Player(this, "Player", new Vector3(1000.0f, 0.0f, 1000.0f));
+            player.AddCollider("main", new Collider(this, new Vector3(1000.0f, 0.0f, 1000.0f), default(Vector3), new Vector3(200.0f, 0.0f, 200.0f)));
             this.camera = new Camera(this, "Kamera", Vector3.Add(this.player.position, cameraMove));
 
             this.player.cameraAngle = (float) (Math.Atan2(cameraMove.X, cameraMove.Z));
@@ -72,10 +74,11 @@ namespace HESOYAM_Production
             myModel = Content.Load<Model>("Cube");
             string parentDir = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName;
 
-            Scene scene = new Scene(this, "Scene01", parentDir + "/Content/walls16x16.bmp", myModel);
+            Scene scene = new Scene(this, "Scene01", parentDir + "/Content/walls64x64.bmp", myModel);
 
             testObjects = new GameObject(this, "ObjectName_", myModel);
             Components.Add(testObjects);
+            Components.Add(this.player.colliders["main"]);
 
             player.AddChild(testObjects);
             testObjects.position = this.player.position;

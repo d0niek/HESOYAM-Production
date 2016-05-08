@@ -15,8 +15,8 @@ namespace App
             Engine game,
             string name,
             Vector3 position = default(Vector3),
-            Vector3 rotaion = default(Vector3)
-        ) : base(game, name, position, rotaion)
+            Vector3 rotation = default(Vector3)
+        ) : base(game, name, position, rotation)
         {
         }
 
@@ -59,7 +59,7 @@ namespace App
                 child.Move(x, y, z);
             }
 
-            foreach (Collider collider in colliders) {
+            foreach (Collider collider in colliders.Values) {
                 collider.Move(x, y, z);
             }
         }

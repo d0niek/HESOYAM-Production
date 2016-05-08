@@ -36,7 +36,7 @@ namespace App
                                    game,
                                    "Floor",
                                    wall,
-                                   new Vector3((float) bmp.Height * 100f, -400f, (float) bmp.Width * 100f),
+                                   new Vector3((float) bmp.Height * 100f - 200f, -400f, (float) bmp.Width * 100f),
                                    Vector3.Zero,
                                    new Vector3((float) bmp.Height, 0.1f, (float) bmp.Width)
                                );

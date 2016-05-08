@@ -24,6 +24,7 @@ namespace HESOYAM_Production
     #endif
     {
 		private static Engine game;
+        public static bool debugMode = true;
 
 		internal static void RunGame ()
 		{

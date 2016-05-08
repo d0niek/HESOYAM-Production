@@ -1,4 +1,5 @@
 ﻿using App.Collisions;
+using System;
 using System.Collections.Generic;
 
 namespace App
@@ -10,7 +11,7 @@ namespace App
 
         Dictionary<string, IGameObject> children { get; set; }
 
-        List<Collider> colliders { get; set; }
+        Dictionary<String, Collider> colliders { get; set; }
 
         void AddChild(IGameObject component);
 
@@ -20,8 +21,8 @@ namespace App
 
         void AddChildrenToGame(bool recursively);
 
-        void AddCollider(Collider colider);
+        void AddCollider(String name, Collider colider);
 
-        Collider RemoveCollider(Collider colider);
+        Collider RemoveCollider(String name);
     }
 }
