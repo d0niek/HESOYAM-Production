@@ -51,7 +51,7 @@ namespace App
                 LastKeyboardStates[i] = CurrentKeyboardStates[i];
                 LastGamePadStates[i] = CurrentGamePadStates[i];
 
-                CurrentKeyboardStates[i] = Keyboard.GetState((PlayerIndex) i);
+                CurrentKeyboardStates[i] = Keyboard.GetState();
                 CurrentGamePadStates[i] = GamePad.GetState((PlayerIndex) i);
 
                 // Keep track of whether a gamepad has ever been
@@ -118,7 +118,7 @@ namespace App
                 || IsNewKeyPress(key, PlayerIndex.Three, out playerIndex) || IsNewKeyPress(
                     key,
                     PlayerIndex.Four,
-                    out playerIndex ));
+                    out playerIndex));
             }
         }
 
@@ -139,8 +139,11 @@ namespace App
                 return (CurrentGamePadStates[i].IsButtonDown(button) && LastGamePadStates[i].IsButtonUp(button));
             } else {
                 // Accept input from any player.
-                return (IsNewButtonPress(button, PlayerIndex.One, out playerIndex) || IsNewButtonPress(button, PlayerIndex.Two, out playerIndex )
-                    || IsNewButtonPress( button, PlayerIndex.Three, out playerIndex ) || IsNewButtonPress( button, PlayerIndex.Four, out playerIndex ) );
+                return (IsNewButtonPress(button, PlayerIndex.One, out playerIndex) || IsNewButtonPress(
+                    button,
+                    PlayerIndex.Two,
+                    out playerIndex )
+                || IsNewButtonPress(button, PlayerIndex.Three, out playerIndex) || IsNewButtonPress(button, PlayerIndex.Four, out playerIndex ) );
             }
         }
 
