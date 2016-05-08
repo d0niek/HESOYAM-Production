@@ -104,7 +104,7 @@ namespace HESOYAM_Production
                 this.player.update(gameTime, this.inputState);
             }
 
-            this.camera.update(this.inputState, GraphicsDevice.Viewport.AspectRatio);
+            this.camera.update(this.inputState);
 
             // For Mobile devices, this logic will close the Game when the Back button is pressed
             // Exit() is obsolete on iOS

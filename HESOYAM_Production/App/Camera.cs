@@ -31,7 +31,7 @@ namespace App
             this.playModePosition = this.position;
         }
 
-        public void update(InputState input, float aspectRatio)
+        public void update(InputState input)
         {
             if (!this.game.playMode) {
                 if (input.Mouse.isInGameWindow()) {
@@ -45,7 +45,7 @@ namespace App
             this.ViewMatrix = Matrix.CreateLookAt(this.position, this.cameraLookAt, Vector3.Up);
             this.ProjectionMatrix = Matrix.CreatePerspectiveFieldOfView(
                 MathHelper.ToRadians(45.0f),
-                aspectRatio,
+                this.GraphicsDevice.Viewport.AspectRatio,
                 1.0f,
                 10000.0f
             );
