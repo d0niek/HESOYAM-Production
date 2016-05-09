@@ -156,15 +156,31 @@ namespace App
             children.Add(component.name, component);
         }
 
-        public void AddChildrenToGame(bool recursively)
+        public void AddChildrenToGame(bool recursively, bool withColliders)
         {
-            foreach (IGameComponent child in this.children.Values) {
+            if(withColliders)
+            {
+                foreach(Collider collider in this.colliders.Values)
+                {
+                    game.AddComponent(collider);
+                }
+            }
+            foreach (IGameComponent child in this.children.Values)
+            {
                 this.game.AddComponent(child);
 
                 if (recursively) {
                     IGameObject ch = child as IGameObject;
-                    ch.AddChildrenToGame(true);
+                    ch.AddChildrenToGame(true, withColliders);
                 }
+            }
+        }
+
+        public void AddCollidersToGame()
+        {
+            foreach(Collider collider in this.colliders.Values)
+            {
+                game.AddComponent(collider);
             }
         }
 

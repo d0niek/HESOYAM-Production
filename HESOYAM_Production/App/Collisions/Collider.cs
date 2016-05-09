@@ -2,13 +2,32 @@
 using HESOYAM_Production;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using HESOYAM_Production.App.Collisions;
 
 namespace App.Collisions
 {
-
     public class Collider : DrawableGameComponent, IGameElement
     {
+        VertexPositionColor[] verts = new VertexPositionColor[8];
+        static short[] indices = new short[]
+        {
+        0, 1,
+        1, 2,
+        2, 3,
+        3, 0,
+        0, 4,
+        1, 5,
+        2, 6,
+        3, 7,
+        4, 5,
+        5, 6,
+        6, 7,
+        7, 4,
+        };
+        BasicEffect effect;
+
         public IGameObject parent { get; set; }
+        public Color drawColor = Color.GreenYellow;
         private BoundingBox box;
         private Engine game;
 
@@ -25,10 +44,10 @@ namespace App.Collisions
             this.game = game;
         }
 
-        public Collider(Engine game, Vector3 position, Vector3 rotation, Vector3 scale) : base(game)
+        public Collider(Engine game, Vector3 position, Vector3 size, Vector3 rotation) : base(game)
         {
-            Vector3 min = Vector3.Subtract(position, Vector3.Multiply(scale, 0.5f));
-            Vector3 max = Vector3.Add(position, Vector3.Multiply(scale, 0.5f));
+            Vector3 min = Vector3.Subtract(position, Vector3.Multiply(size, 0.5f));
+            Vector3 max = Vector3.Add(position, Vector3.Multiply(size, 0.5f));
             Setup(game, min, max);
         }
 
@@ -72,35 +91,13 @@ namespace App.Collisions
         {
             if(Program.debugMode)
             {
-                BasicEffect effect = new BasicEffect(GraphicsDevice);
-                effect.LightingEnabled = false;
-                effect.View = this.game.camera.ViewMatrix;
-                effect.Projection = this.game.camera.ProjectionMatrix;
-                effect.CurrentTechnique.Passes[0].Apply();
-                Vector3[] boxVertices = box.GetCorners();
-                var drawVertices = new[]
-                {
-                    new VertexPositionColor(boxVertices[0], Color.White),
-                    new VertexPositionColor(boxVertices[1], Color.White),
-                    new VertexPositionColor(boxVertices[1], Color.White),
-                    new VertexPositionColor(boxVertices[2], Color.White),
-                    new VertexPositionColor(boxVertices[2], Color.White),
-                    new VertexPositionColor(boxVertices[3], Color.White)
-                };
-                short[] lineListIndices = new short[(6 * 2) - 2];
-                for(int i = 0; i < 6 - 1; i++)
-                {
-                    lineListIndices[i * 2] = (short)(i);
-                    lineListIndices[(i * 2) + 1] = (short)(i + 1);
-                }
-
-                GraphicsDevice.DrawUserIndexedPrimitives<VertexPositionColor>(PrimitiveType.LineList, drawVertices, 0, 6, lineListIndices, 0, 3);
+                BoundingBoxRenderer.Render(box, GraphicsDevice, this.game.camera.ViewMatrix, this.game.camera.ProjectionMatrix, drawColor);
             }
         }
 
-        public bool Collision(IGameElement collider)
+        public bool CollidesWith(Collider other)
         {
-            throw new NotImplementedException();
+            return box.Intersects(other.box);
         }
     }
 }

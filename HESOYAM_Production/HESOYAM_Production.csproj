@@ -47,6 +47,7 @@
     <Reference Include="System.Drawing" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="App\Collisions\BoundingBoxRenderer.cs" />
     <Compile Include="App\Collisions\Collider.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

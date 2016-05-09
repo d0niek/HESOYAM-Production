@@ -19,7 +19,9 @@ namespace App
 
         IGameObject RemoveChild(string childName);
 
-        void AddChildrenToGame(bool recursively);
+        void AddChildrenToGame(bool recursively, bool withColliders);
+
+        void AddCollidersToGame();
 
         void AddCollider(String name, Collider colider);
 

@@ -2,7 +2,7 @@
 using System.Drawing;
 using Microsoft.Xna.Framework.Graphics;
 using HESOYAM_Production;
-using System.Diagnostics;
+using App.Collisions;
 
 namespace App
 {
@@ -27,6 +27,7 @@ namespace App
                                                   Vector3.Zero,
                                                   new Vector3(1f, 4f, 1f)
                                               );
+                        newChild.AddCollider("main", new Collider(game, newChild.position, new Vector3(200f, 800f, 200f), Vector3.Zero));
                         this.children["Walls"].AddChild(newChild);
                     }
                 }
@@ -42,7 +43,7 @@ namespace App
                                );
 
             this.AddChild(floor);
-            this.AddChildrenToGame(true);
+            this.AddChildrenToGame(true, true);
         }
     }
 }
