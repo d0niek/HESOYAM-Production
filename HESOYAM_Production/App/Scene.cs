@@ -2,6 +2,7 @@
 using System.Drawing;
 using Microsoft.Xna.Framework.Graphics;
 using HESOYAM_Production;
+using System;
 
 namespace App
 {
@@ -53,10 +54,10 @@ namespace App
         {
             if (color.R == 0 && color.G == 0 && color.B == 0) {
                 this.buildWall(this.wall, pos);
-            } else if (color.R == 255 && color.G == 0 && color.B == 0) {
-                this.buildWindow(this.window, pos);
-            } else if (color.R == 0 && color.G == 255 && color.B == 0) {
-                this.buildDoor(this.door, pos);
+            } else if (color.R == 255 && color.B == 0) {
+                this.buildWindow(this.window, pos, (int) color.G);
+            } else if (color.R == 0 && color.G == 255) {
+                this.buildDoor(this.door, pos, (int) color.B);
             }
         }
 
@@ -67,27 +68,28 @@ namespace App
             this.children["Walls"].AddChild(wall);
         }
 
-        private void buildWindow(Model model, Vector2 pos)
+        private void buildWindow(Model model, Vector2 pos, int rotationY)
         {
-            GameObject window = this.buildObject(model, pos, "Window_");
+            GameObject window = this.buildObject(model, pos, "Window_", rotationY);
 
             this.children["Windows"].AddChild(window);
         }
 
-        private void buildDoor(Model model, Vector2 pos)
+        private void buildDoor(Model model, Vector2 pos, int rotationY)
         {
-            GameObject door = this.buildObject(model, pos, "Door_");
+            GameObject door = this.buildObject(model, pos, "Door_", rotationY);
 
             this.children["Doors"].AddChild(door);
         }
 
-        private GameObject buildObject(Model model, Vector2 pos, string prefix = "Object_")
+        private GameObject buildObject(Model model, Vector2 pos, string prefix = "Object_", int rotationY = 0)
         {
             GameObject gameObject = new GameObject(
                                         game,
                                         prefix + pos.X + "x" + pos.Y,
                                         model,
-                                        new Vector3(pos.X * WallShift, 0f, pos.Y * WallShift)
+                                        new Vector3(pos.X * WallShift, 0f, pos.Y * WallShift),
+                                        new Vector3(0f, (float) (rotationY * Math.PI / 2), 0f)
                                     );
 
             return gameObject;
