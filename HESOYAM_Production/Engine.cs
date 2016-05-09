@@ -22,10 +22,6 @@ namespace HESOYAM_Production
         public Player player;
         public bool playMode;
 
-        //TODO: to remove
-        Model myModel;
-        GameObject testObjects;
-
         public Engine()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -69,12 +65,13 @@ namespace HESOYAM_Production
             this.camera.lookAtParent = this.player;
 
             //TODO: use this.Content to load your game content here
-            myModel = Content.Load<Model>("Cube");
             string parentDir = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName;
 
-            Scene scene = new Scene(this, "Scene01", parentDir + "/Content/walls16x16.bmp", myModel);
+            Model wall = Content.Load<Model>("Models/sciana");
+            Scene scene = new Scene(this, "Scene01", parentDir + "/Content/Map/walls32x32.bmp", wall);
 
-            testObjects = new GameObject(this, "ObjectName_", myModel);
+            Model wheelchair = Content.Load<Model>("Models/wozek");
+            GameObject testObjects = new GameObject(this, "ObjectName_", wheelchair);
             Components.Add(testObjects);
 
             player.AddChild(testObjects);

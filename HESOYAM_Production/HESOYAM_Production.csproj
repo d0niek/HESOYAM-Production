@@ -90,6 +90,8 @@
     <None Include="Content\Models\tv.FBX" />
     <None Include="Content\Models\wazon.FBX" />
     <None Include="Content\Models\wozek.FBX" />
+    <None Include="Content\Map\walls16x16.bmp" />
+    <None Include="Content\Map\walls32x32.bmp" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Icon.ico" />
@@ -101,10 +103,6 @@
     <Content Include="OpenTK.dll.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Cube.xnb">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Content\walls16x16.bmp" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\MonoGame\v3.0\MonoGame.Content.Builder.targets" />
@@ -113,5 +111,6 @@
     <Folder Include="App\Collisions\" />
     <Folder Include="App\Util\" />
     <Folder Include="Content\Models\" />
+    <Folder Include="Content\Map\" />
   </ItemGroup>
 </Project>
