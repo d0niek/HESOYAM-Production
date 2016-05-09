@@ -62,6 +62,34 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Icon.png" />
+    <None Include="Content\Models\biurko.FBX" />
+    <None Include="Content\Models\butla_z_gazem.FBX" />
+    <None Include="Content\Models\deska.FBX" />
+    <None Include="Content\Models\drzwi.FBX" />
+    <None Include="Content\Models\fiolka.FBX" />
+    <None Include="Content\Models\gramofon.FBX" />
+    <None Include="Content\Models\kanapa1.FBX" />
+    <None Include="Content\Models\kanapa2.FBX" />
+    <None Include="Content\Models\klatka.FBX" />
+    <None Include="Content\Models\krzeslo.FBX" />
+    <None Include="Content\Models\lampa.FBX" />
+    <None Include="Content\Models\leki.FBX" />
+    <None Include="Content\Models\lozko.FBX" />
+    <None Include="Content\Models\mlotek.FBX" />
+    <None Include="Content\Models\okno.FBX" />
+    <None Include="Content\Models\palka.FBX" />
+    <None Include="Content\Models\poduszka.FBX" />
+    <None Include="Content\Models\ramka.FBX" />
+    <None Include="Content\Models\sciana.FBX" />
+    <None Include="Content\Models\skalpel.FBX" />
+    <None Include="Content\Models\stolik.FBX" />
+    <None Include="Content\Models\strzykawka.FBX" />
+    <None Include="Content\Models\szafka.FBX" />
+    <None Include="Content\Models\tabletka.FBX" />
+    <None Include="Content\Models\taser.FBX" />
+    <None Include="Content\Models\tv.FBX" />
+    <None Include="Content\Models\wazon.FBX" />
+    <None Include="Content\Models\wozek.FBX" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Icon.ico" />
@@ -84,5 +112,6 @@
     <Folder Include="App\" />
     <Folder Include="App\Collisions\" />
     <Folder Include="App\Util\" />
+    <Folder Include="Content\Models\" />
   </ItemGroup>
 </Project>
