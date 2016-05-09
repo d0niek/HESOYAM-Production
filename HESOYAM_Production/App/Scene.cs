@@ -23,8 +23,8 @@ namespace App
 
         private void buildMap(Bitmap bmp, Model model)
         {
-            for (int i = 0; i < bmp.Height; i++) {
-                for (int j = 0; j < bmp.Width; j++) {
+            for (int i = 0; i < bmp.Width; i++) {
+                for (int j = 0; j < bmp.Height; j++) {
                     System.Drawing.Color color = bmp.GetPixel(i, j);
 
                     this.buildMapObject(color, model, i, j);
@@ -55,8 +55,8 @@ namespace App
         {
             int modelWidth = 50;
 
-            float positionX = Height * Shift / 2 - modelWidth;
-            float positionZ = Width * Shift / 2 - modelWidth;
+            float positionX = Width * Shift / 2 - modelWidth;
+            float positionZ = Height * Shift / 2 - modelWidth;
 
             GameObject floor = new GameObject(
                                    this.game,
@@ -64,7 +64,7 @@ namespace App
                                    model,
                                    new Vector3(positionX, 0f, positionZ),
                                    Vector3.Zero,
-                                   new Vector3((float) Height, 0f, (float) Width)
+                                   new Vector3((float) Width, 0f, (float) Height)
                                );
 
             this.AddChild(floor);
