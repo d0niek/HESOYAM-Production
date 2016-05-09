@@ -6,8 +6,6 @@ namespace App
 
     public class Camera : GameObject
     {
-        private const int borderWidth = 100;
-
         public Vector3 playModePosition;
 
         public Vector3 cameraLookAt;
