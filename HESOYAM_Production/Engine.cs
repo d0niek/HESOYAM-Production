@@ -68,7 +68,16 @@ namespace HESOYAM_Production
             string parentDir = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName;
 
             Model wall = Content.Load<Model>("Models/sciana");
-            Scene scene = new Scene(this, "Scene01", parentDir + "/Content/Map/walls32x32.bmp", wall);
+            Model door = Content.Load<Model>("Models/drzwi");
+            Model window = Content.Load<Model>("Models/okno");
+            Scene scene = new Scene(
+                              this,
+                              "Scene01",
+                              parentDir + "/Content/Map/walls32x32.bmp",
+                              wall,
+                              door,
+                              window
+                          );
 
             Model wheelchair = Content.Load<Model>("Models/wozek");
             GameObject testObjects = new GameObject(this, "ObjectName_", wheelchair);
