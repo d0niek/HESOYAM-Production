@@ -39,53 +39,26 @@ namespace App
 
             this.Rotate(0, angle, 0);
 
-            Matrix rotationMatrixY = Matrix.CreateRotationY(this.rotation.Y + cameraAngle);
-            PlayerIndex playerIndex;
-            Vector3 vector = Vector3.Zero;
+            Vector3 vector = this.movePlayer(input);
 
-            if (input.IsKeyPressed(Keys.W, PlayerIndex.One, out playerIndex)) {
-                vector.Z = -10;
-            }
-
-            if (input.IsKeyPressed(Keys.S, PlayerIndex.One, out playerIndex)) {
-                vector.Z = 10;
-            }
-
-            if (input.IsKeyPressed(Keys.A, PlayerIndex.One, out playerIndex)) {
-                vector.X = -10;
-            }
-
-            if (input.IsKeyPressed(Keys.D, PlayerIndex.One, out playerIndex)) {
-                vector.X = 10;
-            }
-
-            vector = Vector3.Transform(vector, rotationMatrixY);
-
-            foreach(Collider collider in colliders.Values)
-            {
+            foreach (Collider collider in colliders.Values) {
                 collider.drawColor = Color.GreenYellow;
             }
-            foreach(IGameObject wall in game.scene.children["Walls"].children.Values)
-            {
-                foreach(Collider collider in wall.colliders.Values)
-                {
-                    if(this.colliders["right"].CollidesWith(collider))
-                    {
+            foreach (IGameObject wall in game.scene.children["Walls"].children.Values) {
+                foreach (Collider collider in wall.colliders.Values) {
+                    if (this.colliders["right"].CollidesWith(collider)) {
                         this.colliders["right"].drawColor = Color.OrangeRed;
                         vector.Z = (vector.Z > 0 ? 0 : vector.Z);
                     }
-                    if(this.colliders["left"].CollidesWith(collider))
-                    {
+                    if (this.colliders["left"].CollidesWith(collider)) {
                         this.colliders["left"].drawColor = Color.OrangeRed;
                         vector.Z = (vector.Z < 0 ? 0 : vector.Z);
                     }
-                    if(this.colliders["front"].CollidesWith(collider))
-                    {
+                    if (this.colliders["front"].CollidesWith(collider)) {
                         this.colliders["front"].drawColor = Color.OrangeRed;
                         vector.X = (vector.X > 0 ? 0 : vector.X);
                     }
-                    if(this.colliders["back"].CollidesWith(collider))
-                    {
+                    if (this.colliders["back"].CollidesWith(collider)) {
                         this.colliders["back"].drawColor = Color.OrangeRed;
                         vector.X = (vector.X < 0 ? 0 : vector.X);
                     }
@@ -132,6 +105,33 @@ namespace App
             }
 
             return angle;
+        }
+
+        private Vector3 movePlayer(InputState input)
+        {
+            Matrix rotationMatrixY = Matrix.CreateRotationY(this.rotation.Y + cameraAngle);
+            PlayerIndex playerIndex;
+            Vector3 vector = Vector3.Zero;
+
+            if (input.IsKeyPressed(Keys.W, PlayerIndex.One, out playerIndex)) {
+                vector.Z = -10;
+            }
+
+            if (input.IsKeyPressed(Keys.S, PlayerIndex.One, out playerIndex)) {
+                vector.Z = 10;
+            }
+
+            if (input.IsKeyPressed(Keys.A, PlayerIndex.One, out playerIndex)) {
+                vector.X = -10;
+            }
+
+            if (input.IsKeyPressed(Keys.D, PlayerIndex.One, out playerIndex)) {
+                vector.X = 10;
+            }
+
+            vector = Vector3.Transform(vector, rotationMatrixY);
+
+            return vector;
         }
     }
 }
