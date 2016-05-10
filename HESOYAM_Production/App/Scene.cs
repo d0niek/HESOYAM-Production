@@ -65,33 +65,22 @@ namespace App
         private void buildWall(Model model, Vector2 pos)
         {
             GameObject wall = this.buildObject(model, pos, "Wall_");
-            wall.AddCollider(
-                "main", 
-                new Collider(game, wall.position, new Vector3(200f, 800f, 200f), Vector3.Zero)
-            );
 
-            this.children[
-                "Walls"].AddChild(wall);
+            this.children["Walls"].AddChild(wall);
         }
 
         private void buildWindow(Model model, Vector2 pos, int rotationY)
         {
             GameObject window = this.buildObject(model, pos, "Window_", rotationY);
-            window.AddCollider(
-                "main", 
-                new Collider(game, window.position, new Vector3(200f, 800f, 200f), Vector3.Zero)
-            );
 
-            this.children[
-                "Windows"].AddChild(window);
+            this.children["Windows"].AddChild(window);
         }
 
         private void buildDoor(Model model, Vector2 pos, int rotationY)
         {
             GameObject door = this.buildObject(model, pos, "Door_", rotationY);
 
-            this.children[
-                "Doors"].AddChild(door);
+            this.children["Doors"].AddChild(door);
         }
 
         private GameObject buildObject(Model model, Vector2 pos, string prefix = "Object_", int rotationY = 0)
@@ -104,7 +93,28 @@ namespace App
                                         new Vector3(0f, (float) (rotationY * Math.PI / 2), 0f)
                                     );
 
+            this.addColider(gameObject, model);
+
             return gameObject;
+        }
+
+        private void addColider(GameObject gameObject, Model model)
+        {
+            if (model != this.door) {
+                const float height = 250;
+
+                Vector3 shift = new Vector3(0f, height / 2, 0f);
+
+                gameObject.AddCollider(
+                    "main",
+                    new Collider(
+                        game,
+                        Vector3.Add(gameObject.position, shift),
+                        new Vector3(100f, height, 100f),
+                        Vector3.Zero
+                    )
+                );
+            }
         }
 
         private void drawFloor(int Width, int Height)
