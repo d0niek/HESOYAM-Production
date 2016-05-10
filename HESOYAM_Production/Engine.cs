@@ -58,7 +58,7 @@ namespace HESOYAM_Production
 
             Vector3 cameraMove = new Vector3(-1500.0f, 2000.0f, 1500.0f);
 
-            this.player = new Player(this, "Player", new Vector3(1000.0f, 0.0f, 1000.0f));
+            this.player = new Player(this, "Player", new Vector3(-1000.0f, 0.0f, 1000.0f));
             this.camera = new Camera(this, "Kamera", Vector3.Add(this.player.position, cameraMove));
 
             this.player.cameraAngle = (float) (Math.Atan2(cameraMove.X, cameraMove.Z));
