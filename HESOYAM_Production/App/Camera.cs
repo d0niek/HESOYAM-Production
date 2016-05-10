@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using HESOYAM_Production;
+using Microsoft.Xna.Framework.Input;
 
 namespace App
 {
@@ -31,6 +32,8 @@ namespace App
 
         public void update(InputState input)
         {
+            this.Zoom(input);
+
             if (!this.game.playMode) {
                 if (input.Mouse.isInGameWindow()) {
                     this.moveCamera(input);
@@ -76,6 +79,17 @@ namespace App
             }
 
             this.Move(vector.X, 0, vector.Z);
+        }
+
+        private void Zoom(InputState input)
+        {
+            MouseState mouseState = new MouseState();
+
+            if (input.IsNewMouseScrollUp(out mouseState)) {
+                this.Move(-10, 10, 10);
+            } else if (input.IsNewMouseScrollDown(out mouseState)) {
+                this.Move(10, -10, -10);
+            }
         }
 
         public new void Move(float x, float y, float z)
