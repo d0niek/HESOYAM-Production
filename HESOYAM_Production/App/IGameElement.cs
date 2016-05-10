@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using App.Collisions;
+using Microsoft.Xna.Framework;
 
 namespace App
 {
@@ -22,7 +23,5 @@ namespace App
         void SetRotation(float x, float y, float z);
 
         void Scale(float x, float y, float z);
-
-        bool Collision(IGameElement collider);
     }
 }

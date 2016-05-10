@@ -26,7 +26,7 @@ namespace App
 
         public Dictionary<string, IGameObject> children { get; set; }
 
-        public List<Collider> colliders { get; set; }
+        public Dictionary<String, Collider> colliders { get; set; }
 
         public GameObject(
             Engine game,
@@ -43,7 +43,7 @@ namespace App
             this.rotation = rotation;
             this.scale = scale ?? Vector3.One;
             this.children = new Dictionary<string, IGameObject>();
-            this.colliders = new List<Collider>();
+            this.colliders = new Dictionary<String, Collider>();
         }
 
         public GameObject(
@@ -60,7 +60,7 @@ namespace App
             this.rotation = rotation;
             this.scale = scale ?? Vector3.One;
             this.children = new Dictionary<string, IGameObject>();
-            this.colliders = new List<Collider>();
+            this.colliders = new Dictionary<String, Collider>();
         }
 
         public void Move(float x, float y, float z)
@@ -72,7 +72,7 @@ namespace App
                 child.Move(x, y, z);
             }
 
-            foreach (Collider collider in colliders) {
+            foreach (Collider collider in colliders.Values) {
                 collider.Move(x, y, z);
             }
         }
@@ -86,7 +86,7 @@ namespace App
                 child.RotateAroundParent(x, y, z);
             }
 
-            foreach (Collider collider in colliders) {
+            foreach (Collider collider in colliders.Values) {
                 collider.RotateAroundParent(x, y, z);
             }
         }
@@ -156,21 +156,37 @@ namespace App
             children.Add(component.name, component);
         }
 
-        public void AddChildrenToGame(bool recursively)
+        public void AddChildrenToGame(bool recursively, bool withColliders)
         {
-            foreach (IGameComponent child in this.children.Values) {
+            if(withColliders)
+            {
+                foreach(Collider collider in this.colliders.Values)
+                {
+                    game.AddComponent(collider);
+                }
+            }
+            foreach (IGameComponent child in this.children.Values)
+            {
                 this.game.AddComponent(child);
 
                 if (recursively) {
                     IGameObject ch = child as IGameObject;
-                    ch.AddChildrenToGame(true);
+                    ch.AddChildrenToGame(true, withColliders);
                 }
             }
         }
 
-        public void AddCollider(Collider collider)
+        public void AddCollidersToGame()
         {
-            colliders.Add(collider);
+            foreach(Collider collider in this.colliders.Values)
+            {
+                game.AddComponent(collider);
+            }
+        }
+
+        public void AddCollider(String name, Collider collider)
+        {
+            colliders.Add(name, collider);
         }
 
         public IGameObject RemoveChild(IGameObject child)
@@ -185,10 +201,11 @@ namespace App
             return child;
         }
 
-        public Collider RemoveCollider(Collider collider)
+        public Collider RemoveCollider(String name)
         {
-            colliders.Remove(collider);
-            return collider;
+            Collider backup = colliders[name];
+            colliders.Remove(name);
+            return backup;
         }
 
         public override void Draw(GameTime gameTime)

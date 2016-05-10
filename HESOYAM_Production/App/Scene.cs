@@ -3,6 +3,7 @@ using System.Drawing;
 using Microsoft.Xna.Framework.Graphics;
 using HESOYAM_Production;
 using System;
+using App.Collisions;
 
 namespace App
 {
@@ -32,7 +33,7 @@ namespace App
             this.buildMap(bmp);
             this.drawFloor(bmp.Width, bmp.Height);
 
-            this.AddChildrenToGame(true);
+            this.AddChildrenToGame(true, true);
         }
 
         private void buildMap(Bitmap bmp)
@@ -64,22 +65,33 @@ namespace App
         private void buildWall(Model model, Vector2 pos)
         {
             GameObject wall = this.buildObject(model, pos, "Wall_");
+            wall.AddCollider(
+                "main", 
+                new Collider(game, wall.position, new Vector3(200f, 800f, 200f), Vector3.Zero)
+            );
 
-            this.children["Walls"].AddChild(wall);
+            this.children[
+                "Walls"].AddChild(wall);
         }
 
         private void buildWindow(Model model, Vector2 pos, int rotationY)
         {
             GameObject window = this.buildObject(model, pos, "Window_", rotationY);
+            window.AddCollider(
+                "main", 
+                new Collider(game, window.position, new Vector3(200f, 800f, 200f), Vector3.Zero)
+            );
 
-            this.children["Windows"].AddChild(window);
+            this.children[
+                "Windows"].AddChild(window);
         }
 
         private void buildDoor(Model model, Vector2 pos, int rotationY)
         {
             GameObject door = this.buildObject(model, pos, "Door_", rotationY);
 
-            this.children["Doors"].AddChild(door);
+            this.children[
+                "Doors"].AddChild(door);
         }
 
         private GameObject buildObject(Model model, Vector2 pos, string prefix = "Object_", int rotationY = 0)

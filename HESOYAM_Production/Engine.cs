@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using App;
+using App.Collisions;
 using System.IO;
 
 namespace HESOYAM_Production
@@ -20,6 +21,7 @@ namespace HESOYAM_Production
         SpriteBatch spriteBatch;
         public Camera camera;
         public Player player;
+        public Scene scene;
         public bool playMode;
 
         public Engine()
@@ -56,7 +58,7 @@ namespace HESOYAM_Production
 
             Vector3 cameraMove = new Vector3(-1500.0f, 2000.0f, 1500.0f);
 
-            this.player = new Player(this, "Player", new Vector3(-1500.0f, 0.0f, 5000.0f));
+            this.player = new Player(this, "Player", new Vector3(1000.0f, 0.0f, 1000.0f));
             this.camera = new Camera(this, "Kamera", Vector3.Add(this.player.position, cameraMove));
 
             this.player.cameraAngle = (float) (Math.Atan2(cameraMove.X, cameraMove.Z));
@@ -70,17 +72,19 @@ namespace HESOYAM_Production
             Model wall = Content.Load<Model>("Models/sciana");
             Model door = Content.Load<Model>("Models/drzwi");
             Model window = Content.Load<Model>("Models/okno");
-            Scene scene = new Scene(
-                              this,
-                              "Scene01",
-                              parentDir + "/Content/Map/walls32x32.bmp",
-                              wall,
-                              door,
-                              window
-                          );
+
+            scene = new Scene(
+                this,
+                "Scene01",
+                parentDir + "/Content/Map/walls32x32.bmp",
+                wall,
+                door,
+                window
+            );
 
             Model wheelchair = Content.Load<Model>("Models/wozek");
             GameObject testObjects = new GameObject(this, "ObjectName_", wheelchair);
+
             Components.Add(testObjects);
 
             player.AddChild(testObjects);
@@ -103,6 +107,11 @@ namespace HESOYAM_Production
 
             if (this.inputState.IsSpace(PlayerIndex.One)) {
                 this.playMode = !this.playMode;
+            }
+
+            PlayerIndex outPlayerIndex;
+            if (this.inputState.IsNewKeyPress(Keys.F5, null, out outPlayerIndex)) {
+                Program.debugMode = !Program.debugMode;
             }
 
             if (this.playMode) {
