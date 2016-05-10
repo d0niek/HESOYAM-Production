@@ -130,8 +130,18 @@ namespace App
             }
 
             vector = Vector3.Transform(vector, rotationMatrixY);
+            this.fixSpeedOfMovingDiagonally(vector);
 
             return vector;
+        }
+
+        private void fixSpeedOfMovingDiagonally(Vector3 vector)
+        {
+            if (vector.X == 0f) {
+                vector.Z /= (float) Math.Sqrt(2);
+            } else if (vector.Z == 0f) {
+                vector.X /= (float) Math.Sqrt(2);
+            }
         }
     }
 }
