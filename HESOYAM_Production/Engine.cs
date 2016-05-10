@@ -3,10 +3,8 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using App.Render;
 using App;
 using System.IO;
-
 
 namespace HESOYAM_Production
 {
@@ -24,15 +22,11 @@ namespace HESOYAM_Production
         public Player player;
         public bool playMode;
 
-        //TODO: to remove
-        Model myModel;
-        Object3D testObjects;
-
         public Engine()
         {
             graphics = new GraphicsDeviceManager(this);
+
             Content.RootDirectory = "Content";
-            this.inputState = new InputState();
             this.playMode = true;
         }
 
@@ -45,7 +39,7 @@ namespace HESOYAM_Production
         protected override void Initialize()
         {
             this.IsMouseVisible = true;
-            this.graphics.IsFullScreen = true;
+            this.graphics.IsFullScreen = false;
             base.Initialize();
         }
 
@@ -58,6 +52,8 @@ namespace HESOYAM_Production
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
+            this.inputState = new InputState(this.GraphicsDevice);
+
             Vector3 cameraMove = new Vector3(-1500.0f, 2000.0f, 1500.0f);
 
             this.player = new Player(this, "Player", new Vector3(-1500.0f, 0.0f, 5000.0f));
@@ -69,12 +65,22 @@ namespace HESOYAM_Production
             this.camera.lookAtParent = this.player;
 
             //TODO: use this.Content to load your game content here
-            myModel = Content.Load<Model>("Cube");
             string parentDir = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName;
 
-            Scene scene = new Scene(this, "Scene01", parentDir + "/Content/walls16x16.bmp", myModel);
+            Model wall = Content.Load<Model>("Models/sciana");
+            Model door = Content.Load<Model>("Models/drzwi");
+            Model window = Content.Load<Model>("Models/okno");
+            Scene scene = new Scene(
+                              this,
+                              "Scene01",
+                              parentDir + "/Content/Map/walls32x32.bmp",
+                              wall,
+                              door,
+                              window
+                          );
 
-            testObjects = new Object3D(this, myModel, "ObjectName_");
+            Model wheelchair = Content.Load<Model>("Models/wozek");
+            GameObject testObjects = new GameObject(this, "ObjectName_", wheelchair);
             Components.Add(testObjects);
 
             player.AddChild(testObjects);
@@ -104,7 +110,7 @@ namespace HESOYAM_Production
                 this.player.update(gameTime, this.inputState);
             }
 
-            this.camera.update(this.inputState, GraphicsDevice.Viewport.AspectRatio);
+            this.camera.update(this.inputState);
 
             // For Mobile devices, this logic will close the Game when the Back button is pressed
             // Exit() is obsolete on iOS
@@ -139,16 +145,6 @@ namespace HESOYAM_Production
         public GraphicsDeviceManager Graphics()
         {
             return this.graphics;
-        }
-
-        public bool isMouseInGameWindow()
-        {
-            bool leftBorder = this.inputState.CurrentMouseState.X >= 0;
-            bool topBorder = this.inputState.CurrentMouseState.Y >= 0;
-            bool rightBorder = this.inputState.CurrentMouseState.X <= this.GraphicsDevice.Viewport.Width;
-            bool bottomBorder = this.inputState.CurrentMouseState.Y <= this.GraphicsDevice.Viewport.Height;
-
-            return leftBorder && topBorder && rightBorder && bottomBorder;
         }
     }
 }

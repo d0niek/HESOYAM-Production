@@ -6,8 +6,6 @@ namespace App
 
     public class Camera : GameObject
     {
-        private const int borderWidth = 100;
-
         public Vector3 playModePosition;
 
         public Vector3 cameraLookAt;
@@ -31,10 +29,10 @@ namespace App
             this.playModePosition = this.position;
         }
 
-        public void update(InputState input, float aspectRatio)
+        public void update(InputState input)
         {
             if (!this.game.playMode) {
-                if (this.game.isMouseInGameWindow()) {
+                if (input.Mouse.isInGameWindow()) {
                     this.moveCamera(input);
                 }
             } else {
@@ -45,7 +43,7 @@ namespace App
             this.ViewMatrix = Matrix.CreateLookAt(this.position, this.cameraLookAt, Vector3.Up);
             this.ProjectionMatrix = Matrix.CreatePerspectiveFieldOfView(
                 MathHelper.ToRadians(45.0f),
-                aspectRatio,
+                this.GraphicsDevice.Viewport.AspectRatio,
                 1.0f,
                 10000.0f
             );
@@ -53,30 +51,26 @@ namespace App
 
         private void moveCamera(InputState input)
         {
-            Vector2 mousePosition = new Vector2(
-                                        input.CurrentMouseState.Position.X,
-                                        input.CurrentMouseState.Position.Y
-                                    );
             Vector3 vector = Vector3.Zero;
 
-            if (this.isMouseCloseToTopLeftCorner(mousePosition)) {
+            if (input.Mouse.isCloseToTopLeftCorner()) {
                 vector.Z = -20;
-            } else if (this.isMouseCloseToTopRightCorner(mousePosition)) {
+            } else if (input.Mouse.isCloseToTopRightCorner()) {
                 vector.X = 20;
-            } else if (this.isMouseCloseToBottomLeftCorner(mousePosition)) {
+            } else if (input.Mouse.isCloseToBottomLeftCorner()) {
                 vector.X = -20;
-            } else if (this.isMouseCloseToBottomRightCorner(mousePosition)) {
+            } else if (input.Mouse.isCloseToBottomRightCorner()) {
                 vector.Z = 20;
-            } else if (this.isMouseCloseToLeftBorder(mousePosition)) {
+            } else if (input.Mouse.isCloseToLeftBorder()) {
                 vector.Z = -20;
                 vector.X = -20;
-            } else if (this.isMouseCloseToRightBorder(mousePosition)) {
+            } else if (input.Mouse.isCloseToRightBorder()) {
                 vector.Z = 20;
                 vector.X = 20;
-            } else if (this.isMouseCloseToTopBorder(mousePosition)) {
+            } else if (input.Mouse.isCloseToTopBorder()) {
                 vector.Z = -20;
                 vector.X = 20;
-            } else if (this.isMouseCloseToBottomBorder(mousePosition)) {
+            } else if (input.Mouse.isCloseToBottomBorder()) {
                 vector.Z = 20;
                 vector.X = -20;
             }
@@ -91,48 +85,6 @@ namespace App
             base.Move(x, y, z);
 
             this.cameraLookAt = Vector3.Add(this.position, newLookAt);
-        }
-
-        private bool isMouseCloseToLeftBorder(Vector2 mousePosition)
-        {
-            return mousePosition.X >= 0 && mousePosition.X < borderWidth;
-        }
-
-        private bool isMouseCloseToRightBorder(Vector2 mousePosition)
-        {
-            return mousePosition.X <= this.game.GraphicsDevice.Viewport.Width &&
-            mousePosition.X > this.game.GraphicsDevice.Viewport.Width - borderWidth;
-        }
-
-        private bool isMouseCloseToTopBorder(Vector2 mousePosition)
-        {
-            return mousePosition.Y >= 0 && mousePosition.Y < borderWidth;
-        }
-
-        private bool isMouseCloseToBottomBorder(Vector2 mousePosition)
-        {
-            return mousePosition.Y <= this.game.GraphicsDevice.Viewport.Height &&
-            mousePosition.Y > this.game.GraphicsDevice.Viewport.Height - borderWidth;
-        }
-
-        private bool isMouseCloseToTopLeftCorner(Vector2 mousePosition)
-        {
-            return this.isMouseCloseToLeftBorder(mousePosition) && this.isMouseCloseToTopBorder(mousePosition);
-        }
-
-        private bool isMouseCloseToTopRightCorner(Vector2 mousePosition)
-        {
-            return this.isMouseCloseToRightBorder(mousePosition) && this.isMouseCloseToTopBorder(mousePosition);
-        }
-
-        private bool isMouseCloseToBottomLeftCorner(Vector2 mousePosition)
-        {
-            return this.isMouseCloseToLeftBorder(mousePosition) && this.isMouseCloseToBottomBorder(mousePosition);
-        }
-
-        private bool isMouseCloseToBottomRightCorner(Vector2 mousePosition)
-        {
-            return this.isMouseCloseToRightBorder(mousePosition) && this.isMouseCloseToBottomBorder(mousePosition);
         }
     }
 }

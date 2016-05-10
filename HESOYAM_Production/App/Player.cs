@@ -77,8 +77,8 @@ namespace App
         {
             float angle = this.rotation.Y;
 
-            if (this.game.isMouseInGameWindow()) {
-                Vector2 mousePos = new Vector2(input.CurrentMouseState.X, input.CurrentMouseState.Y);
+            if (input.Mouse.isInGameWindow()) {
+                Vector2 mousePos = new Vector2(input.Mouse.CurrentMouseState.X, input.Mouse.CurrentMouseState.Y);
 
                 mousePos.X -= this.Game.GraphicsDevice.Viewport.Width / 2;
                 mousePos.Y -= this.Game.GraphicsDevice.Viewport.Height / 2;

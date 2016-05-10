@@ -1,5 +1,4 @@
-﻿using System;
-using App.Collisions;
+﻿using App.Collisions;
 using System.Collections.Generic;
 
 namespace App
