@@ -19,17 +19,23 @@ namespace App
         ) : base(game, name, position, rotation)
         {
             Vector3 newPosition = position;
-            newPosition.X += 100;
             Vector3 newSize = new Vector3(50.0f, 100.0f, 100.0f);
+
+            newPosition.X += 100;
             AddCollider("front", new Collider(game, newPosition, newSize, Vector3.Zero));
+
             newPosition.X -= 200;
             AddCollider("back", new Collider(game, newPosition, newSize, Vector3.Zero));
+
+            newSize = new Vector3(100.0f, 100.0f, 50.0f);
+
             newPosition.X += 100;
             newPosition.Z += 100;
-            newSize = new Vector3(100.0f, 100.0f, 50.0f);
             AddCollider("right", new Collider(game, newPosition, newSize, Vector3.Zero));
+
             newPosition.Z -= 200;
             AddCollider("left", new Collider(game, newPosition, newSize, Vector3.Zero));
+
             AddCollidersToGame();
         }
 
@@ -44,20 +50,24 @@ namespace App
             foreach (Collider collider in colliders.Values) {
                 collider.drawColor = Color.GreenYellow;
             }
+
             foreach (IGameObject wall in game.scene.children["Walls"].children.Values) {
                 foreach (Collider collider in wall.colliders.Values) {
                     if (this.colliders["right"].CollidesWith(collider)) {
                         this.colliders["right"].drawColor = Color.OrangeRed;
                         vector.Z = (vector.Z > 0 ? 0 : vector.Z);
                     }
+
                     if (this.colliders["left"].CollidesWith(collider)) {
                         this.colliders["left"].drawColor = Color.OrangeRed;
                         vector.Z = (vector.Z < 0 ? 0 : vector.Z);
                     }
+
                     if (this.colliders["front"].CollidesWith(collider)) {
                         this.colliders["front"].drawColor = Color.OrangeRed;
                         vector.X = (vector.X > 0 ? 0 : vector.X);
                     }
+
                     if (this.colliders["back"].CollidesWith(collider)) {
                         this.colliders["back"].drawColor = Color.OrangeRed;
                         vector.X = (vector.X < 0 ? 0 : vector.X);
@@ -109,7 +119,18 @@ namespace App
 
         private Vector3 movePlayer(InputState input)
         {
+            Vector3 vector = this.readInputAndMovePlayer(input);
+
             Matrix rotationMatrixY = Matrix.CreateRotationY(this.rotation.Y + cameraAngle);
+            vector = Vector3.Transform(vector, rotationMatrixY);
+
+            this.fixSpeedOfMovingDiagonally(vector);
+
+            return vector;
+        }
+
+        private Vector3 readInputAndMovePlayer(InputState input)
+        {
             PlayerIndex playerIndex;
             Vector3 vector = Vector3.Zero;
 
@@ -128,9 +149,6 @@ namespace App
             if (input.IsKeyPressed(Keys.D, PlayerIndex.One, out playerIndex)) {
                 vector.X = 10;
             }
-
-            vector = Vector3.Transform(vector, rotationMatrixY);
-            this.fixSpeedOfMovingDiagonally(vector);
 
             return vector;
         }
