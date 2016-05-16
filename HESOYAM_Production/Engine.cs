@@ -4,8 +4,9 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using App;
-using App.Collisions;
 using System.IO;
+using System.Collections.Generic;
+using Microsoft.Xna.Framework.Content;
 
 namespace HESOYAM_Production
 {
@@ -16,9 +17,12 @@ namespace HESOYAM_Production
     public class Engine : Game
     {
         private InputState inputState;
+        private String rootDir;
 
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+
+        Dictionary<String, Model> models;
         public Camera camera;
         public Player player;
         public Scene scene;
@@ -30,6 +34,8 @@ namespace HESOYAM_Production
 
             Content.RootDirectory = "Content";
             this.playMode = true;
+            this.rootDir = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName;
+            this.models = new Dictionary<String, Model>();
         }
 
         /// <summary>
@@ -51,6 +57,8 @@ namespace HESOYAM_Production
         /// </summary>
         protected override void LoadContent()
         {
+            this.LoadModels();
+
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
@@ -66,29 +74,42 @@ namespace HESOYAM_Production
             this.player.AddChild(this.camera);
             this.camera.lookAtParent = this.player;
 
-            //TODO: use this.Content to load your game content here
-            string parentDir = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName;
-
-            Model wall = Content.Load<Model>("Models/sciana");
-            Model door = Content.Load<Model>("Models/drzwi");
-            Model window = Content.Load<Model>("Models/okno");
-
             scene = new Scene(
                 this,
                 "Scene01",
-                parentDir + "/Content/Map/walls32x32.bmp",
-                wall,
-                door,
-                window
+                this.rootDir + "/Content/Map/walls32x32.bmp",
+                this.models["sciana"],
+                this.models["drzwi"],
+                this.models["okno"]
             );
 
-            Model wheelchair = Content.Load<Model>("Models/wozek");
-            GameObject testObjects = new GameObject(this, "ObjectName_", wheelchair);
+            GameObject testObjects = new GameObject(this, "ObjectName_", this.models["wozek"]);
 
             Components.Add(testObjects);
 
             player.AddChild(testObjects);
             testObjects.position = this.player.position;
+        }
+
+        private void LoadModels()
+        {
+            String modelsDir = this.rootDir + "/Content/Models";
+
+            String[] files = Directory.GetFiles(modelsDir);
+            foreach (String file in files) {
+                String name = file.Remove(0, modelsDir.Length + 1).Replace(".FBX", "");
+
+                this.LoadModel(name);
+            }
+        }
+
+        private void LoadModel(String name)
+        {
+            try {
+                this.models.Add(name, Content.Load<Model>("Models/" + name));
+            } catch (ContentLoadException e) {
+                Console.WriteLine("Model '" + name + "' does not exists in Content.mgcb");
+            }
         }
 
         public void AddComponent(IGameComponent item)
