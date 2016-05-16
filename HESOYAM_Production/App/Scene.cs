@@ -58,7 +58,13 @@ namespace App
             } else if (color.R == 100 && color.G == 50) {
                 this.buildOther(this.models["lampa"], pos, (int) color.B);
             } else if (color.R == 250 && color.G == 250) {
-                this.insertMainCharacter(this.models["wozek"], pos, (int) color.B);
+                this.insertMainCharacter(this.models["bohater"], pos, (int) color.B);
+            } else if (color.R == 250 && color.G == 200) {
+                this.insertCharacter(this.models["chudzielec"], pos, (int) color.B);
+            } else if (color.R == 200 && color.G == 250) {
+                this.insertCharacter(this.models["grubas"], pos, (int) color.B);
+            } else if (color.R == 200 && color.G == 200) {
+                this.insertCharacter(this.models["miesniak"], pos, (int) color.B);
             }
         }
 
@@ -95,6 +101,13 @@ namespace App
             this.Player = this.buildObject(model, pos, "Player_", rotationY);
 
             this.children["Characters"].AddChild(this.Player);
+        }
+
+        private void insertCharacter(Model model, Vector2 pos, int rotationY)
+        {
+            GameObject character = this.buildObject(model, pos, "Player_", rotationY);
+
+            this.children["Characters"].AddChild(character);
         }
 
         private GameObject buildObject(Model model, Vector2 pos, string prefix, int rotationY)
