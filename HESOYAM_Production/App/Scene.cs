@@ -4,29 +4,19 @@ using Microsoft.Xna.Framework.Graphics;
 using HESOYAM_Production;
 using System;
 using App.Collisions;
+using System.Collections.Generic;
 
 namespace App
 {
 
     public class Scene: GameObject
     {
+        private Dictionary<String, Model> models;
         private const float WallShift = 100;
-        private Model wall;
-        private Model door;
-        private Model window;
 
-        public Scene(
-            Engine game,
-            string name,
-            string bitmapPath,
-            Model wall,
-            Model door,
-            Model window
-        ) : base(game, name)
+        public Scene(Engine game, string name, string bitmapPath, Dictionary<String, Model> models) : base(game, name)
         {
-            this.wall = wall;
-            this.door = door;
-            this.window = window;
+            this.models = models;
 
             Bitmap bmp = (Bitmap) Image.FromFile(bitmapPath);
 
@@ -54,11 +44,11 @@ namespace App
         private void buildMapObject(System.Drawing.Color color, Vector2 pos)
         {
             if (color.R == 0 && color.G == 0 && color.B == 0) {
-                this.buildWall(this.wall, pos);
+                this.buildWall(this.models["sciana"], pos);
             } else if (color.R == 255 && color.B == 0) {
-                this.buildWindow(this.window, pos, (int) color.G);
+                this.buildWindow(this.models["okno"], pos, (int) color.G);
             } else if (color.R == 0 && color.G == 255) {
-                this.buildDoor(this.door, pos, (int) color.B);
+                this.buildDoor(this.models["drzwi"], pos, (int) color.B);
             }
         }
 
@@ -100,7 +90,7 @@ namespace App
 
         private void addColider(GameObject gameObject, Model model)
         {
-            if (model != this.door) {
+            if (model != this.models["drzwi"]) {
                 const float height = 250;
 
                 Vector3 shift = new Vector3(0f, height / 2, 0f);
@@ -127,7 +117,7 @@ namespace App
             GameObject floor = new GameObject(
                                    this.game,
                                    "Floor",
-                                   this.wall,
+                                   this.models["sciana"],
                                    new Vector3(positionX, 0f, positionZ),
                                    Vector3.Zero,
                                    new Vector3((float) Width, 0f, (float) Height)

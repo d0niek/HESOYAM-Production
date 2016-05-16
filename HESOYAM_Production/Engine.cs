@@ -18,11 +18,11 @@ namespace HESOYAM_Production
     {
         private InputState inputState;
         private String rootDir;
+        private Dictionary<String, Model> models;
 
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
-        Dictionary<String, Model> models;
         public Camera camera;
         public Player player;
         public Scene scene;
@@ -78,9 +78,7 @@ namespace HESOYAM_Production
                 this,
                 "Scene01",
                 this.rootDir + "/Content/Map/walls32x32.bmp",
-                this.models["sciana"],
-                this.models["drzwi"],
-                this.models["okno"]
+                this.models
             );
 
             GameObject testObjects = new GameObject(this, "ObjectName_", this.models["wozek"]);
