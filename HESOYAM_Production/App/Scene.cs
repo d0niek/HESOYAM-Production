@@ -12,13 +12,21 @@ namespace App
     public class Scene: GameObject
     {
         private Dictionary<String, Model> models;
+        private Dictionary<String, Texture2D> textures;
         private const float WallShift = 100;
 
         public GameObject Player { get; private set; }
 
-        public Scene(Engine game, string name, string bitmapPath, Dictionary<String, Model> models) : base(game, name)
+        public Scene(
+            Engine game,
+            string name,
+            string bitmapPath,
+            Dictionary<String, Model> models,
+            Dictionary<String, Texture2D> textures
+        ) : base(game, name)
         {
             this.models = models;
+            this.textures = textures;
 
             Bitmap bmp = (Bitmap) Image.FromFile(bitmapPath + ".bmp");
 
@@ -60,11 +68,11 @@ namespace App
             } else if (color.R == 250 && color.G == 250) {
                 this.insertMainCharacter(this.models["bohater"], pos, (int) color.B);
             } else if (color.R == 250 && color.G == 200) {
-                this.insertCharacter(this.models["chudzielec"], pos, (int) color.B);
+                this.insertCharacter(this.models["chudzielec"], pos, (int) color.B, "chudzielec");
             } else if (color.R == 200 && color.G == 250) {
-                this.insertCharacter(this.models["grubas"], pos, (int) color.B);
+                this.insertCharacter(this.models["grubas"], pos, (int) color.B, "grubas");
             } else if (color.R == 200 && color.G == 200) {
-                this.insertCharacter(this.models["miesniak"], pos, (int) color.B);
+                this.insertCharacter(this.models["miesniak"], pos, (int) color.B, "miesniak");
             }
         }
 
@@ -99,13 +107,15 @@ namespace App
         private void insertMainCharacter(Model model, Vector2 pos, int rotationY)
         {
             this.Player = this.buildObject(model, pos, "Player_", rotationY);
+            this.Player.setTexture(this.textures["bohater"]);
 
             this.children["Characters"].AddChild(this.Player);
         }
 
-        private void insertCharacter(Model model, Vector2 pos, int rotationY)
+        private void insertCharacter(Model model, Vector2 pos, int rotationY, string texture)
         {
             GameObject character = this.buildObject(model, pos, "Player_", rotationY);
+            character.setTexture(this.textures[texture]);
 
             this.children["Characters"].AddChild(character);
         }

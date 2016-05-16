@@ -11,6 +11,7 @@ namespace App
     public class GameObject : DrawableGameComponent, IGameElement, IGameObject
     {
         private Model model;
+        private Texture2D texture;
 
         protected Engine game;
 
@@ -39,6 +40,7 @@ namespace App
             this.game = game;
             this.name = name;
             this.model = model;
+            this.texture = null;
             this.position = position;
             this.rotation = rotation;
             this.scale = scale ?? Vector3.One;
@@ -158,15 +160,12 @@ namespace App
 
         public void AddChildrenToGame(bool recursively, bool withColliders)
         {
-            if(withColliders)
-            {
-                foreach(Collider collider in this.colliders.Values)
-                {
+            if (withColliders) {
+                foreach (Collider collider in this.colliders.Values) {
                     game.AddComponent(collider);
                 }
             }
-            foreach (IGameComponent child in this.children.Values)
-            {
+            foreach (IGameComponent child in this.children.Values) {
                 this.game.AddComponent(child);
 
                 if (recursively) {
@@ -178,8 +177,7 @@ namespace App
 
         public void AddCollidersToGame()
         {
-            foreach(Collider collider in this.colliders.Values)
-            {
+            foreach (Collider collider in this.colliders.Values) {
                 game.AddComponent(collider);
             }
         }
@@ -215,6 +213,11 @@ namespace App
             }
         }
 
+        public void setTexture(Texture2D texture)
+        {
+            this.texture = texture;
+        }
+
         private void DrawModel(Model model)
         {
             // Copy any parent transforms.
@@ -235,10 +238,20 @@ namespace App
                     * Matrix.CreateTranslation(this.position);
                     effect.View = this.game.camera.ViewMatrix;
                     effect.Projection = this.game.camera.ProjectionMatrix;
+
+                    this.DrawTexture(effect);
                 }
 
                 // Draw the mesh, using the effects set above.
                 mesh.Draw();
+            }
+        }
+
+        private void DrawTexture(BasicEffect effect)
+        {
+            if (this.texture != null) {
+                effect.TextureEnabled = true;
+                effect.Texture = this.texture;
             }
         }
     }

@@ -19,6 +19,7 @@ namespace HESOYAM_Production
         private InputState inputState;
         private String rootDir;
         private Dictionary<String, Model> models;
+        private Dictionary<String, Texture2D> textures;
 
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
@@ -36,6 +37,7 @@ namespace HESOYAM_Production
             this.playMode = true;
             this.rootDir = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName;
             this.models = new Dictionary<String, Model>();
+            this.textures = new Dictionary<String, Texture2D>();
         }
 
         /// <summary>
@@ -63,12 +65,14 @@ namespace HESOYAM_Production
             this.inputState = new InputState(this.GraphicsDevice);
 
             this.LoadModels();
+            this.LoadTextures();
 
             scene = new Scene(
                 this,
                 "Scene_1",
                 this.rootDir + "/Content/Map/scene_1",
-                this.models
+                this.models,
+                this.textures
             );
 
             Vector3 cameraMove = new Vector3(-500.0f, 500.0f, 500.0f);
@@ -98,10 +102,31 @@ namespace HESOYAM_Production
         private void LoadModel(String name)
         {
             try {
-                this.models.Add(name, Content.Load<Model>("Models/" + name));
+                Model model = Content.Load<Model>("Models/" + name);
+
+                this.models.Add(name, model);
             } catch (ContentLoadException e) {
                 Console.WriteLine("Model '" + name + "' does not exists in Content.mgcb");
             }
+        }
+
+        private void LoadTextures()
+        {
+            String texturesDir = this.rootDir + "/Content/Textures";
+
+            String[] files = Directory.GetFiles(texturesDir);
+            foreach (String file in files) {
+                String name = file.Remove(0, texturesDir.Length + 1).Replace(".png", "");
+
+                this.LoadTexture(name);
+            }
+        }
+
+        private void LoadTexture(String name)
+        {
+            Texture2D texture = Content.Load<Texture2D>("Textures/" + name);
+
+            this.textures.Add(name, texture);
         }
 
         public void AddComponent(IGameComponent item)
