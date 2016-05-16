@@ -14,11 +14,13 @@ namespace App
         private Dictionary<String, Model> models;
         private const float WallShift = 100;
 
+        public GameObject Player { get; private set; }
+
         public Scene(Engine game, string name, string bitmapPath, Dictionary<String, Model> models) : base(game, name)
         {
             this.models = models;
 
-            Bitmap bmp = (Bitmap) Image.FromFile(bitmapPath);
+            Bitmap bmp = (Bitmap) Image.FromFile(bitmapPath + ".bmp");
 
             this.buildMap(bmp);
             this.drawFloor(bmp.Width, bmp.Height);
@@ -28,9 +30,11 @@ namespace App
 
         private void buildMap(Bitmap bmp)
         {
+            this.AddChild(new GameObject(game, "Characters"));
             this.AddChild(new GameObject(game, "Walls"));
             this.AddChild(new GameObject(game, "Windows"));
             this.AddChild(new GameObject(game, "Doors"));
+            this.AddChild(new GameObject(game, "Others"));
 
             for (int i = 0; i < bmp.Width; i++) {
                 for (int j = 0; j < bmp.Height; j++) {
@@ -43,18 +47,24 @@ namespace App
 
         private void buildMapObject(System.Drawing.Color color, Vector2 pos)
         {
-            if (color.R == 0 && color.G == 0 && color.B == 0) {
+            if (color.R == 0 && color.G == 0) {
                 this.buildWall(this.models["sciana"], pos);
-            } else if (color.R == 255 && color.B == 0) {
-                this.buildWindow(this.models["okno"], pos, (int) color.G);
+            } else if (color.R == 255 && color.G == 0) {
+                this.buildWindow(this.models["okno"], pos, (int) color.B);
             } else if (color.R == 0 && color.G == 255) {
                 this.buildDoor(this.models["drzwi"], pos, (int) color.B);
+            } else if (color.R == 100 && color.G == 100) {
+                this.buildOther(this.models["lozko"], pos, (int) color.B);
+            } else if (color.R == 100 && color.G == 50) {
+                this.buildOther(this.models["lampa"], pos, (int) color.B);
+            } else if (color.R == 250 && color.G == 250) {
+                this.insertMainCharacter(this.models["wozek"], pos, (int) color.B);
             }
         }
 
         private void buildWall(Model model, Vector2 pos)
         {
-            GameObject wall = this.buildObject(model, pos, "Wall_");
+            GameObject wall = this.buildObject(model, pos, "Wall_", 0);
 
             this.children["Walls"].AddChild(wall);
         }
@@ -73,7 +83,21 @@ namespace App
             this.children["Doors"].AddChild(door);
         }
 
-        private GameObject buildObject(Model model, Vector2 pos, string prefix = "Object_", int rotationY = 0)
+        private void buildOther(Model model, Vector2 pos, int rotationY)
+        {
+            GameObject other = this.buildObject(model, pos, "Other_", rotationY);
+
+            this.children["Others"].AddChild(other);
+        }
+
+        private void insertMainCharacter(Model model, Vector2 pos, int rotationY)
+        {
+            this.Player = this.buildObject(model, pos, "Player_", rotationY);
+
+            this.children["Characters"].AddChild(this.Player);
+        }
+
+        private GameObject buildObject(Model model, Vector2 pos, string prefix, int rotationY)
         {
             GameObject gameObject = new GameObject(
                                         game,
@@ -83,33 +107,33 @@ namespace App
                                         new Vector3(0f, (float) (rotationY * Math.PI / 2), 0f)
                                     );
 
-            this.addColider(gameObject, model);
+            if (model != this.models["drzwi"]) {
+                this.addColider(gameObject);
+            }
 
             return gameObject;
         }
 
-        private void addColider(GameObject gameObject, Model model)
+        private void addColider(GameObject gameObject)
         {
-            if (model != this.models["drzwi"]) {
-                const float height = 250;
+            const float height = 250;
 
-                Vector3 shift = new Vector3(0f, height / 2, 0f);
+            Vector3 shift = new Vector3(0f, height / 2, 0f);
 
-                gameObject.AddCollider(
-                    "main",
-                    new Collider(
-                        game,
-                        Vector3.Add(gameObject.position, shift),
-                        new Vector3(100f, height, 100f),
-                        Vector3.Zero
-                    )
-                );
-            }
+            gameObject.AddCollider(
+                "main",
+                new Collider(
+                    game,
+                    Vector3.Add(gameObject.position, shift),
+                    new Vector3(100f, height, 100f),
+                    Vector3.Zero
+                )
+            );
         }
 
         private void drawFloor(int Width, int Height)
         {
-            int modelWidth = 50;
+            const int modelWidth = 50;
 
             float positionX = Width * WallShift / 2 - modelWidth;
             float positionZ = Height * WallShift / 2 - modelWidth;

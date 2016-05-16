@@ -57,36 +57,30 @@ namespace HESOYAM_Production
         /// </summary>
         protected override void LoadContent()
         {
-            this.LoadModels();
-
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             this.inputState = new InputState(this.GraphicsDevice);
 
-            Vector3 cameraMove = new Vector3(-1500.0f, 2000.0f, 1500.0f);
-
-            this.player = new Player(this, "Player", new Vector3(-1000.0f, 0.0f, 1000.0f));
-            this.camera = new Camera(this, "Kamera", Vector3.Add(this.player.position, cameraMove));
-
-            this.player.cameraAngle = (float) (Math.Atan2(cameraMove.X, cameraMove.Z));
-
-            this.player.AddChild(this.camera);
-            this.camera.lookAtParent = this.player;
+            this.LoadModels();
 
             scene = new Scene(
                 this,
-                "Scene01",
-                this.rootDir + "/Content/Map/walls32x32.bmp",
+                "Scene_1",
+                this.rootDir + "/Content/Map/scene_1",
                 this.models
             );
 
-            GameObject testObjects = new GameObject(this, "ObjectName_", this.models["wozek"]);
+            Vector3 cameraMove = new Vector3(-500.0f, 500.0f, 500.0f);
 
-            Components.Add(testObjects);
+            this.player = new Player(this, "Player", scene.Player.position);
+            this.camera = new Camera(this, "Kamera", Vector3.Add(this.player.position, cameraMove));
 
-            player.AddChild(testObjects);
-            testObjects.position = this.player.position;
+            this.player.cameraAngle = (float) (Math.Atan2(cameraMove.X, cameraMove.Z));
+            this.camera.lookAtParent = this.player;
+
+            this.player.AddChild(this.camera);
+            player.AddChild(scene.Player);
         }
 
         private void LoadModels()
