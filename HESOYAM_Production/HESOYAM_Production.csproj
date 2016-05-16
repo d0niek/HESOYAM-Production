@@ -91,9 +91,8 @@
     <None Include="Content\Models\tv.FBX" />
     <None Include="Content\Models\wazon.FBX" />
     <None Include="Content\Models\wozek.FBX" />
-    <None Include="Content\Map\walls16x16.bmp" />
-    <None Include="Content\Map\walls32x32.bmp" />
     <None Include="Content\Models\podnozek.FBX" />
+    <None Include="Content\Map\scene_1.bmp" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Icon.ico" />
