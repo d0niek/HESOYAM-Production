@@ -73,6 +73,10 @@ namespace App
                 this.insertCharacter(this.models["grubas"], pos, (int) color.B, "grubas");
             } else if (color.R == 200 && color.G == 200) {
                 this.insertCharacter(this.models["miesniak"], pos, (int) color.B, "miesniak");
+            } else if (color.R == 75 && color.G == 25) {
+                this.insertCharacter(this.models["zolnierz"], pos, (int) color.B, "zolnierz");
+            } else if (color.R == 25 && color.G == 57) {
+                this.insertCharacter(this.models["lekarz"], pos, (int) color.B, "lekarz");
             }
         }
 
