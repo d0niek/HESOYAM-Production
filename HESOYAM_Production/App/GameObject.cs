@@ -10,9 +10,9 @@ namespace App
 
     public class GameObject : DrawableGameComponent, IGameElement, IGameObject
     {
-        private Model model;
-
         protected Engine game;
+        protected Model model;
+        protected Texture2D texture;
 
         public string name { get; set; }
 
@@ -39,6 +39,7 @@ namespace App
             this.game = game;
             this.name = name;
             this.model = model;
+            this.texture = null;
             this.position = position;
             this.rotation = rotation;
             this.scale = scale ?? Vector3.One;
@@ -158,15 +159,12 @@ namespace App
 
         public void AddChildrenToGame(bool recursively, bool withColliders)
         {
-            if(withColliders)
-            {
-                foreach(Collider collider in this.colliders.Values)
-                {
+            if (withColliders) {
+                foreach (Collider collider in this.colliders.Values) {
                     game.AddComponent(collider);
                 }
             }
-            foreach (IGameComponent child in this.children.Values)
-            {
+            foreach (IGameComponent child in this.children.Values) {
                 this.game.AddComponent(child);
 
                 if (recursively) {
@@ -178,8 +176,7 @@ namespace App
 
         public void AddCollidersToGame()
         {
-            foreach(Collider collider in this.colliders.Values)
-            {
+            foreach (Collider collider in this.colliders.Values) {
                 game.AddComponent(collider);
             }
         }
@@ -215,7 +212,7 @@ namespace App
             }
         }
 
-        private void DrawModel(Model model)
+        protected void DrawModel(Model model)
         {
             // Copy any parent transforms.
             Matrix[] transforms = new Matrix[model.Bones.Count];
@@ -235,11 +232,26 @@ namespace App
                     * Matrix.CreateTranslation(this.position);
                     effect.View = this.game.camera.ViewMatrix;
                     effect.Projection = this.game.camera.ProjectionMatrix;
+
+                    this.DrawTexture(effect);
                 }
 
                 // Draw the mesh, using the effects set above.
                 mesh.Draw();
             }
+        }
+
+        protected void DrawTexture(BasicEffect effect)
+        {
+            if (this.texture != null) {
+                effect.TextureEnabled = true;
+                effect.Texture = this.texture;
+            }
+        }
+
+        public void setTexture(Texture2D texture)
+        {
+            this.texture = texture;
         }
     }
 }
