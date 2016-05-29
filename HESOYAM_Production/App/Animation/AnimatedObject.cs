@@ -3,16 +3,19 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework;
+using HESOYAM_Production;
 
 namespace App.Animation
 {
+
     /// <summary>
     /// An encloser for an XNA model that we will use that includes support for
     /// bones, animation, and some manipulations.
     /// </summary>
-    public class AnimatedModel: GameObject
+    public class AnimatedObject: GameObject
     {
         #region Fields
+
         /// <summary>
         /// Extra data associated with the XNA model
         /// </summary>
@@ -26,7 +29,7 @@ namespace App.Animation
         /// <summary>
         /// The model asset name
         /// </summary>
-        private string assetName = "";
+        private string name = "";
 
         /// <summary>
         /// An associated animation clip player
@@ -55,22 +58,18 @@ namespace App.Animation
         /// Constructor. Creates the model from an XNA model
         /// </summary>
         /// <param name="assetName">The name of the asset for this model</param>
-        public AnimatedModel(string assetName)
+        public AnimatedObject(
+            Engine game,
+            string name,
+            Model model,
+            Vector3 position = default(Vector3), 
+            Vector3 rotation = default(Vector3), 
+            Vector3? scale = null
+        ) : base(game, name, model, position, rotation, scale)
         {
-            this.assetName = assetName;
-
-        }
-
-        /// <summary>
-        /// Load the model asset from content
-        /// </summary>
-        /// <param name="content"></param>
-        public void LoadContent(ContentManager content)
-        {
-            this.model = content.Load<Model>(assetName);
+            this.name = name;
             modelExtra = model.Tag as ModelExtra;
             System.Diagnostics.Debug.Assert(modelExtra != null);
-
             ObtainBones();
         }
 
@@ -86,10 +85,12 @@ namespace App.Animation
         private void ObtainBones()
         {
             bones.Clear();
-            foreach (ModelBone bone in model.Bones)
-            {
+            foreach (ModelBone bone in model.Bones) {
                 // Create the bone object and add to the heirarchy
-                Bone newBone = new Bone(bone.Name, bone.Transform, bone.Parent != null ? bones[bone.Parent.Index] : null);
+                Bone newBone = new Bone(
+                                   bone.Name,
+                                   bone.Transform,
+                                   bone.Parent != null ? bones[bone.Parent.Index] : null);
 
                 // Add to the bones for this model
                 bones.Add(newBone);
@@ -103,8 +104,7 @@ namespace App.Animation
         /// <returns></returns>
         public Bone FindBone(string name)
         {
-            foreach(Bone bone in Bones)
-            {
+            foreach (Bone bone in Bones) {
                 if (bone.Name == name)
                     return bone;
             }
@@ -138,8 +138,7 @@ namespace App.Animation
         /// <param name="gameTime"></param>
         public void Update(GameTime gameTime)
         {
-            if (player != null)
-            {
+            if (player != null) {
                 player.Update(gameTime);
             }
         }
@@ -165,8 +164,7 @@ namespace App.Animation
 
             Matrix[] boneTransforms = new Matrix[bones.Count];
 
-            for (int i = 0; i < bones.Count; i++)
-            {
+            for (int i = 0; i < bones.Count; i++) {
                 Bone bone = bones[i];
                 bone.ComputeAbsoluteTransform();
 
@@ -178,19 +176,15 @@ namespace App.Animation
             //
 
             Matrix[] skeleton = new Matrix[modelExtra.Skeleton.Count];
-            for (int s = 0; s < modelExtra.Skeleton.Count; s++)
-            {
+            for (int s = 0; s < modelExtra.Skeleton.Count; s++) {
                 Bone bone = bones[modelExtra.Skeleton[s]];
                 skeleton[s] = bone.SkinTransform * bone.AbsoluteTransform;
             }
 
             // Draw the model.
-            foreach (ModelMesh modelMesh in model.Meshes)
-            {
-                foreach (Effect effect in modelMesh.Effects)
-                {
-                    if (effect is BasicEffect)
-                    {
+            foreach (ModelMesh modelMesh in model.Meshes) {
+                foreach (Effect effect in modelMesh.Effects) {
+                    if (effect is BasicEffect) {
                         BasicEffect beffect = effect as BasicEffect;
                         beffect.World = boneTransforms[modelMesh.ParentBone.Index] * world;
                         beffect.View = this.game.camera.ViewMatrix;
@@ -199,8 +193,7 @@ namespace App.Animation
                         beffect.PreferPerPixelLighting = true;
                     }
 
-                    if (effect is SkinnedEffect)
-                    {
+                    if (effect is SkinnedEffect) {
                         SkinnedEffect seffect = effect as SkinnedEffect;
                         seffect.World = boneTransforms[modelMesh.ParentBone.Index] * world;
                         seffect.View = this.game.camera.ViewMatrix;

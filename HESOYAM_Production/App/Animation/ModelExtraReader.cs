@@ -4,9 +4,8 @@ using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
-using App.Animation;
 
-namespace AnimationPipeline
+namespace App.Animation
 {
     public class ModelExtraReader : ContentTypeReader<ModelExtra>
     {

@@ -10,7 +10,7 @@ namespace App
 
     public class GameObject : DrawableGameComponent, IGameElement, IGameObject
     {
-        private Model model;
+        protected Model model;
 
         protected Engine game;
 

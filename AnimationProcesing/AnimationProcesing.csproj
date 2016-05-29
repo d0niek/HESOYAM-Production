@@ -47,18 +47,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Game1.cs" />
-    <Compile Include="Program.cs" />
+    <Compile Include="AnimationClipWriter.cs" />
+    <Compile Include="AnimationProcessor.cs" />
+    <Compile Include="AssemblyInfo.cs" />
+    <Compile Include="ModelExtraWriter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Icon.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Icon.ico" />
-  </ItemGroup>
-  <ItemGroup>
-    <MonoGameContentReference Include="Content\Content.mgcb" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="OpenTK.dll.config">
@@ -67,4 +60,13 @@
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\MonoGame\v3.0\MonoGame.Content.Builder.targets" />
+  <ItemGroup>
+    <Folder Include="Properties\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\HESOYAM_Production\HESOYAM_Production.csproj">
+      <Project>{DE1263FE-0738-4562-810A-4360C696A171}</Project>
+      <Name>HESOYAM_Production</Name>
+    </ProjectReference>
+  </ItemGroup>
 </Project>
