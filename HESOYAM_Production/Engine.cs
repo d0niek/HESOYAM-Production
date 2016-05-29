@@ -4,8 +4,9 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using App;
-using App.Collisions;
 using System.IO;
+using System.Collections.Generic;
+using Microsoft.Xna.Framework.Content;
 
 namespace HESOYAM_Production
 {
@@ -16,9 +17,13 @@ namespace HESOYAM_Production
     public class Engine : Game
     {
         private InputState inputState;
+        private String rootDir;
+        private Dictionary<String, Model> models;
+        private Dictionary<String, Texture2D> textures;
 
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+
         public Camera camera;
         public Player player;
         public Scene scene;
@@ -30,6 +35,9 @@ namespace HESOYAM_Production
 
             Content.RootDirectory = "Content";
             this.playMode = true;
+            this.rootDir = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName;
+            this.models = new Dictionary<String, Model>();
+            this.textures = new Dictionary<String, Texture2D>();
         }
 
         /// <summary>
@@ -56,39 +64,69 @@ namespace HESOYAM_Production
 
             this.inputState = new InputState(this.GraphicsDevice);
 
-            Vector3 cameraMove = new Vector3(-1500.0f, 2000.0f, 1500.0f);
-
-            this.player = new Player(this, "Player", new Vector3(-1000.0f, 0.0f, 1000.0f));
-            this.camera = new Camera(this, "Kamera", Vector3.Add(this.player.position, cameraMove));
-
-            this.player.cameraAngle = (float) (Math.Atan2(cameraMove.X, cameraMove.Z));
-
-            this.player.AddChild(this.camera);
-            this.camera.lookAtParent = this.player;
-
-            //TODO: use this.Content to load your game content here
-            string parentDir = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName;
-
-            Model wall = Content.Load<Model>("Models/sciana");
-            Model door = Content.Load<Model>("Models/drzwi");
-            Model window = Content.Load<Model>("Models/okno");
+            this.LoadModels();
+            this.LoadTextures();
 
             scene = new Scene(
                 this,
-                "Scene01",
-                parentDir + "/Content/Map/walls32x32.bmp",
-                wall,
-                door,
-                window
+                "Scene_1",
+                this.rootDir + "/Content/Map/scene_1",
+                this.models,
+                this.textures
             );
 
-            Model wheelchair = Content.Load<Model>("Models/wozek");
-            GameObject testObjects = new GameObject(this, "ObjectName_", wheelchair);
+            Vector3 cameraMove = new Vector3(-500.0f, 500.0f, 500.0f);
 
-            Components.Add(testObjects);
+            this.player = new Player(this, "Player", scene.Player.position);
+            this.camera = new Camera(this, "Kamera", Vector3.Add(this.player.position, cameraMove));
 
-            player.AddChild(testObjects);
-            testObjects.position = this.player.position;
+            this.player.cameraAngle = (float) (Math.Atan2(cameraMove.X, cameraMove.Z));
+            this.camera.lookAtParent = this.player;
+
+            this.player.AddChild(this.camera);
+            player.AddChild(scene.Player);
+        }
+
+        private void LoadModels()
+        {
+            String modelsDir = this.rootDir + "/Content/Models";
+
+            String[] files = Directory.GetFiles(modelsDir);
+            foreach (String file in files) {
+                String name = file.Remove(0, modelsDir.Length + 1).Replace(".FBX", "");
+
+                this.LoadModel(name);
+            }
+        }
+
+        private void LoadModel(String name)
+        {
+            try {
+                Model model = Content.Load<Model>("Models/" + name);
+
+                this.models.Add(name, model);
+            } catch (ContentLoadException e) {
+                Console.WriteLine("Model '" + name + "' does not exists in Content.mgcb");
+            }
+        }
+
+        private void LoadTextures()
+        {
+            String texturesDir = this.rootDir + "/Content/Textures";
+
+            String[] files = Directory.GetFiles(texturesDir);
+            foreach (String file in files) {
+                String name = file.Remove(0, texturesDir.Length + 1).Replace(".png", "");
+
+                this.LoadTexture(name);
+            }
+        }
+
+        private void LoadTexture(String name)
+        {
+            Texture2D texture = Content.Load<Texture2D>("Textures/" + name);
+
+            this.textures.Add(name, texture);
         }
 
         public void AddComponent(IGameComponent item)
