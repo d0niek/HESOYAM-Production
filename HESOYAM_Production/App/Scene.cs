@@ -56,17 +56,23 @@ namespace App
         private void buildMapObject(System.Drawing.Color color, Vector2 pos)
         {
             if (color.R == 0 && color.G == 0) {
-                this.buildWall(this.models["sciana"], pos);
+                this.buildWall(pos);
             } else if (color.R == 255 && color.G == 0) {
-                this.buildWindow(this.models["okno"], pos, (int) color.B);
+                this.buildWindow(pos, (int) color.B);
             } else if (color.R == 0 && color.G == 255) {
-                this.buildDoor(this.models["drzwi"], pos, (int) color.B);
+                this.buildDoor(pos, (int) color.B);
             } else if (color.R == 100 && color.G == 100) {
                 this.buildOther(this.models["lozko"], pos, (int) color.B);
             } else if (color.R == 100 && color.G == 50) {
                 this.buildOther(this.models["lampa"], pos, (int) color.B);
+            } else if (color.R == 185 && color.G == 67) {
+                this.buildOther(this.models["szafka"], pos, (int) color.B);
+            } else if (color.R == 185 && color.G == 163) {
+                this.buildOther(this.models["biurko"], pos, (int) color.B);
+            } else if (color.R == 46 && color.G == 163) {
+                this.buildOther(this.models["krzeslo"], pos, (int) color.B);
             } else if (color.R == 250 && color.G == 250) {
-                this.insertMainCharacter(this.models["bohater"], pos, (int) color.B);
+                this.insertMainCharacter(pos, (int) color.B);
             } else if (color.R == 250 && color.G == 200) {
                 this.insertCharacter(this.models["chudzielec"], pos, (int) color.B, "chudzielec");
             } else if (color.R == 200 && color.G == 250) {
@@ -80,23 +86,50 @@ namespace App
             }
         }
 
-        private void buildWall(Model model, Vector2 pos)
+        private void buildWall(Vector2 pos)
         {
-            GameObject wall = this.buildObject(model, pos, "Wall_", 0);
+            GameObject wall = new Wall(
+                                  game,
+                                  "Wall_" + pos.X + "x" + pos.Y,
+                                  this.models["sciana"],
+                                  this.models["modul_przyciete"],
+                                  new Vector3(pos.X * WallShift, 0f, pos.Y * WallShift)
+                              );
+            wall.setTexture(this.textures["kafelki"]);
+
+            this.addColider(wall);
 
             this.children["Walls"].AddChild(wall);
         }
 
-        private void buildWindow(Model model, Vector2 pos, int rotationY)
+        private void buildWindow(Vector2 pos, int rotationY)
         {
-            GameObject window = this.buildObject(model, pos, "Window_", rotationY);
+            GameObject window = new Wall(
+                                    game,
+                                    "Window_" + pos.X + "x" + pos.Y,
+                                    this.models["okno"],
+                                    this.models["modul_przyciete"],
+                                    new Vector3(pos.X * WallShift, 0f, pos.Y * WallShift),
+                                    new Vector3(0f, (float) (rotationY * Math.PI / 2), 0f)
+                                );
+            window.setTexture(this.textures["kafelki"]);
+
+            this.addColider(window);
 
             this.children["Windows"].AddChild(window);
         }
 
-        private void buildDoor(Model model, Vector2 pos, int rotationY)
+        private void buildDoor(Vector2 pos, int rotationY)
         {
-            GameObject door = this.buildObject(model, pos, "Door_", rotationY);
+            GameObject door = new Wall(
+                                  game,
+                                  "Door_" + pos.X + "x" + pos.Y,
+                                  this.models["drzwi"],
+                                  this.models["drzwi_przyciete"],
+                                  new Vector3(pos.X * WallShift, 0f, pos.Y * WallShift),
+                                  new Vector3(0f, (float) (rotationY * Math.PI / 2), 0f)
+                              );
+            door.setTexture(this.textures["kafelki"]);
 
             this.children["Doors"].AddChild(door);
         }
@@ -108,9 +141,9 @@ namespace App
             this.children["Others"].AddChild(other);
         }
 
-        private void insertMainCharacter(Model model, Vector2 pos, int rotationY)
+        private void insertMainCharacter(Vector2 pos, int rotationY)
         {
-            this.Player = this.buildObject(model, pos, "Player_", rotationY);
+            this.Player = this.buildObject(this.models["bohater"], pos, "Player_", rotationY);
             this.Player.setTexture(this.textures["bohater"]);
 
             this.children["Characters"].AddChild(this.Player);
@@ -134,9 +167,7 @@ namespace App
                                         new Vector3(0f, (float) (rotationY * Math.PI / 2), 0f)
                                     );
 
-            if (model != this.models["drzwi"]) {
-                this.addColider(gameObject);
-            }
+            this.addColider(gameObject);
 
             return gameObject;
         }

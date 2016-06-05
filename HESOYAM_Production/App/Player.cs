@@ -19,21 +19,21 @@ namespace App
         ) : base(game, name, position, rotation)
         {
             Vector3 newPosition = position;
-            Vector3 newSize = new Vector3(50.0f, 100.0f, 100.0f);
+            Vector3 newSize = new Vector3(5.0f, 10.0f, 10.0f);
 
-            newPosition.X += 100;
+            newPosition.X += 50;
             AddCollider("front", new Collider(game, newPosition, newSize, Vector3.Zero));
 
-            newPosition.X -= 200;
+            newPosition.X -= 100;
             AddCollider("back", new Collider(game, newPosition, newSize, Vector3.Zero));
 
-            newSize = new Vector3(100.0f, 100.0f, 50.0f);
+            newSize = new Vector3(10.0f, 10.0f, 5.0f);
 
-            newPosition.X += 100;
-            newPosition.Z += 100;
+            newPosition.X += 50;
+            newPosition.Z += 50;
             AddCollider("right", new Collider(game, newPosition, newSize, Vector3.Zero));
 
-            newPosition.Z -= 200;
+            newPosition.Z -= 100;
             AddCollider("left", new Collider(game, newPosition, newSize, Vector3.Zero));
 
             AddCollidersToGame();

@@ -10,10 +10,9 @@ namespace App
 
     public class GameObject : DrawableGameComponent, IGameElement, IGameObject
     {
-        private Model model;
-        private Texture2D texture;
-
         protected Engine game;
+        protected Model model;
+        protected Texture2D texture;
 
         public string name { get; set; }
 
@@ -213,12 +212,7 @@ namespace App
             }
         }
 
-        public void setTexture(Texture2D texture)
-        {
-            this.texture = texture;
-        }
-
-        private void DrawModel(Model model)
+        protected void DrawModel(Model model)
         {
             // Copy any parent transforms.
             Matrix[] transforms = new Matrix[model.Bones.Count];
@@ -247,12 +241,17 @@ namespace App
             }
         }
 
-        private void DrawTexture(BasicEffect effect)
+        protected void DrawTexture(BasicEffect effect)
         {
             if (this.texture != null) {
                 effect.TextureEnabled = true;
                 effect.Texture = this.texture;
             }
+        }
+
+        public void setTexture(Texture2D texture)
+        {
+            this.texture = texture;
         }
     }
 }

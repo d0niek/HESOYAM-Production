@@ -86,9 +86,9 @@ namespace App
             MouseState mouseState = new MouseState();
 
             if (input.IsNewMouseScrollUp(out mouseState)) {
-                this.Move(-10, 10, 10);
-            } else if (input.IsNewMouseScrollDown(out mouseState)) {
                 this.Move(10, -10, -10);
+            } else if (input.IsNewMouseScrollDown(out mouseState)) {
+                this.Move(-10, 10, 10);
             }
         }
 
