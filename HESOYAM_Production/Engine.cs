@@ -181,6 +181,7 @@ namespace HESOYAM_Production
         protected override void Draw(GameTime gameTime)
         {
             graphics.GraphicsDevice.Clear(Color.CornflowerBlue);
+
             base.Draw(gameTime);
         }
 

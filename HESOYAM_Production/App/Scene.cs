@@ -65,6 +65,12 @@ namespace App
                 this.buildOther(this.models["lozko"], pos, (int) color.B);
             } else if (color.R == 100 && color.G == 50) {
                 this.buildOther(this.models["lampa"], pos, (int) color.B);
+            } else if (color.R == 185 && color.G == 67) {
+                this.buildOther(this.models["szafka"], pos, (int) color.B);
+            } else if (color.R == 185 && color.G == 163) {
+                this.buildOther(this.models["biurko"], pos, (int) color.B);
+            } else if (color.R == 46 && color.G == 163) {
+                this.buildOther(this.models["krzeslo"], pos, (int) color.B);
             } else if (color.R == 250 && color.G == 250) {
                 this.insertMainCharacter(pos, (int) color.B);
             } else if (color.R == 250 && color.G == 200) {
@@ -86,9 +92,10 @@ namespace App
                                   game,
                                   "Wall_" + pos.X + "x" + pos.Y,
                                   this.models["sciana"],
-                                  this.models["sciana_przezroczysta"],
+                                  this.models["modul_przyciete"],
                                   new Vector3(pos.X * WallShift, 0f, pos.Y * WallShift)
                               );
+            wall.setTexture(this.textures["kafelki"]);
 
             this.addColider(wall);
 
@@ -101,10 +108,11 @@ namespace App
                                     game,
                                     "Window_" + pos.X + "x" + pos.Y,
                                     this.models["okno"],
-                                    this.models["okno"],
+                                    this.models["modul_przyciete"],
                                     new Vector3(pos.X * WallShift, 0f, pos.Y * WallShift),
                                     new Vector3(0f, (float) (rotationY * Math.PI / 2), 0f)
                                 );
+            window.setTexture(this.textures["kafelki"]);
 
             this.addColider(window);
 
@@ -117,10 +125,11 @@ namespace App
                                   game,
                                   "Door_" + pos.X + "x" + pos.Y,
                                   this.models["drzwi"],
-                                  this.models["drzwi"],
+                                  this.models["drzwi_przyciete"],
                                   new Vector3(pos.X * WallShift, 0f, pos.Y * WallShift),
                                   new Vector3(0f, (float) (rotationY * Math.PI / 2), 0f)
                               );
+            door.setTexture(this.textures["kafelki"]);
 
             this.children["Doors"].AddChild(door);
         }

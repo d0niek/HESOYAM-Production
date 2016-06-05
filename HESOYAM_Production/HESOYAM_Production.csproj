@@ -111,6 +111,9 @@
     <None Include="Content\Textures\stary.png" />
     <None Include="Content\Textures\zolnierz.png" />
     <None Include="Content\Models\sciana_przezroczysta.FBX" />
+    <None Include="Content\Models\drzwi_przyciete.FBX" />
+    <None Include="Content\Models\modul_przyciete.FBX" />
+    <None Include="Content\Textures\kafelki.png" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Icon.ico" />

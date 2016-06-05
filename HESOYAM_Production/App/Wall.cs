@@ -24,7 +24,7 @@ namespace App
         public override void Draw(GameTime gameTime)
         {
             if (this.isWallCoversCameraLookAt()) {
-                //this.DrawModel(this.transparentModel);
+                this.DrawModel(this.transparentModel);
             } else {
                 this.DrawModel(this.model);
             }
