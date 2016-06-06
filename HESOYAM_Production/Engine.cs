@@ -63,7 +63,7 @@ namespace HESOYAM_Production
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             this.inputState = new InputState(this.GraphicsDevice);
-            this.hud = new HUD(this, this.textures);
+            this.hud = new HUD(this, this.inputState, this.textures);
 
             this.LoadModels();
             this.LoadTextures();

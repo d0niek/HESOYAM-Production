@@ -11,12 +11,14 @@ namespace App
     public class HUD
     {
         private Engine game;
+        private InputState inputState;
         private Dictionary<String, Texture2D> textures;
 
-        public HUD(Engine game, Dictionary<String, Texture2D> textures)
+        public HUD(Engine game, InputState inputState, Dictionary<String, Texture2D> textures)
         {
             this.game = game;
             this.textures = textures;
+            this.inputState = inputState;
         }
 
         public void Draw()
@@ -28,21 +30,34 @@ namespace App
 
         private void DrawPlayPauseButton()
         {
-            Texture2D button = this.GetPlayOrPauseButton();
-            int x = this.game.Graphics().Viewport.Width / 2 - (button.Width / 2);
-            int y = this.game.Graphics().Viewport.Height - button.Height;
+            int x = this.game.Graphics().Viewport.Width / 2 - 25;
+            int y = this.game.Graphics().Viewport.Height - 50;
+            Rectangle rec = new Rectangle(x, y, 50, 50);
 
-            Rectangle rec = new Rectangle(x, y, button.Width, button.Height);
+            Texture2D button = this.GetPlayOrPauseButtonTexture(rec);
+
             this.game.spriteBatch.Draw(button, rec, Color.White);
         }
 
-        private Texture2D GetPlayOrPauseButton()
+        private Texture2D GetPlayOrPauseButtonTexture(Rectangle rec)
         {
+            String buttonTexture = "";
+            var mousePoint = new Point(
+                                 this.inputState.Mouse.CurrentMouseState.X,
+                                 this.inputState.Mouse.CurrentMouseState.Y
+                             );
+
             if (this.game.playMode) {
-                return textures["pause_button"];
+                buttonTexture = "pause_button";
             } else {
-                return textures["play_button"];
+                buttonTexture = "play_button";
             }
+
+            if (rec.Contains(mousePoint)) {
+                buttonTexture += "_hover";
+            }
+
+            return textures[buttonTexture];
         }
     }
 }
