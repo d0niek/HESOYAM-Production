@@ -95,7 +95,7 @@ namespace App
                                   this.models["modul_przyciete"],
                                   new Vector3(pos.X * WallShift, 0f, pos.Y * WallShift)
                               );
-            wall.setTexture(this.textures["kafelki"]);
+            wall.setTexture(this.textures["sciana_tekstura"]);
 
             this.addColider(wall);
 

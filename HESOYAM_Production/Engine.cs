@@ -20,10 +20,10 @@ namespace HESOYAM_Production
         private String rootDir;
         private Dictionary<String, Model> models;
         private Dictionary<String, Texture2D> textures;
+        private GraphicsDeviceManager graphics;
+        private HUD hud;
 
-        GraphicsDeviceManager graphics;
-        SpriteBatch spriteBatch;
-
+        public SpriteBatch spriteBatch;
         public Camera camera;
         public Player player;
         public Scene scene;
@@ -63,6 +63,7 @@ namespace HESOYAM_Production
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             this.inputState = new InputState(this.GraphicsDevice);
+            this.hud = new HUD(this, this.textures);
 
             this.LoadModels();
             this.LoadTextures();
@@ -84,7 +85,7 @@ namespace HESOYAM_Production
             this.camera.lookAtParent = this.player;
 
             this.player.AddChild(this.camera);
-            player.AddChild(scene.Player);
+            this.player.AddChild(scene.Player);
         }
 
         private void LoadModels()
@@ -182,7 +183,11 @@ namespace HESOYAM_Production
         {
             graphics.GraphicsDevice.Clear(Color.CornflowerBlue);
 
+            GraphicsDevice.DepthStencilState = DepthStencilState.Default;
+
             base.Draw(gameTime);
+
+            this.hud.Draw();
         }
 
         static float GameTimeFloat(GameTime gameTime)
@@ -190,9 +195,9 @@ namespace HESOYAM_Production
             return (float) gameTime.ElapsedGameTime.TotalMilliseconds;
         }
 
-        public GraphicsDeviceManager Graphics()
+        public GraphicsDevice Graphics()
         {
-            return this.graphics;
+            return this.GraphicsDevice;
         }
     }
 }

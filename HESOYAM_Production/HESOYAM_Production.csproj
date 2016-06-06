@@ -61,6 +61,7 @@
     <Compile Include="App\Scene.cs" />
     <Compile Include="App\Util\Mouse.cs" />
     <Compile Include="App\Wall.cs" />
+    <Compile Include="App\HUD.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Icon.png" />
