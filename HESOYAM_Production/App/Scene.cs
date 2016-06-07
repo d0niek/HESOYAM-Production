@@ -40,7 +40,7 @@ namespace App
         {
             this.AddChild(new GameObject(game, "Characters"));
             this.children["Characters"].AddChild(new GameObject(game, "Player"));
-            this.children["Characters"].AddChild(new GameObject(game, "Teammate"));
+            this.children["Characters"].AddChild(new GameObject(game, "Teammates"));
             this.children["Characters"].AddChild(new GameObject(game, "Opponents"));
             this.AddChild(new GameObject(game, "Walls"));
             this.AddChild(new GameObject(game, "Windows"));
@@ -85,9 +85,9 @@ namespace App
             } else if (color.R == 200 && color.G == 200) {
                 this.insertTeammateCharacter(this.models["miesniak"], pos, (int) color.B, "miesniak");
             } else if (color.R == 75 && color.G == 25) {
-                this.insertOpponentsCharacter(this.models["zolnierz"], pos, (int) color.B, "zolnierz");
+                this.insertOpponentCharacter(this.models["zolnierz"], pos, (int) color.B, "zolnierz");
             } else if (color.R == 25 && color.G == 57) {
-                this.insertOpponentsCharacter(this.models["lekarz"], pos, (int) color.B, "lekarz");
+                this.insertOpponentCharacter(this.models["lekarz"], pos, (int) color.B, "lekarz");
             }
         }
 
@@ -178,10 +178,10 @@ namespace App
             GameObject character = this.buildObject(model, pos, "Team_", rotationY);
             character.setTexture(this.textures[texture]);
 
-            this.children["Characters"].children["Teammate"].AddChild(character);
+            this.children["Characters"].children["Teammates"].AddChild(character);
         }
 
-        private void insertOpponentsCharacter(Model model, Vector2 pos, int rotationY, string texture)
+        private void insertOpponentCharacter(Model model, Vector2 pos, int rotationY, string texture)
         {
             GameObject character = this.buildObject(model, pos, "Opponent_", rotationY);
             character.setTexture(this.textures[texture]);
