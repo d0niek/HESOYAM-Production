@@ -48,7 +48,7 @@ namespace App
         private bool isWallCoversCameraLookAt()
         {
             const int distance = 400;
-            Vector3 cameraLookAtPosition = this.game.camera.cameraLookAt;
+            Vector3 cameraLookAtPosition = this.game.Camera.cameraLookAt;
 
             bool onLeft = this.position.X <= cameraLookAtPosition.X + 100 && this.position.X > cameraLookAtPosition.X - distance;
             bool frontOf = this.position.Z >= cameraLookAtPosition.Z - 50 && this.position.Z < cameraLookAtPosition.Z + distance;

@@ -16,28 +16,56 @@ namespace HESOYAM_Production
     /// </summary>
     public class Engine : Game
     {
-        private InputState inputState;
-        private String rootDir;
-        private Dictionary<String, Model> models;
-        private Dictionary<String, Texture2D> textures;
-
+        InputState inputState;
+        String rootDir;
+        Dictionary<String, Model> models;
+        Dictionary<String, Texture2D> textures;
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+        Camera camera;
+        Player player;
+        Scene scene;
+        bool playMode;
 
-        public Camera camera;
-        public Player player;
-        public Scene scene;
-        public bool playMode;
+        public InputState InputState {
+            get { return inputState; }
+            private set { }
+        }
+
+        public Dictionary<String, Model> Models {
+            get { return models; }
+            private set { }
+        }
+
+        public Dictionary<String, Texture2D> Textures {
+            get { return textures; }
+            private set { }
+        }
+
+        public Camera Camera {
+            get { return camera; }
+            private set { }
+        }
+
+        public Scene Scene {
+            get { return scene; }
+            private set { }
+        }
+
+        public bool PlayMode {
+            get { return playMode; }
+            private set { }
+        }
 
         public Engine()
         {
             graphics = new GraphicsDeviceManager(this);
 
             Content.RootDirectory = "Content";
-            this.playMode = true;
-            this.rootDir = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName;
-            this.models = new Dictionary<String, Model>();
-            this.textures = new Dictionary<String, Texture2D>();
+            playMode = true;
+            rootDir = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName;
+            models = new Dictionary<String, Model>();
+            textures = new Dictionary<String, Texture2D>();
         }
 
         /// <summary>
@@ -48,8 +76,8 @@ namespace HESOYAM_Production
         /// </summary>
         protected override void Initialize()
         {
-            this.IsMouseVisible = true;
-            this.graphics.IsFullScreen = false;
+            IsMouseVisible = true;
+            graphics.IsFullScreen = false;
             base.Initialize();
         }
 
@@ -62,40 +90,38 @@ namespace HESOYAM_Production
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            this.inputState = new InputState(this.GraphicsDevice);
+            inputState = new InputState(GraphicsDevice);
 
-            this.LoadModels();
-            this.LoadTextures();
+            LoadModels();
+            LoadTextures();
 
             scene = new Scene(
                 this,
                 "Scene_1",
-                this.rootDir + "/Content/Map/scene_1",
-                this.models,
-                this.textures
+                rootDir + "/Content/Map/scene_1"
             );
 
             Vector3 cameraMove = new Vector3(-500.0f, 500.0f, 500.0f);
+            float cameraAngle = (float) (Math.Atan2(cameraMove.X, cameraMove.Z));
 
-            this.player = new Player(this, "Player", scene.Player.position);
-            this.camera = new Camera(this, "Kamera", Vector3.Add(this.player.position, cameraMove));
+            player = new Player(this, "Player", cameraAngle, scene.Player.position);
+            camera = new Camera(this, "Kamera", Vector3.Add(player.position, cameraMove));
 
-            this.player.cameraAngle = (float) (Math.Atan2(cameraMove.X, cameraMove.Z));
-            this.camera.lookAtParent = this.player;
+            camera.lookAtParent = player;
 
-            this.player.AddChild(this.camera);
+            player.AddChild(camera);
             player.AddChild(scene.Player);
         }
 
         private void LoadModels()
         {
-            String modelsDir = this.rootDir + "/Content/Models";
+            String modelsDir = rootDir + "/Content/Models";
 
             String[] files = Directory.GetFiles(modelsDir);
             foreach (String file in files) {
                 String name = file.Remove(0, modelsDir.Length + 1).Replace(".FBX", "");
 
-                this.LoadModel(name);
+                LoadModel(name);
             }
         }
 
@@ -104,7 +130,7 @@ namespace HESOYAM_Production
             try {
                 Model model = Content.Load<Model>("Models/" + name);
 
-                this.models.Add(name, model);
+                models.Add(name, model);
             } catch (ContentLoadException e) {
                 Console.WriteLine("Model '" + name + "' does not exists in Content.mgcb");
             }
@@ -112,13 +138,13 @@ namespace HESOYAM_Production
 
         private void LoadTextures()
         {
-            String texturesDir = this.rootDir + "/Content/Textures";
+            String texturesDir = rootDir + "/Content/Textures";
 
             String[] files = Directory.GetFiles(texturesDir);
             foreach (String file in files) {
                 String name = file.Remove(0, texturesDir.Length + 1).Replace(".png", "");
 
-                this.LoadTexture(name);
+                LoadTexture(name);
             }
         }
 
@@ -126,7 +152,7 @@ namespace HESOYAM_Production
         {
             Texture2D texture = Content.Load<Texture2D>("Textures/" + name);
 
-            this.textures.Add(name, texture);
+            textures.Add(name, texture);
         }
 
         public void AddComponent(IGameComponent item)
@@ -141,23 +167,22 @@ namespace HESOYAM_Production
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
-            this.inputState.Update();
-
-            if (this.inputState.IsSpace(PlayerIndex.One)) {
-                this.playMode = !this.playMode;
+            inputState.Update();
+            if (inputState.IsSpace(PlayerIndex.One)) {
+                playMode = !playMode;
             }
 
             PlayerIndex outPlayerIndex;
-            if (this.inputState.IsNewKeyPress(Keys.F5, null, out outPlayerIndex)) {
+            if (inputState.IsNewKeyPress(Keys.F5, null, out outPlayerIndex)) {
                 Program.debugMode = !Program.debugMode;
             }
 
-            if (this.playMode) {
-                this.camera.position = this.camera.playModePosition;
-                this.player.update(gameTime, this.inputState);
+            if (playMode) {
+                camera.position = camera.playModePosition;
+                player.update();
             }
 
-            this.camera.update(this.inputState);
+            camera.update();
 
             // For Mobile devices, this logic will close the Game when the Back button is pressed
             // Exit() is obsolete on iOS
@@ -168,8 +193,9 @@ namespace HESOYAM_Production
 
             // TODO: Add your update logic here
             // Allows the game to exit
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
-                this.Exit();
+            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed) {
+                Exit();
+            }
 
             base.Update(gameTime);
         }
@@ -188,11 +214,6 @@ namespace HESOYAM_Production
         static float GameTimeFloat(GameTime gameTime)
         {
             return (float) gameTime.ElapsedGameTime.TotalMilliseconds;
-        }
-
-        public GraphicsDeviceManager Graphics()
-        {
-            return this.graphics;
         }
     }
 }

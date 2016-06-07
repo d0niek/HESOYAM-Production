@@ -9,15 +9,17 @@ namespace App
 
     public class Player : GameObject
     {
-        public float cameraAngle { get; set; }
+        float cameraAngle;
 
         public Player(
             Engine game,
             string name,
+            float cameraAngle,
             Vector3 position = default(Vector3),
             Vector3 rotation = default(Vector3)
         ) : base(game, name, position, rotation)
         {
+            this.cameraAngle = cameraAngle;
             Vector3 newPosition = position;
             Vector3 newSize = new Vector3(5.0f, 10.0f, 10.0f);
 
@@ -39,19 +41,19 @@ namespace App
             AddCollidersToGame();
         }
 
-        public void update(GameTime gameTime, InputState input)
+        public void update()
         {   
-            float angle = this.getAngleFromMouse(input);
+            float angle = this.getAngleFromMouse();
 
             this.Rotate(0, angle, 0);
 
-            Vector3 vector = this.movePlayer(input);
+            Vector3 vector = this.movePlayer();
 
             foreach (Collider collider in colliders.Values) {
                 collider.drawColor = Color.GreenYellow;
             }
 
-            foreach (IGameObject wall in game.scene.children["Walls"].children.Values) {
+            foreach (IGameObject wall in game.Scene.children["Walls"].children.Values) {
                 foreach (Collider collider in wall.colliders.Values) {
                     if (this.colliders["right"].CollidesWith(collider)) {
                         this.colliders["right"].drawColor = Color.OrangeRed;
@@ -101,12 +103,15 @@ namespace App
             }
         }
 
-        private float getAngleFromMouse(InputState input)
+        private float getAngleFromMouse()
         {
             float angle = this.rotation.Y;
 
-            if (input.Mouse.isInGameWindow()) {
-                Vector2 mousePos = new Vector2(input.Mouse.CurrentMouseState.X, input.Mouse.CurrentMouseState.Y);
+            if (game.InputState.Mouse.isInGameWindow()) {
+                Vector2 mousePos = new Vector2(
+                                       game.InputState.Mouse.CurrentMouseState.X, 
+                                       game.InputState.Mouse.CurrentMouseState.Y
+                                   );
 
                 mousePos.X -= this.Game.GraphicsDevice.Viewport.Width / 2;
                 mousePos.Y -= this.Game.GraphicsDevice.Viewport.Height / 2;
@@ -117,9 +122,9 @@ namespace App
             return angle;
         }
 
-        private Vector3 movePlayer(InputState input)
+        private Vector3 movePlayer()
         {
-            Vector3 vector = this.readInputAndMovePlayer(input);
+            Vector3 vector = this.readInputAndMovePlayer();
 
             Matrix rotationMatrixY = Matrix.CreateRotationY(this.rotation.Y + cameraAngle);
             vector = Vector3.Transform(vector, rotationMatrixY);
@@ -129,24 +134,24 @@ namespace App
             return vector;
         }
 
-        private Vector3 readInputAndMovePlayer(InputState input)
+        private Vector3 readInputAndMovePlayer()
         {
             PlayerIndex playerIndex;
             Vector3 vector = Vector3.Zero;
 
-            if (input.IsKeyPressed(Keys.W, PlayerIndex.One, out playerIndex)) {
+            if (game.InputState.IsKeyPressed(Keys.W, PlayerIndex.One, out playerIndex)) {
                 vector.Z = -10;
             }
 
-            if (input.IsKeyPressed(Keys.S, PlayerIndex.One, out playerIndex)) {
+            if (game.InputState.IsKeyPressed(Keys.S, PlayerIndex.One, out playerIndex)) {
                 vector.Z = 10;
             }
 
-            if (input.IsKeyPressed(Keys.A, PlayerIndex.One, out playerIndex)) {
+            if (game.InputState.IsKeyPressed(Keys.A, PlayerIndex.One, out playerIndex)) {
                 vector.X = -10;
             }
 
-            if (input.IsKeyPressed(Keys.D, PlayerIndex.One, out playerIndex)) {
+            if (game.InputState.IsKeyPressed(Keys.D, PlayerIndex.One, out playerIndex)) {
                 vector.X = 10;
             }
 

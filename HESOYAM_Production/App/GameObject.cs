@@ -230,8 +230,8 @@ namespace App
                     * Matrix.CreateRotationZ(this.rotation.Z)
                     * Matrix.CreateScale(this.scale)
                     * Matrix.CreateTranslation(this.position);
-                    effect.View = this.game.camera.ViewMatrix;
-                    effect.Projection = this.game.camera.ProjectionMatrix;
+                    effect.View = this.game.Camera.ViewMatrix;
+                    effect.Projection = this.game.Camera.ProjectionMatrix;
 
                     this.DrawTexture(effect);
                 }

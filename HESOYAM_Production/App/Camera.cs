@@ -30,13 +30,13 @@ namespace App
             this.playModePosition = this.position;
         }
 
-        public void update(InputState input)
+        public void update()
         {
-            this.Zoom(input);
+            this.Zoom();
 
-            if (!this.game.playMode) {
-                if (input.Mouse.isInGameWindow()) {
-                    this.moveCamera(input);
+            if (!this.game.PlayMode) {
+                if (game.InputState.Mouse.isInGameWindow()) {
+                    this.moveCamera();
                 }
             } else {
                 this.cameraLookAt = this.lookAtParent != null ? this.lookAtParent.position : Vector3.Zero;
@@ -52,28 +52,28 @@ namespace App
             );
         }
 
-        private void moveCamera(InputState input)
+        private void moveCamera()
         {
             Vector3 vector = Vector3.Zero;
 
-            if (input.Mouse.isCloseToTopLeftCorner()) {
+            if (game.InputState.Mouse.isCloseToTopLeftCorner()) {
                 vector.Z = -20;
-            } else if (input.Mouse.isCloseToTopRightCorner()) {
+            } else if (game.InputState.Mouse.isCloseToTopRightCorner()) {
                 vector.X = 20;
-            } else if (input.Mouse.isCloseToBottomLeftCorner()) {
+            } else if (game.InputState.Mouse.isCloseToBottomLeftCorner()) {
                 vector.X = -20;
-            } else if (input.Mouse.isCloseToBottomRightCorner()) {
+            } else if (game.InputState.Mouse.isCloseToBottomRightCorner()) {
                 vector.Z = 20;
-            } else if (input.Mouse.isCloseToLeftBorder()) {
+            } else if (game.InputState.Mouse.isCloseToLeftBorder()) {
                 vector.Z = -20;
                 vector.X = -20;
-            } else if (input.Mouse.isCloseToRightBorder()) {
+            } else if (game.InputState.Mouse.isCloseToRightBorder()) {
                 vector.Z = 20;
                 vector.X = 20;
-            } else if (input.Mouse.isCloseToTopBorder()) {
+            } else if (game.InputState.Mouse.isCloseToTopBorder()) {
                 vector.Z = -20;
                 vector.X = 20;
-            } else if (input.Mouse.isCloseToBottomBorder()) {
+            } else if (game.InputState.Mouse.isCloseToBottomBorder()) {
                 vector.Z = 20;
                 vector.X = -20;
             }
@@ -81,13 +81,13 @@ namespace App
             this.Move(vector.X, 0, vector.Z);
         }
 
-        private void Zoom(InputState input)
+        private void Zoom()
         {
             MouseState mouseState = new MouseState();
 
-            if (input.IsNewMouseScrollUp(out mouseState)) {
+            if (game.InputState.IsNewMouseScrollUp(out mouseState)) {
                 this.Move(10, -10, -10);
-            } else if (input.IsNewMouseScrollDown(out mouseState)) {
+            } else if (game.InputState.IsNewMouseScrollDown(out mouseState)) {
                 this.Move(-10, 10, 10);
             }
         }
