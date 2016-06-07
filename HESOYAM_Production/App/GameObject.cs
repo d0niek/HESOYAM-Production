@@ -211,18 +211,18 @@ namespace App
         public override void Draw(GameTime gameTime)
         {
             if (this.model != null) {
-                this.DrawModel(this.model);
+                this.DrawModel();
             }
         }
 
-        private void DrawModel(Model model)
+        private void DrawModel()
         {
             // Copy any parent transforms.
-            Matrix[] transforms = new Matrix[model.Bones.Count];
-            model.CopyAbsoluteBoneTransformsTo(transforms);
+            Matrix[] transforms = new Matrix[this.model.Bones.Count];
+            this.model.CopyAbsoluteBoneTransformsTo(transforms);
 
             // Draw the model. A model can have multiple meshes, so loop.
-            foreach (ModelMesh mesh in model.Meshes) {
+            foreach (ModelMesh mesh in this.model.Meshes) {
                 // This is where the mesh orientation is set, as well
                 // as our camera and projection.
                 foreach (BasicEffect effect in mesh.Effects) {

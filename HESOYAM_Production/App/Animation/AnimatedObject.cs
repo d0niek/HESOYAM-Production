@@ -123,6 +123,8 @@ namespace App.Animation
         /// <returns>The player that will play this clip</returns>
         public AnimationPlayer PlayClip(AnimationClip clip)
         {
+
+            Console.WriteLine("play clip");
             // Create a clip player and assign it to this model
             player = new AnimationPlayer(clip, this);
             return player;
@@ -136,7 +138,7 @@ namespace App.Animation
         /// Update animation for the model.
         /// </summary>
         /// <param name="gameTime"></param>
-        public void Update(GameTime gameTime)
+        public override void Update(GameTime gameTime)
         {
             if (player != null) {
                 player.Update(gameTime);
@@ -153,14 +155,11 @@ namespace App.Animation
         /// <param name="graphics">The graphics device to draw on</param>
         /// <param name="camera">A camera to determine the view</param>
         /// <param name="world">A world matrix to place the model</param>
-        public void Draw(GraphicsDevice graphics, Matrix world)
+        public override void Draw(GameTime gameTime)
         {
+            
             if (model == null)
                 return;
-
-            //
-            // Compute all of the bone absolute transforms
-            //
 
             Matrix[] boneTransforms = new Matrix[bones.Count];
 
@@ -176,6 +175,7 @@ namespace App.Animation
             //
 
             Matrix[] skeleton = new Matrix[modelExtra.Skeleton.Count];
+
             for (int s = 0; s < modelExtra.Skeleton.Count; s++) {
                 Bone bone = bones[modelExtra.Skeleton[s]];
                 skeleton[s] = bone.SkinTransform * bone.AbsoluteTransform;
@@ -186,7 +186,12 @@ namespace App.Animation
                 foreach (Effect effect in modelMesh.Effects) {
                     if (effect is BasicEffect) {
                         BasicEffect beffect = effect as BasicEffect;
-                        beffect.World = boneTransforms[modelMesh.ParentBone.Index] * world;
+                        beffect.World = boneTransforms[modelMesh.ParentBone.Index]
+                    * Matrix.CreateRotationY(this.rotation.Y)
+                    * Matrix.CreateRotationX(this.rotation.X)
+                    * Matrix.CreateRotationZ(this.rotation.Z)
+                    * Matrix.CreateScale(this.scale)
+                    * Matrix.CreateTranslation(this.position);;
                         beffect.View = this.game.camera.ViewMatrix;
                         beffect.Projection = this.game.camera.ProjectionMatrix;
                         beffect.EnableDefaultLighting();
@@ -195,7 +200,11 @@ namespace App.Animation
 
                     if (effect is SkinnedEffect) {
                         SkinnedEffect seffect = effect as SkinnedEffect;
-                        seffect.World = boneTransforms[modelMesh.ParentBone.Index] * world;
+                        seffect.World = boneTransforms[modelMesh.ParentBone.Index]
+                    * Matrix.CreateRotationY(this.rotation.Y)
+                    * Matrix.CreateRotationX(this.rotation.X)
+                    * Matrix.CreateRotationZ(this.rotation.Z)
+                    * Matrix.CreateTranslation(this.position);
                         seffect.View = this.game.camera.ViewMatrix;
                         seffect.Projection = this.game.camera.ProjectionMatrix;
                         seffect.EnableDefaultLighting();

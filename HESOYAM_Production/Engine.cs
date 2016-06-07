@@ -24,6 +24,9 @@ namespace HESOYAM_Production
         public Player player;
         public Scene scene;
         public bool playMode;
+        AnimatedObject animated;
+        AnimatedObject animatedPos;
+
 
         public Engine()
         {
@@ -73,17 +76,18 @@ namespace HESOYAM_Production
             Model wall = Content.Load<Model>("Models/sciana");
             Model door = Content.Load<Model>("Models/drzwi");
             Model window = Content.Load<Model>("Models/okno");
-            Model animation = Content.Load<Model>("Animation/bohater_bieg");
-            Model animationPos = Content.Load<Model>("Animation/bohater_postawa");
+            Model animation = Content.Load<Model>("Animation/bohater_postawa");
+            Console.WriteLine(wall.Meshes.Count);
+            Model animationPos = Content.Load<Model>("Animation/bohater");
+            Console.WriteLine(animationPos.Meshes.Count);
 
-            AnimatedObject animated = new AnimatedObject(this,"animation",animation);
-            AnimatedObject animatedPos = new AnimatedObject(this,"animationPos",animationPos);
-
-            //AnimationClip clip = animated.Clips[0];
+            animated = new AnimatedObject(this,"animation",animation);
+            animatedPos = new AnimatedObject(this,"animationPos",animationPos);
+            AnimationClip clip = animated.Clips[0];
 
             // And play the clip
-            //AnimationPlayer play = animatedPos.PlayClip(clip);
-            //play.Looping = true;
+            AnimationPlayer play = animatedPos.PlayClip(clip);
+            play.Looping = true;
 
             scene = new Scene(
                 this,
@@ -99,6 +103,7 @@ namespace HESOYAM_Production
 
             Components.Add(testObjects);
             Components.Add(animated);
+            Components.Add(animatedPos);
 
             player.AddChild(testObjects);
             testObjects.position = this.player.position;

@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HESOYAM_Production", "HESOYAM_Production\HESOYAM_Production.csproj", "{DE1263FE-0738-4562-810A-4360C696A171}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AnimationPipeline", "AnimationPipeline\AnimationPipeline.csproj", "{21C86CAE-F863-4FB5-A7D9-2AB9C246FAF3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AnimationPipeline", "AnimationPipeline\AnimationPipeline.csproj", "{501C8626-471E-41DB-969D-BA65604B36B1}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{4283C410-FA95-4C88-808E-FCF96AD6D7D9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,14 +13,16 @@ Global
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{21C86CAE-F863-4FB5-A7D9-2AB9C246FAF3}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{21C86CAE-F863-4FB5-A7D9-2AB9C246FAF3}.Debug|x86.Build.0 = Debug|Any CPU
-		{21C86CAE-F863-4FB5-A7D9-2AB9C246FAF3}.Release|x86.ActiveCfg = Release|Any CPU
-		{21C86CAE-F863-4FB5-A7D9-2AB9C246FAF3}.Release|x86.Build.0 = Release|Any CPU
+		{501C8626-471E-41DB-969D-BA65604B36B1}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{501C8626-471E-41DB-969D-BA65604B36B1}.Debug|x86.Build.0 = Debug|Any CPU
+		{501C8626-471E-41DB-969D-BA65604B36B1}.Release|x86.ActiveCfg = Release|Any CPU
+		{501C8626-471E-41DB-969D-BA65604B36B1}.Release|x86.Build.0 = Release|Any CPU
 		{DE1263FE-0738-4562-810A-4360C696A171}.Debug|x86.ActiveCfg = Debug|x86
 		{DE1263FE-0738-4562-810A-4360C696A171}.Debug|x86.Build.0 = Debug|x86
 		{DE1263FE-0738-4562-810A-4360C696A171}.Release|x86.ActiveCfg = Release|x86
 		{DE1263FE-0738-4562-810A-4360C696A171}.Release|x86.Build.0 = Release|x86
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
 		Policies = $0

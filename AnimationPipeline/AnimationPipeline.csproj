@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{21C86CAE-F863-4FB5-A7D9-2AB9C246FAF3}</ProjectGuid>
+    <ProjectGuid>{501C8626-471E-41DB-969D-BA65604B36B1}</ProjectGuid>
     <OutputType>Library</OutputType>
     <RootNamespace>AnimationPipeline</RootNamespace>
     <AssemblyName>AnimationPipeline</AssemblyName>
@@ -35,7 +35,6 @@
     <Reference Include="MonoGame.Framework.Content.Pipeline">
       <HintPath>..\packages\MonoGame.Framework.Content.Pipeline.Portable.3.2.99.1-Beta\lib\portable-net45+win+wpa81+Xamarin.iOS10+MonoAndroid10+MonoTouch10\MonoGame.Framework.Content.Pipeline.dll</HintPath>
     </Reference>
-    <Reference Include="Mono.C5" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
   </ItemGroup>
@@ -46,12 +45,13 @@
     <Compile Include="AnimationClipWriter.cs" />
     <Compile Include="AnimationProcessor.cs" />
     <Compile Include="ModelExtraWriter.cs" />
-    <Compile Include="AnimationClipReader.cs" />
+    <Compile Include="Animation\AnimationClip.cs" />
+    <Compile Include="Animation\Bone.cs" />
+    <Compile Include="Animation\ModelExtra.cs" />
+    <Compile Include="Animation\ModelExtraReader.cs" />
+    <Compile Include="Animation\AnimationClipReader.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\HESOYAM_Production\HESOYAM_Production.csproj">
-      <Project>{DE1263FE-0738-4562-810A-4360C696A171}</Project>
-      <Name>HESOYAM_Production</Name>
-    </ProjectReference>
+    <Folder Include="Animation\" />
   </ItemGroup>
 </Project>
