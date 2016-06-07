@@ -23,6 +23,11 @@ namespace App
             this.DrawAvatars();
             this.DrawFotterBar();
             this.DrawPlayPauseButton();
+
+            if (this.game.PlayMode == false) {
+                this.SelectTeammate();
+            }
+
             this.game.spriteBatch.End();
         }
 
@@ -89,6 +94,16 @@ namespace App
             Rectangle rec = new Rectangle(x, y, this.game.GraphicsDevice.Viewport.Width, bar.Height);
 
             this.game.spriteBatch.Draw(bar, rec, Color.White);
+        }
+
+        void SelectTeammate()
+        {
+            foreach (GameObject teammate in this.game.Scene.children["Characters"].children["Teammates"].children.Values) {
+                if (teammate.IsMouseOverObject()) {
+                    Console.WriteLine("Mouse over " + teammate.name);
+                    break;
+                }
+            }
         }
     }
 }

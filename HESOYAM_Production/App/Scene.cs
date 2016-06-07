@@ -171,7 +171,7 @@ namespace App
 
         private void insertTeammateCharacter(Model model, Vector2 pos, int rotationY, string texture)
         {
-            GameObject character = this.buildObject(model, pos, "Team_", rotationY);
+            GameObject character = this.buildObject(model, pos, "Teammate_", rotationY);
             character.setTexture(this.game.Textures[texture]);
 
             this.children["Characters"].children["Teammates"].AddChild(character);
