@@ -61,6 +61,8 @@ namespace App
                 this.buildWindow(pos, (int) color.B);
             } else if (color.R == 0 && color.G == 255) {
                 this.buildDoor(pos, (int) color.B);
+            } else if (color.R == 164 && color.G == 255) {
+                this.buildExit(pos, (int) color.B);
             } else if (color.R == 100 && color.G == 100) {
                 this.buildOther(this.models["lozko"], pos, (int) color.B);
             } else if (color.R == 100 && color.G == 50) {
@@ -88,14 +90,15 @@ namespace App
 
         private void buildWall(Vector2 pos)
         {
-            GameObject wall = new Wall(
-                                  game,
-                                  "Wall_" + pos.X + "x" + pos.Y,
-                                  this.models["sciana"],
-                                  this.models["modul_przyciete"],
-                                  new Vector3(pos.X * WallShift, 0f, pos.Y * WallShift)
-                              );
-            wall.setTexture(this.textures["kafelki"]);
+            Wall wall = new Wall(
+                            game,
+                            "Wall_" + pos.X + "x" + pos.Y,
+                            this.models["sciana"],
+                            this.models["modul_przyciete"],
+                            new Vector3(pos.X * WallShift, 0f, pos.Y * WallShift)
+                        );
+            wall.setTextureNormal(this.textures["sciana_tekstura"]);
+            wall.setTextureCut(this.textures["modul_przyciete_tekstura"]);
 
             this.addColider(wall);
 
@@ -104,15 +107,16 @@ namespace App
 
         private void buildWindow(Vector2 pos, int rotationY)
         {
-            GameObject window = new Wall(
-                                    game,
-                                    "Window_" + pos.X + "x" + pos.Y,
-                                    this.models["okno"],
-                                    this.models["modul_przyciete"],
-                                    new Vector3(pos.X * WallShift, 0f, pos.Y * WallShift),
-                                    new Vector3(0f, (float) (rotationY * Math.PI / 2), 0f)
-                                );
-            window.setTexture(this.textures["kafelki"]);
+            Wall window = new Wall(
+                              game,
+                              "Window_" + pos.X + "x" + pos.Y,
+                              this.models["okno"],
+                              this.models["modul_przyciete"],
+                              new Vector3(pos.X * WallShift, 0f, pos.Y * WallShift),
+                              new Vector3(0f, (float) (rotationY * Math.PI / 2), 0f)
+                          );
+            window.setTextureNormal(this.textures["okno_tekstura"]);
+            window.setTextureCut(this.textures["modul_przyciete_tekstura"]);
 
             this.addColider(window);
 
@@ -121,17 +125,34 @@ namespace App
 
         private void buildDoor(Vector2 pos, int rotationY)
         {
-            GameObject door = new Wall(
-                                  game,
-                                  "Door_" + pos.X + "x" + pos.Y,
-                                  this.models["drzwi"],
-                                  this.models["drzwi_przyciete"],
-                                  new Vector3(pos.X * WallShift, 0f, pos.Y * WallShift),
-                                  new Vector3(0f, (float) (rotationY * Math.PI / 2), 0f)
-                              );
-            door.setTexture(this.textures["kafelki"]);
+            Wall door = new Wall(
+                            game,
+                            "Door_" + pos.X + "x" + pos.Y,
+                            this.models["drzwi"],
+                            this.models["drzwi_przyciete"],
+                            new Vector3(pos.X * WallShift, 0f, pos.Y * WallShift),
+                            new Vector3(0f, (float) (rotationY * Math.PI / 2), 0f)
+                        );
+            door.setTextureNormal(this.textures["drzwi_tekstura"]);
+            door.setTextureCut(this.textures["modul_przyciete_tekstura"]);
 
             this.children["Doors"].AddChild(door);
+        }
+
+        private void buildExit(Vector2 pos, int rotationY)
+        {
+            Wall exit = new Wall(
+                            game,
+                            "Door_" + pos.X + "x" + pos.Y,
+                            this.models["drzwi_duze"],
+                            this.models["drzwi_duze"],
+                            new Vector3(pos.X * WallShift, 0f, pos.Y * WallShift),
+                            new Vector3(0f, (float) (rotationY * Math.PI / 2), 0f)
+                        );
+            exit.setTextureNormal(this.textures["drzwi_duze_tekstura"]);
+            exit.setTextureCut(this.textures["drzwi_duze_tekstura"]);
+
+            this.children["Doors"].AddChild(exit);
         }
 
         private void buildOther(Model model, Vector2 pos, int rotationY)
