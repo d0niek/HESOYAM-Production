@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework;
 using System.Collections.Generic;
 using System;
 using Microsoft.Xna.Framework.Graphics;
-
+using Microsoft.Xna.Framework.Input;
 
 namespace App
 {
@@ -13,6 +13,7 @@ namespace App
         private Engine game;
         private InputState inputState;
         private Dictionary<String, Texture2D> textures;
+        bool mouseLeftClicked = false;
 
         public HUD(Engine game, InputState inputState, Dictionary<String, Texture2D> textures)
         {
@@ -24,6 +25,7 @@ namespace App
         public void Draw()
         {
             this.game.spriteBatch.Begin();
+            this.DrawFotterBar();
             this.DrawPlayPauseButton();
             this.game.spriteBatch.End();
         }
@@ -55,9 +57,27 @@ namespace App
 
             if (rec.Contains(mousePoint)) {
                 buttonTexture += "_hover";
+
+                if (this.inputState.Mouse.CurrentMouseState.LeftButton == ButtonState.Pressed &&
+                    this.mouseLeftClicked == false) {
+                    this.game.playMode = !this.game.playMode;
+                    this.mouseLeftClicked = true;
+                } else if (this.inputState.Mouse.CurrentMouseState.LeftButton == ButtonState.Released) {
+                    this.mouseLeftClicked = false;
+                }
             }
 
             return textures[buttonTexture];
+        }
+
+        private void DrawFotterBar()
+        {
+            Texture2D bar = textures["bar"];
+            int x = 0;
+            int y = this.game.Graphics().Viewport.Height - bar.Height;
+            Rectangle rec = new Rectangle(x, y, this.game.Graphics().Viewport.Width, bar.Height);
+
+            this.game.spriteBatch.Draw(bar, rec, Color.White);
         }
     }
 }
