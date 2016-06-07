@@ -25,9 +25,25 @@ namespace App
         public void Draw()
         {
             this.game.spriteBatch.Begin();
+            this.DrawAvatars();
             this.DrawFotterBar();
             this.DrawPlayPauseButton();
             this.game.spriteBatch.End();
+        }
+
+        private void DrawAvatars()
+        {
+            const int move = 10;
+            this.DrawAvatar("avatar_1", move, 40);
+            this.DrawAvatar("avatar_2", move, 90 + move);
+            this.DrawAvatar("avatar_3", move, 140 + 2 * move);
+        }
+
+        private void DrawAvatar(String avatarName, int x, int y)
+        {
+            Rectangle rec = new Rectangle(x, y, 50, 50);
+
+            this.game.spriteBatch.Draw(this.textures[avatarName], rec, Color.White);
         }
 
         private void DrawPlayPauseButton()
