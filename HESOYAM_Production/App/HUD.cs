@@ -48,8 +48,8 @@ namespace App
 
         private void DrawPlayPauseButton()
         {
-            int x = this.game.Graphics().Viewport.Width / 2 - 25;
-            int y = this.game.Graphics().Viewport.Height - 50;
+            int x = this.game.GraphicsDevice.Viewport.Width / 2 - 25;
+            int y = this.game.GraphicsDevice.Viewport.Height - 50;
             Rectangle rec = new Rectangle(x, y, 50, 50);
 
             Texture2D button = this.GetPlayOrPauseButtonTexture(rec);
@@ -90,8 +90,8 @@ namespace App
         {
             Texture2D bar = textures["bar"];
             int x = 0;
-            int y = this.game.Graphics().Viewport.Height - bar.Height;
-            Rectangle rec = new Rectangle(x, y, this.game.Graphics().Viewport.Width, bar.Height);
+            int y = this.game.GraphicsDevice.Viewport.Height - bar.Height;
+            Rectangle rec = new Rectangle(x, y, this.game.GraphicsDevice.Viewport.Width, bar.Height);
 
             this.game.spriteBatch.Draw(bar, rec, Color.White);
         }

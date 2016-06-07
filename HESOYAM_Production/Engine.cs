@@ -194,10 +194,5 @@ namespace HESOYAM_Production
         {
             return (float) gameTime.ElapsedGameTime.TotalMilliseconds;
         }
-
-        public GraphicsDevice Graphics()
-        {
-            return this.GraphicsDevice;
-        }
     }
 }
