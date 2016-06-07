@@ -1,5 +1,4 @@
 ﻿using System;
-
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -150,9 +149,13 @@ namespace HESOYAM_Production
 
         private void LoadTexture(String name)
         {
-            Texture2D texture = Content.Load<Texture2D>("Textures/" + name);
+            try {
+                Texture2D texture = Content.Load<Texture2D>("Textures/" + name);
 
-            textures.Add(name, texture);
+                textures.Add(name, texture);
+            } catch (ContentLoadException e) {
+                Console.WriteLine("Texture '" + name + "' does not exists in Content.mgcb");
+            }
         }
 
         public void AddComponent(IGameComponent item)
