@@ -88,7 +88,6 @@ namespace HESOYAM_Production
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
-
             inputState = new InputState(GraphicsDevice);
 
             LoadModels();
@@ -104,9 +103,9 @@ namespace HESOYAM_Production
             float cameraAngle = (float) (Math.Atan2(cameraMove.X, cameraMove.Z));
 
             player = new Player(this, "Player", cameraAngle, scene.Player.position);
-            camera = new Camera(this, "Kamera", Vector3.Add(player.position, cameraMove));
+            camera = new Camera(this, "Camera", Vector3.Add(player.position, cameraMove));
 
-            camera.lookAtParent = player;
+            camera.LookAtParent = player;
 
             player.AddChild(camera);
             player.AddChild(scene.Player);
@@ -181,7 +180,7 @@ namespace HESOYAM_Production
             }
 
             if (playMode) {
-                camera.position = camera.playModePosition;
+                camera.position = camera.PlayModePosition;
                 player.update();
             }
 

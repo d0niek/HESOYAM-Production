@@ -34,7 +34,8 @@ namespace App
             Model model,
             Vector3 position = default(Vector3), 
             Vector3 rotation = default(Vector3), 
-            Vector3? scale = null) : base(game)
+            Vector3? scale = null
+        ) : base(game)
         {
             this.game = game;
             this.name = name;
@@ -52,7 +53,8 @@ namespace App
             string name,
             Vector3 position = default(Vector3), 
             Vector3 rotation = default(Vector3), 
-            Vector3? scale = null) : base(game)
+            Vector3? scale = null
+        ) : base(game)
         {
             this.game = game;
             this.name = name;

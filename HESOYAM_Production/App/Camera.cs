@@ -7,15 +7,35 @@ namespace App
 
     public class Camera : GameObject
     {
-        public Vector3 playModePosition;
+        Vector3 playModePosition;
+        Vector3 cameraLookAt;
+        Matrix viewMatrix;
+        Matrix projectionMatrix;
 
-        public Vector3 cameraLookAt;
+        public Vector3 PlayModePosition {
+            get { return playModePosition; }
+            private set { }
+        }
 
-        public IGameElement lookAtParent { get; set; }
+        public Vector3 CameraLookAt {
+            get { return cameraLookAt; }
+            private set { }
+        }
 
-        public Matrix ViewMatrix { get; set; }
+        public IGameElement LookAtParent {
+            get;
+            set;
+        }
 
-        public Matrix ProjectionMatrix { get; set; }
+        public Matrix ViewMatrix { 
+            get { return viewMatrix; } 
+            private set { }
+        }
+
+        public Matrix ProjectionMatrix { 
+            get { return projectionMatrix; } 
+            private set { }
+        }
 
         public Camera(
             Engine game,
@@ -24,9 +44,9 @@ namespace App
             Vector3 rotaion = default(Vector3)
         ) : base(game, name, position, rotaion)
         {
-            this.lookAtParent = null;
-            this.ViewMatrix = Matrix.Identity;
-            this.ProjectionMatrix = Matrix.Identity;
+            this.LookAtParent = null;
+            this.viewMatrix = Matrix.Identity;
+            this.projectionMatrix = Matrix.Identity;
             this.playModePosition = this.position;
         }
 
@@ -39,12 +59,12 @@ namespace App
                     this.moveCamera();
                 }
             } else {
-                this.cameraLookAt = this.lookAtParent != null ? this.lookAtParent.position : Vector3.Zero;
+                this.cameraLookAt = this.LookAtParent != null ? this.LookAtParent.position : Vector3.Zero;
                 this.playModePosition = this.position;
             }
 
-            this.ViewMatrix = Matrix.CreateLookAt(this.position, this.cameraLookAt, Vector3.Up);
-            this.ProjectionMatrix = Matrix.CreatePerspectiveFieldOfView(
+            this.viewMatrix = Matrix.CreateLookAt(this.position, this.cameraLookAt, Vector3.Up);
+            this.projectionMatrix = Matrix.CreatePerspectiveFieldOfView(
                 MathHelper.ToRadians(45.0f),
                 this.GraphicsDevice.Viewport.AspectRatio,
                 1.0f,

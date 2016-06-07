@@ -4,16 +4,19 @@ using Microsoft.Xna.Framework.Graphics;
 using HESOYAM_Production;
 using System;
 using App.Collisions;
-using System.Collections.Generic;
 
 namespace App
 {
 
     public class Scene: GameObject
     {
-        private const float WallShift = 100;
+        const float wallShift = 100;
+        GameObject player;
 
-        public GameObject Player { get; private set; }
+        public GameObject Player {
+            get { return player; } 
+            private set { }
+        }
 
         public Scene(
             Engine game,
@@ -88,7 +91,7 @@ namespace App
                             "Wall_" + pos.X + "x" + pos.Y,
                             this.game.Models["sciana"],
                             this.game.Models["modul_przyciete"],
-                            new Vector3(pos.X * WallShift, 0f, pos.Y * WallShift)
+                            new Vector3(pos.X * wallShift, 0f, pos.Y * wallShift)
                         );
             wall.setTextureNormal(this.game.Textures["sciana_tekstura"]);
             wall.setTextureCut(this.game.Textures["modul_przyciete_tekstura"]);
@@ -105,7 +108,7 @@ namespace App
                               "Window_" + pos.X + "x" + pos.Y,
                               this.game.Models["okno"],
                               this.game.Models["modul_przyciete"],
-                              new Vector3(pos.X * WallShift, 0f, pos.Y * WallShift),
+                              new Vector3(pos.X * wallShift, 0f, pos.Y * wallShift),
                               new Vector3(0f, (float) (rotationY * Math.PI / 2), 0f)
                           );
             window.setTextureNormal(this.game.Textures["okno_tekstura"]);
@@ -123,7 +126,7 @@ namespace App
                             "Door_" + pos.X + "x" + pos.Y,
                             this.game.Models["drzwi"],
                             this.game.Models["drzwi_przyciete"],
-                            new Vector3(pos.X * WallShift, 0f, pos.Y * WallShift),
+                            new Vector3(pos.X * wallShift, 0f, pos.Y * wallShift),
                             new Vector3(0f, (float) (rotationY * Math.PI / 2), 0f)
                         );
             door.setTextureNormal(this.game.Textures["drzwi_tekstura"]);
@@ -139,7 +142,7 @@ namespace App
                             "Door_" + pos.X + "x" + pos.Y,
                             this.game.Models["drzwi_duze"],
                             this.game.Models["drzwi_duze"],
-                            new Vector3(pos.X * WallShift, 0f, pos.Y * WallShift),
+                            new Vector3(pos.X * wallShift, 0f, pos.Y * wallShift),
                             new Vector3(0f, (float) (rotationY * Math.PI / 2), 0f)
                         );
             exit.setTextureNormal(this.game.Textures["drzwi_duze_tekstura"]);
@@ -157,10 +160,10 @@ namespace App
 
         private void insertMainCharacter(Vector2 pos, int rotationY)
         {
-            this.Player = this.buildObject(this.game.Models["bohater"], pos, "Player_", rotationY);
-            this.Player.setTexture(this.game.Textures["bohater"]);
+            this.player = this.buildObject(this.game.Models["bohater"], pos, "Player_", rotationY);
+            this.player.setTexture(this.game.Textures["bohater"]);
 
-            this.children["Characters"].AddChild(this.Player);
+            this.children["Characters"].AddChild(this.player);
         }
 
         private void insertCharacter(Model model, Vector2 pos, int rotationY, string texture)
@@ -177,7 +180,7 @@ namespace App
                                         game,
                                         prefix + pos.X + "x" + pos.Y,
                                         model,
-                                        new Vector3(pos.X * WallShift, 0f, pos.Y * WallShift),
+                                        new Vector3(pos.X * wallShift, 0f, pos.Y * wallShift),
                                         new Vector3(0f, (float) (rotationY * Math.PI / 2), 0f)
                                     );
 
@@ -207,8 +210,8 @@ namespace App
         {
             const int modelWidth = 50;
 
-            float positionX = Width * WallShift / 2 - modelWidth;
-            float positionZ = Height * WallShift / 2 - modelWidth;
+            float positionX = Width * wallShift / 2 - modelWidth;
+            float positionZ = Height * wallShift / 2 - modelWidth;
 
             GameObject floor = new GameObject(
                                    this.game,
