@@ -19,11 +19,11 @@ namespace App
 
         public void Draw()
         {
-            this.game.SpriteBatch.Begin();
+            this.game.spriteBatch.Begin();
             this.DrawAvatars();
             this.DrawFotterBar();
             this.DrawPlayPauseButton();
-            this.game.SpriteBatch.End();
+            this.game.spriteBatch.End();
         }
 
         private void DrawAvatars()
@@ -38,7 +38,7 @@ namespace App
         {
             Rectangle rec = new Rectangle(x, y, 50, 50);
 
-            this.game.SpriteBatch.Draw(this.game.Textures[avatarName], rec, Color.White);
+            this.game.spriteBatch.Draw(this.game.Textures[avatarName], rec, Color.White);
         }
 
         private void DrawPlayPauseButton()
@@ -49,7 +49,7 @@ namespace App
 
             Texture2D button = this.GetPlayOrPauseButtonTexture(rec);
 
-            this.game.SpriteBatch.Draw(button, rec, Color.White);
+            this.game.spriteBatch.Draw(button, rec, Color.White);
         }
 
         private Texture2D GetPlayOrPauseButtonTexture(Rectangle rec)
@@ -88,7 +88,7 @@ namespace App
             int y = this.game.GraphicsDevice.Viewport.Height - bar.Height;
             Rectangle rec = new Rectangle(x, y, this.game.GraphicsDevice.Viewport.Width, bar.Height);
 
-            this.game.SpriteBatch.Draw(bar, rec, Color.White);
+            this.game.spriteBatch.Draw(bar, rec, Color.White);
         }
     }
 }

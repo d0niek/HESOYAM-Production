@@ -21,11 +21,11 @@ namespace HESOYAM_Production
         Dictionary<String, Texture2D> textures;
         GraphicsDeviceManager graphics;
         HUD hud;
-        SpriteBatch spriteBatch;
         Camera camera;
         Player player;
         Scene scene;
-        bool playMode;
+
+        public SpriteBatch spriteBatch;
 
         public InputState InputState {
             get { return inputState; }
@@ -39,11 +39,6 @@ namespace HESOYAM_Production
 
         public Dictionary<String, Texture2D> Textures {
             get { return textures; }
-            private set { }
-        }
-
-        public SpriteBatch SpriteBatch {
-            get { return spriteBatch; }
             private set { }
         }
 
@@ -67,7 +62,7 @@ namespace HESOYAM_Production
             graphics = new GraphicsDeviceManager(this);
 
             Content.RootDirectory = "Content";
-            playMode = true;
+            PlayMode = true;
             rootDir = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName;
             models = new Dictionary<String, Model>();
             textures = new Dictionary<String, Texture2D>();
@@ -95,8 +90,6 @@ namespace HESOYAM_Production
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
             inputState = new InputState(GraphicsDevice);
-
-            inputState = new InputState(this.GraphicsDevice);
             hud = new HUD(this);
 
             LoadModels();
@@ -180,7 +173,7 @@ namespace HESOYAM_Production
         {
             inputState.Update();
             if (inputState.IsSpace(PlayerIndex.One)) {
-                playMode = !playMode;
+                PlayMode = !PlayMode;
             }
 
             PlayerIndex outPlayerIndex;
@@ -188,7 +181,7 @@ namespace HESOYAM_Production
                 Program.debugMode = !Program.debugMode;
             }
 
-            if (playMode) {
+            if (PlayMode) {
                 camera.position = camera.PlayModePosition;
                 player.update();
             }

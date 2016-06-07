@@ -166,7 +166,7 @@ namespace App
             this.player = this.buildObject(this.game.Models["bohater"], pos, "Player_", rotationY);
             this.player.setTexture(this.game.Textures["bohater"]);
 
-            this.children["Characters"].children["Player"].AddChild(this.Player);
+            this.children["Characters"].children["Player"].AddChild(this.player);
         }
 
         private void insertTeammateCharacter(Model model, Vector2 pos, int rotationY, string texture)
