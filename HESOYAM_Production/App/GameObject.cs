@@ -34,7 +34,8 @@ namespace App
             Model model,
             Vector3 position = default(Vector3), 
             Vector3 rotation = default(Vector3), 
-            Vector3? scale = null) : base(game)
+            Vector3? scale = null
+        ) : base(game)
         {
             this.game = game;
             this.name = name;
@@ -52,7 +53,8 @@ namespace App
             string name,
             Vector3 position = default(Vector3), 
             Vector3 rotation = default(Vector3), 
-            Vector3? scale = null) : base(game)
+            Vector3? scale = null
+        ) : base(game)
         {
             this.game = game;
             this.name = name;
@@ -230,8 +232,8 @@ namespace App
                     * Matrix.CreateRotationZ(this.rotation.Z)
                     * Matrix.CreateScale(this.scale)
                     * Matrix.CreateTranslation(this.position);
-                    effect.View = this.game.camera.ViewMatrix;
-                    effect.Projection = this.game.camera.ProjectionMatrix;
+                    effect.View = this.game.Camera.ViewMatrix;
+                    effect.Projection = this.game.Camera.ProjectionMatrix;
 
                     this.DrawTexture(effect);
                 }

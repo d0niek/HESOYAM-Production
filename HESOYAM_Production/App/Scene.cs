@@ -4,30 +4,26 @@ using Microsoft.Xna.Framework.Graphics;
 using HESOYAM_Production;
 using System;
 using App.Collisions;
-using System.Collections.Generic;
 
 namespace App
 {
 
     public class Scene: GameObject
     {
-        private Dictionary<String, Model> models;
-        private Dictionary<String, Texture2D> textures;
-        private const float WallShift = 100;
+        const float wallShift = 100;
+        GameObject player;
 
-        public GameObject Player { get; private set; }
+        public GameObject Player {
+            get { return player; } 
+            private set { }
+        }
 
         public Scene(
             Engine game,
             string name,
-            string bitmapPath,
-            Dictionary<String, Model> models,
-            Dictionary<String, Texture2D> textures
+            string bitmapPath
         ) : base(game, name)
         {
-            this.models = models;
-            this.textures = textures;
-
             Bitmap bmp = (Bitmap) Image.FromFile(bitmapPath + ".bmp");
 
             this.buildMap(bmp);
@@ -67,27 +63,27 @@ namespace App
             } else if (color.R == 164 && color.G == 255) {
                 this.buildExit(pos, (int) color.B);
             } else if (color.R == 100 && color.G == 100) {
-                this.buildOther(this.models["lozko"], pos, (int) color.B);
+                this.buildOther(this.game.Models["lozko"], pos, (int) color.B);
             } else if (color.R == 100 && color.G == 50) {
-                this.buildOther(this.models["lampa"], pos, (int) color.B);
+                this.buildOther(this.game.Models["lampa"], pos, (int) color.B);
             } else if (color.R == 185 && color.G == 67) {
-                this.buildOther(this.models["szafka"], pos, (int) color.B);
+                this.buildOther(this.game.Models["szafka"], pos, (int) color.B);
             } else if (color.R == 185 && color.G == 163) {
-                this.buildOther(this.models["biurko"], pos, (int) color.B);
+                this.buildOther(this.game.Models["biurko"], pos, (int) color.B);
             } else if (color.R == 46 && color.G == 163) {
-                this.buildOther(this.models["krzeslo"], pos, (int) color.B);
+                this.buildOther(this.game.Models["krzeslo"], pos, (int) color.B);
             } else if (color.R == 250 && color.G == 250) {
                 this.insertPlayerCharacter(pos, (int) color.B);
             } else if (color.R == 250 && color.G == 200) {
-                this.insertTeammateCharacter(this.models["chudzielec"], pos, (int) color.B, "chudzielec");
+                this.insertTeammateCharacter(this.game.Models["chudzielec"], pos, (int) color.B, "chudzielec");
             } else if (color.R == 200 && color.G == 250) {
-                this.insertTeammateCharacter(this.models["grubas"], pos, (int) color.B, "grubas");
+                this.insertTeammateCharacter(this.game.Models["grubas"], pos, (int) color.B, "grubas");
             } else if (color.R == 200 && color.G == 200) {
-                this.insertTeammateCharacter(this.models["miesniak"], pos, (int) color.B, "miesniak");
+                this.insertTeammateCharacter(this.game.Models["miesniak"], pos, (int) color.B, "miesniak");
             } else if (color.R == 75 && color.G == 25) {
-                this.insertOpponentCharacter(this.models["zolnierz"], pos, (int) color.B, "zolnierz");
+                this.insertOpponentCharacter(this.game.Models["zolnierz"], pos, (int) color.B, "zolnierz");
             } else if (color.R == 25 && color.G == 57) {
-                this.insertOpponentCharacter(this.models["lekarz"], pos, (int) color.B, "lekarz");
+                this.insertOpponentCharacter(this.game.Models["lekarz"], pos, (int) color.B, "lekarz");
             }
         }
 
@@ -96,12 +92,12 @@ namespace App
             Wall wall = new Wall(
                             game,
                             "Wall_" + pos.X + "x" + pos.Y,
-                            this.models["sciana"],
-                            this.models["modul_przyciete"],
-                            new Vector3(pos.X * WallShift, 0f, pos.Y * WallShift)
+                            this.game.Models["sciana"],
+                            this.game.Models["modul_przyciete"],
+                            new Vector3(pos.X * wallShift, 0f, pos.Y * wallShift)
                         );
-            wall.setTextureNormal(this.textures["sciana_tekstura"]);
-            wall.setTextureCut(this.textures["modul_przyciete_tekstura"]);
+            wall.setTextureNormal(this.game.Textures["sciana_tekstura"]);
+            wall.setTextureCut(this.game.Textures["modul_przyciete_tekstura"]);
 
             this.addColider(wall);
 
@@ -113,13 +109,13 @@ namespace App
             Wall window = new Wall(
                               game,
                               "Window_" + pos.X + "x" + pos.Y,
-                              this.models["okno"],
-                              this.models["modul_przyciete"],
-                              new Vector3(pos.X * WallShift, 0f, pos.Y * WallShift),
+                              this.game.Models["okno"],
+                              this.game.Models["modul_przyciete"],
+                              new Vector3(pos.X * wallShift, 0f, pos.Y * wallShift),
                               new Vector3(0f, (float) (rotationY * Math.PI / 2), 0f)
                           );
-            window.setTextureNormal(this.textures["okno_tekstura"]);
-            window.setTextureCut(this.textures["modul_przyciete_tekstura"]);
+            window.setTextureNormal(this.game.Textures["okno_tekstura"]);
+            window.setTextureCut(this.game.Textures["modul_przyciete_tekstura"]);
 
             this.addColider(window);
 
@@ -131,13 +127,13 @@ namespace App
             Wall door = new Wall(
                             game,
                             "Door_" + pos.X + "x" + pos.Y,
-                            this.models["drzwi"],
-                            this.models["drzwi_przyciete"],
-                            new Vector3(pos.X * WallShift, 0f, pos.Y * WallShift),
+                            this.game.Models["drzwi"],
+                            this.game.Models["drzwi_przyciete"],
+                            new Vector3(pos.X * wallShift, 0f, pos.Y * wallShift),
                             new Vector3(0f, (float) (rotationY * Math.PI / 2), 0f)
                         );
-            door.setTextureNormal(this.textures["drzwi_tekstura"]);
-            door.setTextureCut(this.textures["modul_przyciete_tekstura"]);
+            door.setTextureNormal(this.game.Textures["drzwi_tekstura"]);
+            door.setTextureCut(this.game.Textures["modul_przyciete_tekstura"]);
 
             this.children["Doors"].AddChild(door);
         }
@@ -147,13 +143,13 @@ namespace App
             Wall exit = new Wall(
                             game,
                             "Door_" + pos.X + "x" + pos.Y,
-                            this.models["drzwi_duze"],
-                            this.models["drzwi_duze"],
-                            new Vector3(pos.X * WallShift, 0f, pos.Y * WallShift),
+                            this.game.Models["drzwi_duze"],
+                            this.game.Models["drzwi_duze"],
+                            new Vector3(pos.X * wallShift, 0f, pos.Y * wallShift),
                             new Vector3(0f, (float) (rotationY * Math.PI / 2), 0f)
                         );
-            exit.setTextureNormal(this.textures["drzwi_duze_tekstura"]);
-            exit.setTextureCut(this.textures["drzwi_duze_tekstura"]);
+            exit.setTextureNormal(this.game.Textures["drzwi_duze_tekstura"]);
+            exit.setTextureCut(this.game.Textures["drzwi_duze_tekstura"]);
 
             this.children["Doors"].AddChild(exit);
         }
@@ -167,8 +163,8 @@ namespace App
 
         private void insertPlayerCharacter(Vector2 pos, int rotationY)
         {
-            this.Player = this.buildObject(this.models["bohater"], pos, "Player_", rotationY);
-            this.Player.setTexture(this.textures["bohater"]);
+            this.player = this.buildObject(this.game.Models["bohater"], pos, "Player_", rotationY);
+            this.player.setTexture(this.game.Textures["bohater"]);
 
             this.children["Characters"].children["Player"].AddChild(this.Player);
         }
@@ -176,7 +172,7 @@ namespace App
         private void insertTeammateCharacter(Model model, Vector2 pos, int rotationY, string texture)
         {
             GameObject character = this.buildObject(model, pos, "Team_", rotationY);
-            character.setTexture(this.textures[texture]);
+            character.setTexture(this.game.Textures[texture]);
 
             this.children["Characters"].children["Teammates"].AddChild(character);
         }
@@ -184,7 +180,7 @@ namespace App
         private void insertOpponentCharacter(Model model, Vector2 pos, int rotationY, string texture)
         {
             GameObject character = this.buildObject(model, pos, "Opponent_", rotationY);
-            character.setTexture(this.textures[texture]);
+            character.setTexture(this.game.Textures[texture]);
 
             this.children["Characters"].children["Opponents"].AddChild(character);
         }
@@ -195,7 +191,7 @@ namespace App
                                         game,
                                         prefix + pos.X + "x" + pos.Y,
                                         model,
-                                        new Vector3(pos.X * WallShift, 0f, pos.Y * WallShift),
+                                        new Vector3(pos.X * wallShift, 0f, pos.Y * wallShift),
                                         new Vector3(0f, (float) (rotationY * Math.PI / 2), 0f)
                                     );
 
@@ -225,13 +221,13 @@ namespace App
         {
             const int modelWidth = 50;
 
-            float positionX = Width * WallShift / 2 - modelWidth;
-            float positionZ = Height * WallShift / 2 - modelWidth;
+            float positionX = Width * wallShift / 2 - modelWidth;
+            float positionZ = Height * wallShift / 2 - modelWidth;
 
             GameObject floor = new GameObject(
                                    this.game,
                                    "Floor",
-                                   this.models["sciana"],
+                                   this.game.Models["sciana"],
                                    new Vector3(positionX, 0f, positionZ),
                                    Vector3.Zero,
                                    new Vector3((float) Width, 0f, (float) Height)

@@ -1,16 +1,15 @@
 ﻿using HESOYAM_Production;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
-using OpenTK.Graphics.OpenGL;
 
 namespace App
 {
 
     public class Wall : GameObject
     {
-        private Model transparentModel;
-        private Texture2D textureNormal;
-        private Texture2D textureCut;
+        Model transparentModel;
+        Texture2D textureNormal;
+        Texture2D textureCut;
 
         public Wall(
             Engine game,
@@ -19,7 +18,8 @@ namespace App
             Model transparentModel,
             Vector3 position = default(Vector3), 
             Vector3 rotation = default(Vector3), 
-            Vector3? scale = null) : base(game, name, model, position, rotation, scale)
+            Vector3? scale = null
+        ) : base(game, name, model, position, rotation, scale)
         {
             this.transparentModel = transparentModel;
         }
@@ -48,7 +48,7 @@ namespace App
         private bool isWallCoversCameraLookAt()
         {
             const int distance = 400;
-            Vector3 cameraLookAtPosition = this.game.camera.cameraLookAt;
+            Vector3 cameraLookAtPosition = this.game.Camera.CameraLookAt;
 
             bool onLeft = this.position.X <= cameraLookAtPosition.X + 100 && this.position.X > cameraLookAtPosition.X - distance;
             bool frontOf = this.position.Z >= cameraLookAtPosition.Z - 50 && this.position.Z < cameraLookAtPosition.Z + distance;
