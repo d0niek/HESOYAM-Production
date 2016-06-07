@@ -100,8 +100,7 @@ namespace App
         {
             foreach (GameObject teammate in this.game.Scene.children["Characters"].children["Teammates"].children.Values) {
                 if (teammate.IsMouseOverObject()) {
-                    Console.WriteLine("Mouse over " + teammate.name);
-                    break;
+                    teammate.setHover(true);
                 }
             }
         }

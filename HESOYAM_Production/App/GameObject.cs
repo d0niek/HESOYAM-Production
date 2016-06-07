@@ -10,6 +10,7 @@ namespace App
 
     public class GameObject : DrawableGameComponent, IGameElement, IGameObject
     {
+        bool hover;
         protected Engine game;
         protected Model model;
         protected Texture2D texture;
@@ -37,6 +38,7 @@ namespace App
             Vector3? scale = null
         ) : base(game)
         {
+            this.hover = false;
             this.game = game;
             this.name = name;
             this.model = model;
@@ -221,6 +223,8 @@ namespace App
                 }
             }
 
+            this.setHover(false);
+
             return false;
         }
 
@@ -284,6 +288,7 @@ namespace App
                     * Matrix.CreateTranslation(this.position);
                     effect.View = this.game.Camera.ViewMatrix;
                     effect.Projection = this.game.Camera.ProjectionMatrix;
+                    effect.Alpha = this.hover ? 0.1f : 1f;
 
                     this.DrawTexture(effect);
                 }
@@ -299,6 +304,11 @@ namespace App
                 effect.TextureEnabled = true;
                 effect.Texture = this.texture;
             }
+        }
+
+        public void setHover(bool hover)
+        {
+            this.hover = hover;
         }
 
         public void setTexture(Texture2D texture)
