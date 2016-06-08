@@ -227,8 +227,6 @@ namespace App
                 }
             }
 
-            this.setHover(false);
-
             return false;
         }
 

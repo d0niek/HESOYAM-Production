@@ -12,12 +12,15 @@ namespace App
     {
         Engine game;
         readonly Dictionary<String, IGameObject> teammates;
+        List<Avatar> avatars;
         bool mouseLeftClicked = false;
+        GameObject selectedTeammate;
 
         public HUD(Engine game)
         {
             this.game = game;
             this.teammates = game.Scene.children["Characters"].children["Teammates"].children;
+            this.avatars = new List<Avatar>();
         }
 
         public void Draw()
@@ -37,17 +40,30 @@ namespace App
 
         private void DrawAvatars()
         {
-            const int move = 10;
-            DrawAvatar("avatar_1", move, 40);
-            DrawAvatar("avatar_2", move, 90 + move);
-            DrawAvatar("avatar_3", move, 140 + 2 * move);
+            const int padding = 10;
+            int i = 1;
+
+            foreach (GameObject teammate in teammates.Values) {
+                Avatar avatar = new Avatar(teammate, "avatar_" + i, padding, 40 + (i - 1) * 50 + (i - 1) * padding);
+                avatars.Add(avatar);
+                DrawAvatar(teammate, avatar);
+                i++;
+            }
         }
 
-        private void DrawAvatar(String avatarName, int x, int y)
+        private void DrawAvatar(GameObject teammate, Avatar avatar)
         {
-            Rectangle rec = new Rectangle(x, y, 50, 50);
+            if (teammate == selectedTeammate) {
+                DrawAvatarBorder(avatar);
+            }
 
-            game.spriteBatch.Draw(game.Textures[avatarName], rec, Color.White);
+            game.spriteBatch.Draw(game.Textures[avatar.TextureName], avatar.GetAvatarRectangle(), Color.White);
+        }
+
+        private void DrawAvatarBorder(Avatar avatar)
+        {
+            Rectangle rec = new Rectangle(avatar.X - 3, avatar.Y - 3, 56, 56);
+            game.spriteBatch.Draw(game.Textures["avatar_active"], rec, Color.White);
         }
 
         private void DrawPlayPauseButton()
@@ -64,11 +80,8 @@ namespace App
         private Texture2D GetPlayOrPauseButtonTexture(Rectangle rec)
         {
             String buttonTexture = game.PlayMode ? "pause_button" : "play_button";
-            Point mousePoint = new Point(
-                                   game.InputState.Mouse.CurrentMouseState.X,
-                                   game.InputState.Mouse.CurrentMouseState.Y
-                               );
-            if (rec.Contains(mousePoint)) {
+
+            if (rec.Contains(game.InputState.Mouse.GetMouseLocation())) {
                 buttonTexture += "_hover";
 
                 CheckIfUserClickMouseAndTogglePlayMode();
@@ -107,10 +120,24 @@ namespace App
             foreach (GameObject teammate in teammates.Values) {
                 if (teammate.IsMouseOverObject()) {
                     teammate.setHover(true);
-
-                    break;
+                    selectedTeammate = teammate;
+                    return;
                 }
+
+                teammate.setHover(false);
             }
+
+            foreach (Avatar avatar in avatars) {
+                if (avatar.GetAvatarRectangle().Contains(game.InputState.Mouse.GetMouseLocation())) {
+                    avatar.Character.setHover(true);
+                    selectedTeammate = avatar.Character;
+                    return;
+                }
+
+                avatar.Character.setHover(false);
+            }
+
+            selectedTeammate = null;
         }
 
         private void SelectDoorOrInteractiveModel()

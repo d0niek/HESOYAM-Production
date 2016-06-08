@@ -1,5 +1,7 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System;
+using Microsoft.Xna.Framework;
 
 namespace App.Util
 {
@@ -30,6 +32,14 @@ namespace App.Util
         {
             this.LastMouseState = this.CurrentMouseState;
             this.CurrentMouseState = Microsoft.Xna.Framework.Input.Mouse.GetState();
+        }
+
+        public Point GetMouseLocation()
+        {
+            return new Point(
+                CurrentMouseState.X,
+                CurrentMouseState.Y
+            );
         }
 
         public bool isInGameWindow()
