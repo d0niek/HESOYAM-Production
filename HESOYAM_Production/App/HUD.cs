@@ -3,71 +3,74 @@ using Microsoft.Xna.Framework;
 using System;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System.Collections.Generic;
 
 namespace App
 {
 
     public class HUD
     {
-        private Engine game;
+        Engine game;
+        readonly Dictionary<String, IGameObject> teammates;
         bool mouseLeftClicked = false;
 
         public HUD(Engine game)
         {
             this.game = game;
+            this.teammates = game.Scene.children["Characters"].children["Teammates"].children;
         }
 
         public void Draw()
         {
-            this.game.spriteBatch.Begin();
-            this.DrawAvatars();
-            this.DrawFotterBar();
-            this.DrawPlayPauseButton();
+            game.spriteBatch.Begin();
+            DrawAvatars();
+            DrawFotterBar();
+            DrawPlayPauseButton();
 
-            if (this.game.PlayMode == false) {
-                this.SelectTeammate();
+            if (!game.PlayMode) {
+                SelectTeammate();
             }
 
-            this.game.spriteBatch.End();
+            game.spriteBatch.End();
         }
 
         private void DrawAvatars()
         {
             const int move = 10;
-            this.DrawAvatar("avatar_1", move, 40);
-            this.DrawAvatar("avatar_2", move, 90 + move);
-            this.DrawAvatar("avatar_3", move, 140 + 2 * move);
+            DrawAvatar("avatar_1", move, 40);
+            DrawAvatar("avatar_2", move, 90 + move);
+            DrawAvatar("avatar_3", move, 140 + 2 * move);
         }
 
         private void DrawAvatar(String avatarName, int x, int y)
         {
             Rectangle rec = new Rectangle(x, y, 50, 50);
 
-            this.game.spriteBatch.Draw(this.game.Textures[avatarName], rec, Color.White);
+            game.spriteBatch.Draw(game.Textures[avatarName], rec, Color.White);
         }
 
         private void DrawPlayPauseButton()
         {
-            int x = this.game.GraphicsDevice.Viewport.Width / 2 - 25;
-            int y = this.game.GraphicsDevice.Viewport.Height - 50;
+            int x = game.GraphicsDevice.Viewport.Width / 2 - 25;
+            int y = game.GraphicsDevice.Viewport.Height - 50;
             Rectangle rec = new Rectangle(x, y, 50, 50);
 
-            Texture2D button = this.GetPlayOrPauseButtonTexture(rec);
+            Texture2D button = GetPlayOrPauseButtonTexture(rec);
 
-            this.game.spriteBatch.Draw(button, rec, Color.White);
+            game.spriteBatch.Draw(button, rec, Color.White);
         }
 
         private Texture2D GetPlayOrPauseButtonTexture(Rectangle rec)
         {
-            String buttonTexture = this.game.PlayMode ? "pause_button" : "play_button";
+            String buttonTexture = game.PlayMode ? "pause_button" : "play_button";
             Point mousePoint = new Point(
-                                   this.game.InputState.Mouse.CurrentMouseState.X,
-                                   this.game.InputState.Mouse.CurrentMouseState.Y
+                                   game.InputState.Mouse.CurrentMouseState.X,
+                                   game.InputState.Mouse.CurrentMouseState.Y
                                );
             if (rec.Contains(mousePoint)) {
                 buttonTexture += "_hover";
 
-                this.CheckIfUserClickMouseAndTogglePlayMode();
+                CheckIfUserClickMouseAndTogglePlayMode();
             }
 
             return game.Textures[buttonTexture];
@@ -75,32 +78,32 @@ namespace App
 
         private void CheckIfUserClickMouseAndTogglePlayMode()
         {
-            if (this.IsMouseLeftButtonPressed() && this.mouseLeftClicked == false) {
-                this.game.PlayMode = !this.game.PlayMode;
-                this.mouseLeftClicked = true;
-            } else if (!this.IsMouseLeftButtonPressed()) {
-                this.mouseLeftClicked = false;
+            if (IsMouseLeftButtonPressed() && !mouseLeftClicked) {
+                game.PlayMode = !game.PlayMode;
+                mouseLeftClicked = true;
+            } else if (!IsMouseLeftButtonPressed()) {
+                mouseLeftClicked = false;
             }
         }
 
         private bool IsMouseLeftButtonPressed()
         {
-            return this.game.InputState.Mouse.CurrentMouseState.LeftButton == ButtonState.Pressed;
+            return game.InputState.Mouse.CurrentMouseState.LeftButton == ButtonState.Pressed;
         }
 
         private void DrawFotterBar()
         {
             Texture2D bar = game.Textures["bar"];
             int x = 0;
-            int y = this.game.GraphicsDevice.Viewport.Height - bar.Height;
-            Rectangle rec = new Rectangle(x, y, this.game.GraphicsDevice.Viewport.Width, bar.Height);
+            int y = game.GraphicsDevice.Viewport.Height - bar.Height;
+            Rectangle rec = new Rectangle(x, y, game.GraphicsDevice.Viewport.Width, bar.Height);
 
-            this.game.spriteBatch.Draw(bar, rec, Color.White);
+            game.spriteBatch.Draw(bar, rec, Color.White);
         }
 
         void SelectTeammate()
         {
-            foreach (GameObject teammate in this.game.Scene.children["Characters"].children["Teammates"].children.Values) {
+            foreach (GameObject teammate in teammates.Values) {
                 if (teammate.IsMouseOverObject()) {
                     teammate.setHover(true);
                 }

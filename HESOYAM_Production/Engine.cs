@@ -90,7 +90,6 @@ namespace HESOYAM_Production
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
             inputState = new InputState(GraphicsDevice);
-            hud = new HUD(this);
 
             LoadModels();
             LoadTextures();
@@ -100,6 +99,7 @@ namespace HESOYAM_Production
                 "Scene_1",
                 rootDir + "/Content/Map/scene_1"
             );
+            hud = new HUD(this);
 
             Vector3 cameraMove = new Vector3(-500.0f, 500.0f, 500.0f);
             float cameraAngle = (float) (Math.Atan2(cameraMove.X, cameraMove.Z));
