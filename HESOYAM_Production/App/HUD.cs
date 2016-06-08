@@ -59,31 +59,33 @@ namespace App
 
         private Texture2D GetPlayOrPauseButtonTexture(Rectangle rec)
         {
-            String buttonTexture = "";
-            var mousePoint = new Point(
-                                 this.game.InputState.Mouse.CurrentMouseState.X,
-                                 this.game.InputState.Mouse.CurrentMouseState.Y
-                             );
-
-            if (this.game.PlayMode) {
-                buttonTexture = "pause_button";
-            } else {
-                buttonTexture = "play_button";
-            }
-
+            String buttonTexture = this.game.PlayMode ? "pause_button" : "play_button";
+            Point mousePoint = new Point(
+                                   this.game.InputState.Mouse.CurrentMouseState.X,
+                                   this.game.InputState.Mouse.CurrentMouseState.Y
+                               );
             if (rec.Contains(mousePoint)) {
                 buttonTexture += "_hover";
 
-                if (this.game.InputState.Mouse.CurrentMouseState.LeftButton == ButtonState.Pressed &&
-                    this.mouseLeftClicked == false) {
-                    this.game.PlayMode = !this.game.PlayMode;
-                    this.mouseLeftClicked = true;
-                } else if (this.game.InputState.Mouse.CurrentMouseState.LeftButton == ButtonState.Released) {
-                    this.mouseLeftClicked = false;
-                }
+                this.CheckIfUserClickMouseAndTogglePlayMode();
             }
 
             return game.Textures[buttonTexture];
+        }
+
+        private void CheckIfUserClickMouseAndTogglePlayMode()
+        {
+            if (this.IsMouseLeftButtonPressed() && this.mouseLeftClicked == false) {
+                this.game.PlayMode = !this.game.PlayMode;
+                this.mouseLeftClicked = true;
+            } else if (!this.IsMouseLeftButtonPressed()) {
+                this.mouseLeftClicked = false;
+            }
+        }
+
+        private bool IsMouseLeftButtonPressed()
+        {
+            return this.game.InputState.Mouse.CurrentMouseState.LeftButton == ButtonState.Pressed;
         }
 
         private void DrawFotterBar()
