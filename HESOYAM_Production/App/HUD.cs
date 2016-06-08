@@ -29,6 +29,7 @@ namespace App
 
             if (!game.PlayMode) {
                 SelectTeammate();
+                SelectDoorOrInteractiveModel();
             }
 
             game.spriteBatch.End();
@@ -101,11 +102,34 @@ namespace App
             game.spriteBatch.Draw(bar, rec, Color.White);
         }
 
-        void SelectTeammate()
+        private void SelectTeammate()
         {
             foreach (GameObject teammate in teammates.Values) {
                 if (teammate.IsMouseOverObject()) {
                     teammate.setHover(true);
+
+                    break;
+                }
+            }
+        }
+
+        private void SelectDoorOrInteractiveModel()
+        {
+            Dictionary<String, IGameObject> models = game.Scene.children["Doors"].children;
+
+            foreach (GameObject door in game.Scene.children["Doors"].children.Values) {
+                if (door.IsMouseOverObject()) {
+                    door.setHover(true);
+
+                    return;
+                }
+            }
+
+            foreach (GameObject door in game.Scene.children["Interactive"].children.Values) {
+                if (door.IsMouseOverObject()) {
+                    door.setHover(true);
+
+                    return;
                 }
             }
         }

@@ -41,6 +41,7 @@ namespace App
             this.AddChild(new GameObject(game, "Walls"));
             this.AddChild(new GameObject(game, "Windows"));
             this.AddChild(new GameObject(game, "Doors"));
+            this.AddChild(new GameObject(game, "Interactive"));
             this.AddChild(new GameObject(game, "Others"));
 
             for (int i = 0; i < bmp.Width; i++) {
@@ -67,7 +68,7 @@ namespace App
             } else if (color.R == 100 && color.G == 50) {
                 this.buildOther(this.game.Models["lampa"], pos, (int) color.B);
             } else if (color.R == 185 && color.G == 67) {
-                this.buildOther(this.game.Models["szafka"], pos, (int) color.B);
+                this.buildInteractive(this.game.Models["szafka"], pos, (int) color.B);
             } else if (color.R == 185 && color.G == 163) {
                 this.buildOther(this.game.Models["biurko"], pos, (int) color.B);
             } else if (color.R == 46 && color.G == 163) {
@@ -152,6 +153,13 @@ namespace App
             exit.setTextureCut(this.game.Textures["drzwi_duze_tekstura"]);
 
             this.children["Doors"].AddChild(exit);
+        }
+
+        private void buildInteractive(Model model, Vector2 pos, int rotationY)
+        {
+            GameObject interactive = this.buildObject(model, pos, "Other_", rotationY);
+
+            this.children["Interactive"].AddChild(interactive);
         }
 
         private void buildOther(Model model, Vector2 pos, int rotationY)
