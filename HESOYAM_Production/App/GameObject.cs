@@ -211,7 +211,11 @@ namespace App
 
         public bool IsMouseOverObject()
         {
-            Matrix world = Matrix.CreateTranslation(this.position);
+            Matrix world = Matrix.CreateTranslation(this.position)
+                           * Matrix.CreateRotationY(this.rotation.Y)
+                           * Matrix.CreateRotationX(this.rotation.X)
+                           * Matrix.CreateRotationZ(this.rotation.Z)
+                           * Matrix.CreateScale(this.scale);
 
             for (int index = 0; index < model.Meshes.Count; index++) {
                 BoundingSphere sphere = model.Meshes[index].BoundingSphere;
@@ -288,7 +292,7 @@ namespace App
                     * Matrix.CreateTranslation(this.position);
                     effect.View = this.game.Camera.ViewMatrix;
                     effect.Projection = this.game.Camera.ProjectionMatrix;
-                    effect.Alpha = this.hover ? 0.1f : 1f;
+                    effect.Alpha = this.hover ? 0.8f : 1f;
 
                     this.DrawTexture(effect);
                 }
