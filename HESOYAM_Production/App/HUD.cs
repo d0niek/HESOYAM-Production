@@ -14,6 +14,7 @@ namespace App
         readonly Dictionary<String, IGameObject> teammates;
         List<Avatar> avatars;
         bool mouseLeftClicked = false;
+        GameObject hoverTeammate;
         GameObject selectedTeammate;
 
         public HUD(Engine game)
@@ -54,16 +55,18 @@ namespace App
         private void DrawAvatar(GameObject teammate, Avatar avatar)
         {
             if (teammate == selectedTeammate) {
-                DrawAvatarBorder(avatar);
+                DrawAvatarBorder(avatar, "active");
+            } else if (teammate == hoverTeammate) {
+                DrawAvatarBorder(avatar, "hover");
             }
 
             game.spriteBatch.Draw(game.Textures[avatar.TextureName], avatar.GetAvatarRectangle(), Color.White);
         }
 
-        private void DrawAvatarBorder(Avatar avatar)
+        private void DrawAvatarBorder(Avatar avatar, String avatarBorder)
         {
             Rectangle rec = new Rectangle(avatar.X - 3, avatar.Y - 3, 56, 56);
-            game.spriteBatch.Draw(game.Textures["avatar_active"], rec, Color.White);
+            game.spriteBatch.Draw(game.Textures["avatar_" + avatarBorder], rec, Color.White);
         }
 
         private void DrawPlayPauseButton()
@@ -119,8 +122,7 @@ namespace App
         {
             foreach (GameObject teammate in teammates.Values) {
                 if (teammate.IsMouseOverObject()) {
-                    teammate.setHover(true);
-                    selectedTeammate = teammate;
+                    HighlightTeammateAndCheckIfUserClickLeftButton(teammate);
                     return;
                 }
 
@@ -129,12 +131,41 @@ namespace App
 
             foreach (Avatar avatar in avatars) {
                 if (avatar.GetAvatarRectangle().Contains(game.InputState.Mouse.GetMouseLocation())) {
-                    avatar.Character.setHover(true);
-                    selectedTeammate = avatar.Character;
+                    HighlightTeammateAndCheckIfUserClickLeftButton(avatar.Character);
                     return;
                 }
 
                 avatar.Character.setHover(false);
+            }
+
+            hoverTeammate = null;
+        }
+
+        private void HighlightTeammateAndCheckIfUserClickLeftButton(GameObject teammate)
+        {
+            teammate.setHover(true);
+            hoverTeammate = teammate;
+
+            if (IsMouseLeftButtonPressed() && !mouseLeftClicked) {
+                UpdateSelectedTeammate(teammate);
+                mouseLeftClicked = true;
+            } else if (!IsMouseLeftButtonPressed()) {
+                mouseLeftClicked = false;
+            }
+        }
+
+        private void UpdateSelectedTeammate(GameObject teammate)
+        {
+            ResetSelectedTeammate();
+
+            teammate.setActive(true);
+            selectedTeammate = teammate;
+        }
+
+        public void ResetSelectedTeammate()
+        {
+            if (selectedTeammate != null) {
+                selectedTeammate.setActive(false);
             }
 
             selectedTeammate = null;

@@ -184,6 +184,7 @@ namespace HESOYAM_Production
             if (PlayMode) {
                 camera.position = camera.PlayModePosition;
                 player.update();
+                hud.ResetSelectedTeammate();
             }
 
             camera.update();

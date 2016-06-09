@@ -11,6 +11,7 @@ namespace App
     public class GameObject : DrawableGameComponent, IGameElement, IGameObject
     {
         bool hover;
+        bool active;
         protected Engine game;
         protected Model model;
         protected Texture2D texture;
@@ -288,7 +289,11 @@ namespace App
                     effect.Projection = this.game.Camera.ProjectionMatrix;
 
                     // Tmp effect to highlight object under mouse
-                    effect.Alpha = this.hover ? 0.8f : 1f;
+                    if (active) {
+                        effect.AmbientLightColor = new Vector3(0, 0, 255);
+                    } else if (hover) {
+                        effect.AmbientLightColor = new Vector3(0, 255, 0);
+                    }
 
                     this.DrawTexture(effect);
                 }
@@ -309,6 +314,11 @@ namespace App
         public void setHover(bool hover)
         {
             this.hover = hover;
+        }
+
+        public void setActive(bool active)
+        {
+            this.active = active;
         }
 
         public void setTexture(Texture2D texture)
