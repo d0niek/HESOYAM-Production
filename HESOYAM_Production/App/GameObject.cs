@@ -10,9 +10,9 @@ namespace App
 
     public class GameObject : DrawableGameComponent, IGameElement, IGameObject
     {
-        protected Model model;
-
         protected Engine game;
+        protected Model model;
+        protected Texture2D texture;
 
         public string name { get; set; }
 
@@ -34,11 +34,13 @@ namespace App
             Model model,
             Vector3 position = default(Vector3), 
             Vector3 rotation = default(Vector3), 
-            Vector3? scale = null) : base(game)
+            Vector3? scale = null
+        ) : base(game)
         {
             this.game = game;
             this.name = name;
             this.model = model;
+            this.texture = null;
             this.position = position;
             this.rotation = rotation;
             this.scale = scale ?? Vector3.One;
@@ -51,7 +53,8 @@ namespace App
             string name,
             Vector3 position = default(Vector3), 
             Vector3 rotation = default(Vector3), 
-            Vector3? scale = null) : base(game)
+            Vector3? scale = null
+        ) : base(game)
         {
             this.game = game;
             this.name = name;
@@ -158,15 +161,12 @@ namespace App
 
         public void AddChildrenToGame(bool recursively, bool withColliders)
         {
-            if(withColliders)
-            {
-                foreach(Collider collider in this.colliders.Values)
-                {
+            if (withColliders) {
+                foreach (Collider collider in this.colliders.Values) {
                     game.AddComponent(collider);
                 }
             }
-            foreach (IGameComponent child in this.children.Values)
-            {
+            foreach (IGameComponent child in this.children.Values) {
                 this.game.AddComponent(child);
 
                 if (recursively) {
@@ -178,8 +178,7 @@ namespace App
 
         public void AddCollidersToGame()
         {
-            foreach(Collider collider in this.colliders.Values)
-            {
+            foreach (Collider collider in this.colliders.Values) {
                 game.AddComponent(collider);
             }
         }
@@ -211,18 +210,18 @@ namespace App
         public override void Draw(GameTime gameTime)
         {
             if (this.model != null) {
-                this.DrawModel();
+                this.DrawModel(model);
             }
         }
 
-        private void DrawModel()
+        protected void DrawModel(Model model)
         {
             // Copy any parent transforms.
-            Matrix[] transforms = new Matrix[this.model.Bones.Count];
+            Matrix[] transforms = new Matrix[model.Bones.Count];
             this.model.CopyAbsoluteBoneTransformsTo(transforms);
 
             // Draw the model. A model can have multiple meshes, so loop.
-            foreach (ModelMesh mesh in this.model.Meshes) {
+            foreach (ModelMesh mesh in model.Meshes) {
                 // This is where the mesh orientation is set, as well
                 // as our camera and projection.
                 foreach (BasicEffect effect in mesh.Effects) {
@@ -233,13 +232,28 @@ namespace App
                     * Matrix.CreateRotationZ(this.rotation.Z)
                     * Matrix.CreateScale(this.scale)
                     * Matrix.CreateTranslation(this.position);
-                    effect.View = this.game.camera.ViewMatrix;
-                    effect.Projection = this.game.camera.ProjectionMatrix;
+                    effect.View = this.game.Camera.ViewMatrix;
+                    effect.Projection = this.game.Camera.ProjectionMatrix;
+
+                    this.DrawTexture(effect);
                 }
 
                 // Draw the mesh, using the effects set above.
                 mesh.Draw();
             }
+        }
+
+        protected void DrawTexture(BasicEffect effect)
+        {
+            if (this.texture != null) {
+                effect.TextureEnabled = true;
+                effect.Texture = this.texture;
+            }
+        }
+
+        public void setTexture(Texture2D texture)
+        {
+            this.texture = texture;
         }
     }
 }

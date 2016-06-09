@@ -1,12 +1,12 @@
 ﻿using System;
-
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using App;
-using App.Collisions;
 using System.IO;
 using App.Animation;
+using System.Collections.Generic;
+using Microsoft.Xna.Framework.Content;
 
 namespace HESOYAM_Production
 {
@@ -16,24 +16,58 @@ namespace HESOYAM_Production
     /// </summary>
     public class Engine : Game
     {
-        private InputState inputState;
-
+        InputState inputState;
+        String rootDir;
+        Dictionary<String, Model> models;
+        Dictionary<String, Texture2D> textures;
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
-        public Camera camera;
-        public Player player;
-        public Scene scene;
-        public bool playMode;
         AnimatedObject animated;
         AnimatedObject animatedPos;
+        Camera camera;
+        Player player;
+        Scene scene;
+        bool playMode;
 
+        public InputState InputState {
+            get { return inputState; }
+            private set { }
+        }
+
+        public Dictionary<String, Model> Models {
+            get { return models; }
+            private set { }
+        }
+
+        public Dictionary<String, Texture2D> Textures {
+            get { return textures; }
+            private set { }
+        }
+
+        public Camera Camera {
+            get { return camera; }
+            private set { }
+        }
+
+        public Scene Scene {
+            get { return scene; }
+            private set { }
+        }
+
+        public bool PlayMode {
+            get { return playMode; }
+            private set { }
+        }
 
         public Engine()
         {
             graphics = new GraphicsDeviceManager(this);
 
             Content.RootDirectory = "Content";
-            this.playMode = true;
+            playMode = true;
+            rootDir = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName;
+            models = new Dictionary<String, Model>();
+            textures = new Dictionary<String, Texture2D>();
         }
 
         /// <summary>
@@ -44,8 +78,8 @@ namespace HESOYAM_Production
         /// </summary>
         protected override void Initialize()
         {
-            this.IsMouseVisible = true;
-            this.graphics.IsFullScreen = false;
+            IsMouseVisible = true;
+            graphics.IsFullScreen = false;
             base.Initialize();
         }
 
@@ -53,59 +87,91 @@ namespace HESOYAM_Production
         /// LoadContent will be called once per game and is the place to load
         /// all of your content.
         /// </summary>
-        protected override void LoadContent()
+        protected override void LoadContent ()
         {
             // Create a new SpriteBatch, which can be used to draw textures.
-            spriteBatch = new SpriteBatch(GraphicsDevice);
+            spriteBatch = new SpriteBatch (GraphicsDevice);
+            inputState = new InputState (GraphicsDevice);
 
-            this.inputState = new InputState(this.GraphicsDevice);
+            LoadModels ();
+            LoadTextures ();
 
-            Vector3 cameraMove = new Vector3(-1500.0f, 1000.0f, 1500.0f);
-
-            this.player = new Player(this, "Player", new Vector3(-1000.0f, 0.0f, 1000.0f));
-            this.camera = new Camera(this, "Kamera", Vector3.Add(this.player.position, cameraMove));
-
-            this.player.cameraAngle = (float) (Math.Atan2(cameraMove.X, cameraMove.Z));
-
-            this.player.AddChild(this.camera);
-            this.camera.lookAtParent = this.player;
-
-            //TODO: use this.Content to load your game content here
-            string parentDir = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName;
-
-            Model wall = Content.Load<Model>("Models/sciana");
-            Model door = Content.Load<Model>("Models/drzwi");
-            Model window = Content.Load<Model>("Models/okno");
-            Model animation = Content.Load<Model>("Animation/running");
-            Model animationPos = Content.Load<Model>("Animation/running");
-
-            animated = new AnimatedObject(this,"animation",animation);
-            animatedPos = new AnimatedObject(this,"animationPos",animationPos,new Vector3(-100,0,1000),new Vector3(0,90,0),new Vector3(5,5,5));
-            AnimationClip clip = animated.Clips[1];
-            Console.WriteLine(animated.Clips.Count);
-            Console.WriteLine(clip.Name);
-            // And play the clip
-            AnimationPlayer play = animatedPos.PlayClip(clip);
-            play.Looping = true;
-
-            scene = new Scene(
+            scene = new Scene (
                 this,
-                "Scene01",
-                parentDir + "/Content/Map/walls32x32.bmp",
-                wall,
-                door,
-                window
+                "Scene_1",
+                rootDir + "/Content/Map/scene_1"
             );
 
-            Model wheelchair = Content.Load<Model>("Models/wozek");
-            GameObject testObjects = new GameObject(this, "ObjectName_", wheelchair);
+            Vector3 cameraMove = new Vector3 (-500.0f, 500.0f, 500.0f);
+            float cameraAngle = (float)(Math.Atan2 (cameraMove.X, cameraMove.Z));
 
-            Components.Add(testObjects);
-            //Components.Add(animated);
+            player = new Player (this, "Player", cameraAngle, scene.Player.position);
+            camera = new Camera (this, "Camera", Vector3.Add (player.position, cameraMove));
+
+            camera.LookAtParent = player;
+
+            player.AddChild (camera);
+            player.AddChild (scene.Player);
+            Model animation = Content.Load<Model> ("Animation/corridorMaze_doors_centimeter");
+            Model animationPos = Content.Load<Model> ("Animation/corridorMaze_doors_centimeter");
+            Console.WriteLine (animationPos.Meshes.Count);
+
+            animated = new AnimatedObject (this, "animation", animation);
+            animatedPos = new AnimatedObject (this, "animationPos", animationPos);
+            AnimationClip clip = animated.Clips [0];
+
+            // And play the clip
+            AnimationPlayer play = animatedPos.PlayClip (clip);
+            play.Looping = true;
+
+            Components.Add(animated);
             Components.Add(animatedPos);
+        }
 
-            player.AddChild(testObjects);
-            testObjects.position = this.player.position;
+        private void LoadModels()
+        {
+            String modelsDir = rootDir + "/Content/Models";
+
+            String[] files = Directory.GetFiles(modelsDir);
+            foreach (String file in files) {
+                String name = file.Remove(0, modelsDir.Length + 1).Replace(".FBX", "");
+
+                LoadModel(name);
+            }
+        }
+
+        private void LoadModel(String name)
+        {
+            try {
+                Model model = Content.Load<Model>("Models/" + name);
+
+                models.Add(name, model);
+            } catch (ContentLoadException e) {
+                Console.WriteLine("Model '" + name + "' does not exists in Content.mgcb");
+            }
+        }
+
+        private void LoadTextures()
+        {
+            String texturesDir = rootDir + "/Content/Textures";
+
+            String[] files = Directory.GetFiles(texturesDir);
+            foreach (String file in files) {
+                String name = file.Remove(0, texturesDir.Length + 1).Replace(".png", "");
+
+                LoadTexture(name);
+            }
+        }
+
+        private void LoadTexture(String name)
+        {
+            try {
+                Texture2D texture = Content.Load<Texture2D>("Textures/" + name);
+
+                textures.Add(name, texture);
+            } catch (ContentLoadException e) {
+                Console.WriteLine("Texture '" + name + "' does not exists in Content.mgcb");
+            }
         }
 
         public void AddComponent(IGameComponent item)
@@ -120,23 +186,22 @@ namespace HESOYAM_Production
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
-            this.inputState.Update();
-
-            if (this.inputState.IsSpace(PlayerIndex.One)) {
-                this.playMode = !this.playMode;
+            inputState.Update();
+            if (inputState.IsSpace(PlayerIndex.One)) {
+                playMode = !playMode;
             }
 
             PlayerIndex outPlayerIndex;
-            if (this.inputState.IsNewKeyPress(Keys.F5, null, out outPlayerIndex)) {
+            if (inputState.IsNewKeyPress(Keys.F5, null, out outPlayerIndex)) {
                 Program.debugMode = !Program.debugMode;
             }
 
-            if (this.playMode) {
-                this.camera.position = this.camera.playModePosition;
-                this.player.update(gameTime, this.inputState);
+            if (playMode) {
+                camera.position = camera.PlayModePosition;
+                player.update();
             }
 
-            this.camera.update(this.inputState);
+            camera.update();
 
             // For Mobile devices, this logic will close the Game when the Back button is pressed
             // Exit() is obsolete on iOS
@@ -147,8 +212,9 @@ namespace HESOYAM_Production
 
             // TODO: Add your update logic here
             // Allows the game to exit
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
-                this.Exit();
+            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed) {
+                Exit();
+            }
 
             base.Update(gameTime);
         }
@@ -160,17 +226,13 @@ namespace HESOYAM_Production
         protected override void Draw(GameTime gameTime)
         {
             graphics.GraphicsDevice.Clear(Color.CornflowerBlue);
+
             base.Draw(gameTime);
         }
 
         static float GameTimeFloat(GameTime gameTime)
         {
             return (float) gameTime.ElapsedGameTime.TotalMilliseconds;
-        }
-
-        public GraphicsDeviceManager Graphics()
-        {
-            return this.graphics;
         }
     }
 }
