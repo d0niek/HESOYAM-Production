@@ -192,8 +192,8 @@ namespace App.Animation
                     * Matrix.CreateRotationZ(this.rotation.Z)
                     * Matrix.CreateScale(this.scale)
                     * Matrix.CreateTranslation(this.position);;
-                        beffect.View = this.game.camera.ViewMatrix;
-                        beffect.Projection = this.game.camera.ProjectionMatrix;
+                        beffect.View = this.game.Camera.ViewMatrix;
+                        beffect.Projection = this.game.Camera.ProjectionMatrix;
                         beffect.EnableDefaultLighting();
                         beffect.PreferPerPixelLighting = true;
                     }
@@ -205,8 +205,8 @@ namespace App.Animation
                     * Matrix.CreateRotationX(this.rotation.X)
                     * Matrix.CreateRotationZ(this.rotation.Z)
                     * Matrix.CreateTranslation(this.position);
-                        seffect.View = this.game.camera.ViewMatrix;
-                        seffect.Projection = this.game.camera.ProjectionMatrix;
+                        seffect.View = this.game.Camera.ViewMatrix;
+                        seffect.Projection = this.game.Camera.ProjectionMatrix;
                         seffect.EnableDefaultLighting();
                         seffect.PreferPerPixelLighting = true;
                         seffect.SetBoneTransforms(skeleton);

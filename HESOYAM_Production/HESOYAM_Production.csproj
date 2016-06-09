@@ -66,6 +66,7 @@
     <Compile Include="App\Util\Mouse.cs" />
     <Compile Include="App\Animation\AnimatedObject.cs" />
     <Compile Include="App\Animation\AnimationPlayer.cs" />
+    <Compile Include="App\Wall.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Icon.png" />
@@ -97,13 +98,30 @@
     <None Include="Content\Models\tv.FBX" />
     <None Include="Content\Models\wazon.FBX" />
     <None Include="Content\Models\wozek.FBX" />
-    <None Include="Content\Map\walls16x16.bmp" />
-    <None Include="Content\Map\walls32x32.bmp" />
     <None Include="packages.config" />
-    <None Include="Content\Animation\bohater_bieg.fbx" />
-    <None Include="Content\Animation\bohater_postawa.fbx" />
     <None Include="Content\Animation\corridorMaze_doors_centimeter.FBX" />
-    <None Include="Content\Animation\bohater.fbx" />
+    <None Include="Content\Models\podnozek.FBX" />
+    <None Include="Content\Map\scene_1.bmp" />
+    <None Include="Content\Models\bohater.FBX" />
+    <None Include="Content\Models\chudzielec.FBX" />
+    <None Include="Content\Models\grubas.FBX" />
+    <None Include="Content\Models\lekarz.FBX" />
+    <None Include="Content\Models\miesniak.FBX" />
+    <None Include="Content\Models\policjant.FBX" />
+    <None Include="Content\Models\stary.FBX" />
+    <None Include="Content\Models\zolnierz.FBX" />
+    <None Include="Content\Textures\bohater.png" />
+    <None Include="Content\Textures\chudzielec.png" />
+    <None Include="Content\Textures\grubas.png" />
+    <None Include="Content\Textures\lekarz.png" />
+    <None Include="Content\Textures\miesniak.png" />
+    <None Include="Content\Textures\policjant.png" />
+    <None Include="Content\Textures\stary.png" />
+    <None Include="Content\Textures\zolnierz.png" />
+    <None Include="Content\Models\sciana_przezroczysta.FBX" />
+    <None Include="Content\Models\drzwi_przyciete.FBX" />
+    <None Include="Content\Models\modul_przyciete.FBX" />
+    <None Include="Content\Textures\kafelki.png" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Icon.ico" />

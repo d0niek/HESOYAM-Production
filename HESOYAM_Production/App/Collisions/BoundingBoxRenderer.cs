@@ -1,30 +1,25 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace HESOYAM_Production.App.Collisions
+namespace App.Collisions
 {
+
     public static class BoundingBoxRenderer
     {
         static VertexPositionColor[] verts = new VertexPositionColor[8];
-        static short[] indices = new short[]
-        {
-        0, 1,
-        1, 2,
-        2, 3,
-        3, 0,
-        0, 4,
-        1, 5,
-        2, 6,
-        3, 7,
-        4, 5,
-        5, 6,
-        6, 7,
-        7, 4,
+        static short[] indices = new short[] {
+            0, 1,
+            1, 2,
+            2, 3,
+            3, 0,
+            0, 4,
+            1, 5,
+            2, 6,
+            3, 7,
+            4, 5,
+            5, 6,
+            6, 7,
+            7, 4,
         };
 
         static BasicEffect effect;
@@ -35,18 +30,17 @@ namespace HESOYAM_Production.App.Collisions
             GraphicsDevice graphicsDevice,
             Matrix view,
             Matrix projection,
-            Color color)
+            Color color
+        )
         {
-            if(effect == null)
-            {
+            if (effect == null) {
                 effect = new BasicEffect(graphicsDevice);
                 effect.VertexColorEnabled = true;
                 effect.LightingEnabled = false;
             }
 
             Vector3[] corners = box.GetCorners();
-            for(int i = 0; i < 8; i++)
-            {
+            for (int i = 0; i < 8; i++) {
                 verts[i].Position = corners[i];
                 verts[i].Color = color;
             }
@@ -54,8 +48,7 @@ namespace HESOYAM_Production.App.Collisions
             effect.View = view;
             effect.Projection = projection;
 
-            foreach(EffectPass pass in effect.CurrentTechnique.Passes)
-            {
+            foreach (EffectPass pass in effect.CurrentTechnique.Passes) {
                 pass.Apply();
 
                 graphicsDevice.DrawUserIndexedPrimitives(
@@ -65,7 +58,8 @@ namespace HESOYAM_Production.App.Collisions
                     8,
                     indices,
                     0,
-                    indices.Length / 2);
+                    indices.Length / 2
+                );
             }
         }
     }

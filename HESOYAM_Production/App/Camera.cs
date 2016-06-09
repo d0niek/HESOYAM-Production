@@ -7,15 +7,35 @@ namespace App
 
     public class Camera : GameObject
     {
-        public Vector3 playModePosition;
+        Vector3 playModePosition;
+        Vector3 cameraLookAt;
+        Matrix viewMatrix;
+        Matrix projectionMatrix;
 
-        public Vector3 cameraLookAt;
+        public Vector3 PlayModePosition {
+            get { return playModePosition; }
+            private set { }
+        }
 
-        public IGameElement lookAtParent { get; set; }
+        public Vector3 CameraLookAt {
+            get { return cameraLookAt; }
+            private set { }
+        }
 
-        public Matrix ViewMatrix { get; set; }
+        public IGameElement LookAtParent {
+            get;
+            set;
+        }
 
-        public Matrix ProjectionMatrix { get; set; }
+        public Matrix ViewMatrix { 
+            get { return viewMatrix; } 
+            private set { }
+        }
+
+        public Matrix ProjectionMatrix { 
+            get { return projectionMatrix; } 
+            private set { }
+        }
 
         public Camera(
             Engine game,
@@ -24,27 +44,27 @@ namespace App
             Vector3 rotaion = default(Vector3)
         ) : base(game, name, position, rotaion)
         {
-            this.lookAtParent = null;
-            this.ViewMatrix = Matrix.Identity;
-            this.ProjectionMatrix = Matrix.Identity;
+            this.LookAtParent = null;
+            this.viewMatrix = Matrix.Identity;
+            this.projectionMatrix = Matrix.Identity;
             this.playModePosition = this.position;
         }
 
-        public void update(InputState input)
+        public void update()
         {
-            this.Zoom(input);
+            this.Zoom();
 
-            if (!this.game.playMode) {
-                if (input.Mouse.isInGameWindow()) {
-                    this.moveCamera(input);
+            if (!this.game.PlayMode) {
+                if (game.InputState.Mouse.isInGameWindow()) {
+                    this.moveCamera();
                 }
             } else {
-                this.cameraLookAt = this.lookAtParent != null ? this.lookAtParent.position : Vector3.Zero;
+                this.cameraLookAt = this.LookAtParent != null ? this.LookAtParent.position : Vector3.Zero;
                 this.playModePosition = this.position;
             }
 
-            this.ViewMatrix = Matrix.CreateLookAt(this.position, this.cameraLookAt, Vector3.Up);
-            this.ProjectionMatrix = Matrix.CreatePerspectiveFieldOfView(
+            this.viewMatrix = Matrix.CreateLookAt(this.position, this.cameraLookAt, Vector3.Up);
+            this.projectionMatrix = Matrix.CreatePerspectiveFieldOfView(
                 MathHelper.ToRadians(45.0f),
                 this.GraphicsDevice.Viewport.AspectRatio,
                 1.0f,
@@ -52,28 +72,28 @@ namespace App
             );
         }
 
-        private void moveCamera(InputState input)
+        private void moveCamera()
         {
             Vector3 vector = Vector3.Zero;
 
-            if (input.Mouse.isCloseToTopLeftCorner()) {
+            if (game.InputState.Mouse.isCloseToTopLeftCorner()) {
                 vector.Z = -20;
-            } else if (input.Mouse.isCloseToTopRightCorner()) {
+            } else if (game.InputState.Mouse.isCloseToTopRightCorner()) {
                 vector.X = 20;
-            } else if (input.Mouse.isCloseToBottomLeftCorner()) {
+            } else if (game.InputState.Mouse.isCloseToBottomLeftCorner()) {
                 vector.X = -20;
-            } else if (input.Mouse.isCloseToBottomRightCorner()) {
+            } else if (game.InputState.Mouse.isCloseToBottomRightCorner()) {
                 vector.Z = 20;
-            } else if (input.Mouse.isCloseToLeftBorder()) {
+            } else if (game.InputState.Mouse.isCloseToLeftBorder()) {
                 vector.Z = -20;
                 vector.X = -20;
-            } else if (input.Mouse.isCloseToRightBorder()) {
+            } else if (game.InputState.Mouse.isCloseToRightBorder()) {
                 vector.Z = 20;
                 vector.X = 20;
-            } else if (input.Mouse.isCloseToTopBorder()) {
+            } else if (game.InputState.Mouse.isCloseToTopBorder()) {
                 vector.Z = -20;
                 vector.X = 20;
-            } else if (input.Mouse.isCloseToBottomBorder()) {
+            } else if (game.InputState.Mouse.isCloseToBottomBorder()) {
                 vector.Z = 20;
                 vector.X = -20;
             }
@@ -81,14 +101,14 @@ namespace App
             this.Move(vector.X, 0, vector.Z);
         }
 
-        private void Zoom(InputState input)
+        private void Zoom()
         {
             MouseState mouseState = new MouseState();
 
-            if (input.IsNewMouseScrollUp(out mouseState)) {
-                this.Move(-10, 10, 10);
-            } else if (input.IsNewMouseScrollDown(out mouseState)) {
+            if (game.InputState.IsNewMouseScrollUp(out mouseState)) {
                 this.Move(10, -10, -10);
+            } else if (game.InputState.IsNewMouseScrollDown(out mouseState)) {
+                this.Move(-10, 10, 10);
             }
         }
 
