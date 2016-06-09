@@ -141,11 +141,11 @@ namespace App.Animation
         /// <param name="delta"></param>
         public void Update(GameTime gameTime)
         {
+            Position = Position + (float) gameTime.ElapsedGameTime.TotalSeconds;
 
-            Console.WriteLine("updating player");
-            Position = Position + (float)gameTime.ElapsedGameTime.TotalSeconds;
-            if (looping && Position >= Duration)
+            if (looping && Position >= Duration) {
                 Position = 0;
+            }
         }
 
         #endregion

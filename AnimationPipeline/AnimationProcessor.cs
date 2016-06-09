@@ -113,6 +113,7 @@ namespace AnimationPipeline
         {
             List<NodeContent> nodes = new List<NodeContent>();
             nodes.Add(item);
+
             foreach (NodeContent child in item.Children)
             {
                 FlattenHeirarchy(nodes, child);

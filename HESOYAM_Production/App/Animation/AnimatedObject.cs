@@ -123,8 +123,6 @@ namespace App.Animation
         /// <returns>The player that will play this clip</returns>
         public AnimationPlayer PlayClip(AnimationClip clip)
         {
-
-            Console.WriteLine("play clip");
             // Create a clip player and assign it to this model
             player = new AnimationPlayer(clip, this);
             return player;
@@ -204,6 +202,7 @@ namespace App.Animation
                     * Matrix.CreateRotationY(this.rotation.Y)
                     * Matrix.CreateRotationX(this.rotation.X)
                     * Matrix.CreateRotationZ(this.rotation.Z)
+                    * Matrix.CreateScale(this.scale)
                     * Matrix.CreateTranslation(this.position);
                         seffect.View = this.game.camera.ViewMatrix;
                         seffect.Projection = this.game.camera.ProjectionMatrix;

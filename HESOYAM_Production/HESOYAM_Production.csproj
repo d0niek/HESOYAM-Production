@@ -102,8 +102,12 @@
     <None Include="packages.config" />
     <None Include="Content\Animation\bohater_bieg.fbx" />
     <None Include="Content\Animation\bohater_postawa.fbx" />
-    <None Include="Content\Animation\corridorMaze_doors_centimeter.FBX" />
     <None Include="Content\Animation\bohater.fbx" />
+    <None Include="Content\Animation\corridorMaze_doors_centimeter.FBX" />
+    <None Include="Content\Animation\animacja_testowa.FBX" />
+    <None Include="Content\Animation\running.fbx" />
+    <None Include="Content\Animation\Y_Bot.fbx" />
+    <None Include="Content\Animation\Y_Bot_def_pos.fbx" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Icon.ico" />

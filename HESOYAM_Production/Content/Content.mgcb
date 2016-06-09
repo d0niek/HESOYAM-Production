@@ -187,7 +187,7 @@
 
 #begin Models/gramofon.FBX
 /importer:FbxImporter
-/processor:ModelProcessor
+/processor:AnimationProcessor
 /processorParam:ColorKeyColor=0,0,0,0
 /processorParam:ColorKeyEnabled=True
 /processorParam:DefaultEffect=BasicEffect
@@ -551,7 +551,7 @@
 /processor:AnimationProcessor
 /processorParam:ColorKeyColor=0,0,0,0
 /processorParam:ColorKeyEnabled=True
-/processorParam:DefaultEffect=SkinnedEffect
+/processorParam:DefaultEffect=BasicEffect
 /processorParam:GenerateMipmaps=True
 /processorParam:GenerateTangentFrames=False
 /processorParam:PremultiplyTextureAlpha=True
@@ -567,7 +567,7 @@
 
 #begin Animation/corridorMaze_doors_centimeter.FBX
 /importer:FbxImporter
-/processor:ModelProcessor
+/processor:AnimationProcessor
 /processorParam:ColorKeyColor=0,0,0,0
 /processorParam:ColorKeyEnabled=True
 /processorParam:DefaultEffect=BasicEffect
@@ -602,4 +602,80 @@
 /processorParam:SwapWindingOrder=False
 /processorParam:TextureFormat=DxtCompressed
 /build:Animation/bohater.fbx
+
+#begin Animation/animacja_testowa.FBX
+/importer:FbxImporter
+/processor:AnimationProcessor
+/processorParam:ColorKeyColor=0,0,0,0
+/processorParam:ColorKeyEnabled=True
+/processorParam:DefaultEffect=SkinnedEffect
+/processorParam:GenerateMipmaps=True
+/processorParam:GenerateTangentFrames=True
+/processorParam:PremultiplyTextureAlpha=True
+/processorParam:PremultiplyVertexColors=True
+/processorParam:ResizeTexturesToPowerOfTwo=False
+/processorParam:RotationX=0
+/processorParam:RotationY=0
+/processorParam:RotationZ=0
+/processorParam:Scale=1
+/processorParam:SwapWindingOrder=False
+/processorParam:TextureFormat=DxtCompressed
+/build:Animation/animacja_testowa.FBX
+
+#begin Animation/Y_Bot_def_pos.fbx
+/importer:FbxImporter
+/processor:AnimationProcessor
+/processorParam:ColorKeyColor=0,0,0,0
+/processorParam:ColorKeyEnabled=True
+/processorParam:DefaultEffect=SkinnedEffect
+/processorParam:GenerateMipmaps=True
+/processorParam:GenerateTangentFrames=False
+/processorParam:PremultiplyTextureAlpha=True
+/processorParam:PremultiplyVertexColors=True
+/processorParam:ResizeTexturesToPowerOfTwo=False
+/processorParam:RotationX=0
+/processorParam:RotationY=0
+/processorParam:RotationZ=0
+/processorParam:Scale=1
+/processorParam:SwapWindingOrder=False
+/processorParam:TextureFormat=DxtCompressed
+/build:Animation/Y_Bot_def_pos.fbx
+
+#begin Animation/Y_Bot.fbx
+/importer:FbxImporter
+/processor:AnimationProcessor
+/processorParam:ColorKeyColor=0,0,0,0
+/processorParam:ColorKeyEnabled=True
+/processorParam:DefaultEffect=SkinnedEffect
+/processorParam:GenerateMipmaps=True
+/processorParam:GenerateTangentFrames=False
+/processorParam:PremultiplyTextureAlpha=True
+/processorParam:PremultiplyVertexColors=True
+/processorParam:ResizeTexturesToPowerOfTwo=False
+/processorParam:RotationX=0
+/processorParam:RotationY=0
+/processorParam:RotationZ=0
+/processorParam:Scale=1
+/processorParam:SwapWindingOrder=False
+/processorParam:TextureFormat=DxtCompressed
+/build:Animation/Y_Bot.fbx
+
+#begin Animation/running.fbx
+/importer:FbxImporter
+/processor:AnimationProcessor
+/processorParam:ColorKeyColor=0,0,0,0
+/processorParam:ColorKeyEnabled=True
+/processorParam:DefaultEffect=SkinnedEffect
+/processorParam:GenerateMipmaps=True
+/processorParam:GenerateTangentFrames=False
+/processorParam:PremultiplyTextureAlpha=True
+/processorParam:PremultiplyVertexColors=True
+/processorParam:ResizeTexturesToPowerOfTwo=False
+/processorParam:RotationX=0
+/processorParam:RotationY=0
+/processorParam:RotationZ=0
+/processorParam:Scale=1
+/processorParam:SwapWindingOrder=False
+/processorParam:TextureFormat=DxtCompressed
+/build:Animation/running.fbx
 

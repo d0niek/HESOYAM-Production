@@ -60,7 +60,7 @@ namespace HESOYAM_Production
 
             this.inputState = new InputState(this.GraphicsDevice);
 
-            Vector3 cameraMove = new Vector3(-1500.0f, 2000.0f, 1500.0f);
+            Vector3 cameraMove = new Vector3(-1500.0f, 1000.0f, 1500.0f);
 
             this.player = new Player(this, "Player", new Vector3(-1000.0f, 0.0f, 1000.0f));
             this.camera = new Camera(this, "Kamera", Vector3.Add(this.player.position, cameraMove));
@@ -76,15 +76,14 @@ namespace HESOYAM_Production
             Model wall = Content.Load<Model>("Models/sciana");
             Model door = Content.Load<Model>("Models/drzwi");
             Model window = Content.Load<Model>("Models/okno");
-            Model animation = Content.Load<Model>("Animation/bohater_postawa");
-            Console.WriteLine(wall.Meshes.Count);
-            Model animationPos = Content.Load<Model>("Animation/bohater");
-            Console.WriteLine(animationPos.Meshes.Count);
+            Model animation = Content.Load<Model>("Animation/running");
+            Model animationPos = Content.Load<Model>("Animation/running");
 
             animated = new AnimatedObject(this,"animation",animation);
-            animatedPos = new AnimatedObject(this,"animationPos",animationPos);
-            AnimationClip clip = animated.Clips[0];
-
+            animatedPos = new AnimatedObject(this,"animationPos",animationPos,new Vector3(-100,0,1000),new Vector3(0,90,0),new Vector3(1,5,1));
+            AnimationClip clip = animated.Clips[1];
+            Console.WriteLine(animated.Clips.Count);
+            Console.WriteLine(clip.Name);
             // And play the clip
             AnimationPlayer play = animatedPos.PlayClip(clip);
             play.Looping = true;
@@ -102,7 +101,7 @@ namespace HESOYAM_Production
             GameObject testObjects = new GameObject(this, "ObjectName_", wheelchair);
 
             Components.Add(testObjects);
-            Components.Add(animated);
+            //Components.Add(animated);
             Components.Add(animatedPos);
 
             player.AddChild(testObjects);
