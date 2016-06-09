@@ -80,7 +80,7 @@ namespace HESOYAM_Production
             Model animationPos = Content.Load<Model>("Animation/running");
 
             animated = new AnimatedObject(this,"animation",animation);
-            animatedPos = new AnimatedObject(this,"animationPos",animationPos,new Vector3(-100,0,1000),new Vector3(0,90,0),new Vector3(1,5,1));
+            animatedPos = new AnimatedObject(this,"animationPos",animationPos,new Vector3(-100,0,1000),new Vector3(0,90,0),new Vector3(5,5,5));
             AnimationClip clip = animated.Clips[1];
             Console.WriteLine(animated.Clips.Count);
             Console.WriteLine(clip.Name);
