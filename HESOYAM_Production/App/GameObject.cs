@@ -211,11 +211,7 @@ namespace App
 
         public bool IsMouseOverObject()
         {
-            Matrix world = Matrix.CreateTranslation(this.position)
-                           * Matrix.CreateRotationY(this.rotation.Y)
-                           * Matrix.CreateRotationX(this.rotation.X)
-                           * Matrix.CreateRotationZ(this.rotation.Z)
-                           * Matrix.CreateScale(this.scale);
+            Matrix world = Matrix.CreateTranslation(this.position);
 
             for (int index = 0; index < model.Meshes.Count; index++) {
                 BoundingSphere sphere = model.Meshes[index].BoundingSphere;
@@ -290,6 +286,8 @@ namespace App
                     * Matrix.CreateTranslation(this.position);
                     effect.View = this.game.Camera.ViewMatrix;
                     effect.Projection = this.game.Camera.ProjectionMatrix;
+
+                    // Tmp effect to highlight object under mouse
                     effect.Alpha = this.hover ? 0.8f : 1f;
 
                     this.DrawTexture(effect);

@@ -142,25 +142,27 @@ namespace App
 
         private void SelectDoorOrInteractiveModel()
         {
-            foreach (GameObject door in game.Scene.children["Doors"].children.Values) {
-                if (door.IsMouseOverObject()) {
-                    door.setHover(true);
+            String[] sceneObjectsToLoop = { "Doors", "Interactive" };
 
+            foreach (String objectsToLoop in sceneObjectsToLoop) {
+                if (LoopObjectsAndHighlightObjectUnderMouse(game.Scene.children[objectsToLoop].children)) {
                     return;
                 }
-
-                door.setHover(false);
             }
+        }
 
-            foreach (GameObject interactive in game.Scene.children["Interactive"].children.Values) {
+        private bool LoopObjectsAndHighlightObjectUnderMouse(Dictionary<String, IGameObject> gameObjects)
+        {
+            foreach (GameObject interactive in gameObjects.Values) {
                 if (interactive.IsMouseOverObject()) {
                     interactive.setHover(true);
-
-                    return;
+                    return true;
                 }
 
                 interactive.setHover(false);
             }
+
+            return false;
         }
     }
 }
