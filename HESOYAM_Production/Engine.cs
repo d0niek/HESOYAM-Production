@@ -17,6 +17,7 @@ namespace HESOYAM_Production
     {
         InputState inputState;
         String rootDir;
+        Dictionary<String, SpriteFont> fonts;
         Dictionary<String, Model> models;
         Dictionary<String, Texture2D> textures;
         GraphicsDeviceManager graphics;
@@ -29,6 +30,11 @@ namespace HESOYAM_Production
 
         public InputState InputState {
             get { return inputState; }
+            private set { }
+        }
+
+        public Dictionary<String, SpriteFont> Fonts {
+            get { return fonts; }
             private set { }
         }
 
@@ -64,6 +70,7 @@ namespace HESOYAM_Production
             Content.RootDirectory = "Content";
             PlayMode = true;
             rootDir = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName;
+            fonts = new Dictionary<String, SpriteFont>();
             models = new Dictionary<String, Model>();
             textures = new Dictionary<String, Texture2D>();
         }
@@ -91,6 +98,7 @@ namespace HESOYAM_Production
             spriteBatch = new SpriteBatch(GraphicsDevice);
             inputState = new InputState(GraphicsDevice);
 
+            LoadFonts();
             LoadModels();
             LoadTextures();
 
@@ -111,6 +119,29 @@ namespace HESOYAM_Production
 
             player.AddChild(camera);
             player.AddChild(scene.Player);
+        }
+
+        private void LoadFonts()
+        {
+            String modelsDir = rootDir + "/Content/Fonts";
+
+            String[] files = Directory.GetFiles(modelsDir);
+            foreach (String file in files) {
+                String name = file.Remove(0, modelsDir.Length + 1).Replace(".spritefont", "");
+
+                LoadFont(name);
+            }
+        }
+
+        private void LoadFont(String name)
+        {
+            try {
+                SpriteFont font = Content.Load<SpriteFont>("Fonts/" + name);
+
+                fonts.Add(name, font);
+            } catch (ContentLoadException e) {
+                Console.WriteLine("Font '" + name + "' does not exists in Content.mgcb");
+            }
         }
 
         private void LoadModels()
