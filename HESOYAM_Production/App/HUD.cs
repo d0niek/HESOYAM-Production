@@ -47,16 +47,16 @@ namespace App
             foreach (GameObject teammate in teammates.Values) {
                 Avatar avatar = new Avatar(teammate, "avatar_" + i, padding, 40 + (i - 1) * 50 + (i - 1) * padding);
                 avatars.Add(avatar);
-                DrawAvatar(teammate, avatar);
+                DrawAvatar(avatar);
                 i++;
             }
         }
 
-        private void DrawAvatar(GameObject teammate, Avatar avatar)
+        private void DrawAvatar(Avatar avatar)
         {
-            if (teammate == selectedTeammate) {
+            if (avatar.Character == selectedTeammate) {
                 DrawAvatarBorder(avatar, "active");
-            } else if (teammate == hoverTeammate) {
+            } else if (avatar.Character == hoverTeammate) {
                 DrawAvatarBorder(avatar, "hover");
             }
 
