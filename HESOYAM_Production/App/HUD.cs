@@ -86,26 +86,10 @@ namespace App
 
             if (rec.Contains(game.InputState.Mouse.GetMouseLocation())) {
                 buttonTexture += "_hover";
-
-                CheckIfUserClickMouseAndTogglePlayMode();
+                OnMouseLeftButtonClick(game.TogglePlayMode);
             }
 
             return game.Textures[buttonTexture];
-        }
-
-        private void CheckIfUserClickMouseAndTogglePlayMode()
-        {
-            if (IsMouseLeftButtonPressed() && !mouseLeftClicked) {
-                game.PlayMode = !game.PlayMode;
-                mouseLeftClicked = true;
-            } else if (!IsMouseLeftButtonPressed()) {
-                mouseLeftClicked = false;
-            }
-        }
-
-        private bool IsMouseLeftButtonPressed()
-        {
-            return game.InputState.Mouse.CurrentMouseState.LeftButton == ButtonState.Pressed;
         }
 
         private void DrawFotterBar()
@@ -148,12 +132,7 @@ namespace App
             teammate.setHover(true);
             hoverTeammate = teammate;
 
-            if (IsMouseLeftButtonPressed() && !mouseLeftClicked) {
-                UpdateSelectedTeammate(teammate);
-                mouseLeftClicked = true;
-            } else if (!IsMouseLeftButtonPressed()) {
-                mouseLeftClicked = false;
-            }
+            OnMouseLeftButtonClick(() => UpdateSelectedTeammate(teammate));
         }
 
         private void UpdateSelectedTeammate(GameObject teammate)
@@ -213,6 +192,21 @@ namespace App
                           );
 
             game.spriteBatch.DrawString(game.Fonts["Open Sans"], text, pos, Color.DarkOrange);
+        }
+
+        private void OnMouseLeftButtonClick(Action action)
+        {
+            if (IsMouseLeftButtonPressed() && !mouseLeftClicked) {
+                action();
+                mouseLeftClicked = true;
+            } else if (!IsMouseLeftButtonPressed()) {
+                mouseLeftClicked = false;
+            }
+        }
+
+        private bool IsMouseLeftButtonPressed()
+        {
+            return game.InputState.Mouse.CurrentMouseState.LeftButton == ButtonState.Pressed;
         }
     }
 }

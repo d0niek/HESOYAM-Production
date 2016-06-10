@@ -204,7 +204,7 @@ namespace HESOYAM_Production
         {
             inputState.Update();
             if (inputState.IsSpace(PlayerIndex.One)) {
-                PlayMode = !PlayMode;
+                TogglePlayMode();
             }
 
             PlayerIndex outPlayerIndex;
@@ -234,6 +234,11 @@ namespace HESOYAM_Production
             }
 
             base.Update(gameTime);
+        }
+
+        public void TogglePlayMode()
+        {
+            PlayMode = !PlayMode;
         }
 
         /// <summary>
