@@ -123,6 +123,7 @@ namespace App
             foreach (GameObject teammate in teammates.Values) {
                 if (teammate.IsMouseOverObject()) {
                     HighlightTeammateAndCheckIfUserClickLeftButton(teammate);
+                    DrawStringCloseToMouse(teammate.name);
                     return;
                 }
 
@@ -132,6 +133,7 @@ namespace App
             foreach (Avatar avatar in avatars) {
                 if (avatar.GetAvatarRectangle().Contains(game.InputState.Mouse.GetMouseLocation())) {
                     HighlightTeammateAndCheckIfUserClickLeftButton(avatar.Character);
+                    DrawStringCloseToMouse(avatar.Character.name);
                     return;
                 }
 
@@ -175,25 +177,42 @@ namespace App
         {
             String[] sceneInteractiveObjectsToLoop = { "Doors", "Interactive", "Opponents" };
 
+
             foreach (String interactiveObjectsToLoop in sceneInteractiveObjectsToLoop) {
-                if (LoopObjectsAndHighlightObjectUnderMouse(game.Scene.children[interactiveObjectsToLoop].children)) {
+                GameObject highlightObject = LoopObjectsAndHighlightObjectUnderMouse(
+                                                 game.Scene.children[interactiveObjectsToLoop].children
+                                             );
+
+                if (highlightObject != null) {
+                    DrawStringCloseToMouse(highlightObject.name);
                     return;
                 }
             }
         }
 
-        private bool LoopObjectsAndHighlightObjectUnderMouse(Dictionary<String, IGameObject> gameObjects)
+        private GameObject LoopObjectsAndHighlightObjectUnderMouse(Dictionary<String, IGameObject> gameObjects)
         {
             foreach (GameObject interactive in gameObjects.Values) {
                 if (interactive.IsMouseOverObject()) {
                     interactive.setHover(true);
-                    return true;
+
+                    return interactive;
                 }
 
                 interactive.setHover(false);
             }
 
-            return false;
+            return null;
+        }
+
+        private void DrawStringCloseToMouse(String text)
+        {
+            Vector2 pos = new Vector2(
+                              game.InputState.Mouse.GetMouseLocation().X + 20,
+                              game.InputState.Mouse.GetMouseLocation().Y + 20
+                          );
+
+            game.spriteBatch.DrawString(game.Fonts["Open Sans"], text, pos, Color.DarkOrange);
         }
     }
 }
