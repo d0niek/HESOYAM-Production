@@ -10,12 +10,13 @@ namespace App
 
     public class HUD
     {
-        Engine game;
+        readonly Engine game;
         readonly Dictionary<String, IGameObject> teammates;
         List<Avatar> avatars;
         bool mouseLeftClicked = false;
         GameObject hoverTeammate;
         GameObject selectedTeammate;
+        GameObject objectToInteract;
 
         public HUD(Engine game)
         {
@@ -34,9 +35,15 @@ namespace App
             if (!game.PlayMode) {
                 SelectTeammate();
                 SelectInteractiveObject();
+                DrawMenuToInteractWithObject();
             }
 
             game.spriteBatch.End();
+        }
+
+        public void ResetObjectToInteract()
+        {
+            objectToInteract = null;
         }
 
         private void DrawAvatars()
@@ -164,6 +171,7 @@ namespace App
 
                 if (highlightObject != null) {
                     DrawStringCloseToMouse(highlightObject.name);
+                    OnMouseLeftButtonClick(() => SetObjectToInteractForDrawMenu(highlightObject));
                     return;
                 }
             }
@@ -174,7 +182,6 @@ namespace App
             foreach (GameObject interactive in gameObjects.Values) {
                 if (interactive.IsMouseOverObject()) {
                     interactive.setHover(true);
-
                     return interactive;
                 }
 
@@ -184,14 +191,32 @@ namespace App
             return null;
         }
 
-        private void DrawStringCloseToMouse(String text)
+        private void SetObjectToInteractForDrawMenu(GameObject gameObject)
         {
-            Vector2 pos = new Vector2(
-                              game.InputState.Mouse.GetMouseLocation().X + 20,
-                              game.InputState.Mouse.GetMouseLocation().Y + 20
-                          );
+            if (selectedTeammate != null) {
+                objectToInteract = gameObject;
+            }
+        }
 
-            game.spriteBatch.DrawString(game.Fonts["Open Sans"], text, pos, Color.DarkOrange);
+        private void DrawMenuToInteractWithObject()
+        {
+            if (objectToInteract != null) {
+                Rectangle rec = new Rectangle(
+                                    game.GraphicsDevice.Viewport.Width / 2,
+                                    game.GraphicsDevice.Viewport.Height / 2,
+                                    game.Textures["frame"].Width,
+                                    game.Textures["frame"].Height
+                                );
+                game.spriteBatch.Draw(game.Textures["frame"], rec, Color.White);
+
+                Vector2 pos = new Vector2(rec.X + 18, rec.Y + 13);
+                game.spriteBatch.DrawString(
+                    game.Fonts["Open Sans"],
+                    "Interact with " + objectToInteract.name,
+                    pos,
+                    Color.DarkOrange
+                );
+            }
         }
 
         private void OnMouseLeftButtonClick(Action action)
@@ -207,6 +232,16 @@ namespace App
         private bool IsMouseLeftButtonPressed()
         {
             return game.InputState.Mouse.CurrentMouseState.LeftButton == ButtonState.Pressed;
+        }
+
+        private void DrawStringCloseToMouse(String text)
+        {
+            Vector2 pos = new Vector2(
+                              game.InputState.Mouse.GetMouseLocation().X + 20,
+                              game.InputState.Mouse.GetMouseLocation().Y + 20
+                          );
+
+            game.spriteBatch.DrawString(game.Fonts["Open Sans"], text, pos, Color.DarkOrange);
         }
     }
 }

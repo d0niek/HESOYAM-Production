@@ -216,6 +216,7 @@ namespace HESOYAM_Production
                 camera.position = camera.PlayModePosition;
                 player.update();
                 hud.ResetSelectedTeammate();
+                hud.ResetObjectToInteract();
             }
 
             camera.update();
