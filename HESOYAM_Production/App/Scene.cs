@@ -34,10 +34,9 @@ namespace App
 
         private void buildMap(Bitmap bmp)
         {
-            this.AddChild(new GameObject(game, "Characters"));
-            this.children["Characters"].AddChild(new GameObject(game, "Player"));
-            this.children["Characters"].AddChild(new GameObject(game, "Teammates"));
-            this.children["Characters"].AddChild(new GameObject(game, "Opponents"));
+            this.AddChild(new GameObject(game, "Player"));
+            this.AddChild(new GameObject(game, "Teammates"));
+            this.AddChild(new GameObject(game, "Opponents"));
             this.AddChild(new GameObject(game, "Walls"));
             this.AddChild(new GameObject(game, "Windows"));
             this.AddChild(new GameObject(game, "Doors"));
@@ -174,7 +173,7 @@ namespace App
             this.player = this.buildObject(this.game.Models["bohater"], pos, "Player_", rotationY);
             this.player.setTexture(this.game.Textures["bohater"]);
 
-            this.children["Characters"].children["Player"].AddChild(this.player);
+            this.children["Player"].AddChild(this.player);
         }
 
         private void insertTeammateCharacter(Model model, Vector2 pos, int rotationY, string texture)
@@ -182,7 +181,7 @@ namespace App
             GameObject character = this.buildObject(model, pos, "Teammate_", rotationY);
             character.setTexture(this.game.Textures[texture]);
 
-            this.children["Characters"].children["Teammates"].AddChild(character);
+            this.children["Teammates"].AddChild(character);
         }
 
         private void insertOpponentCharacter(Model model, Vector2 pos, int rotationY, string texture)
@@ -190,7 +189,7 @@ namespace App
             GameObject character = this.buildObject(model, pos, "Opponent_", rotationY);
             character.setTexture(this.game.Textures[texture]);
 
-            this.children["Characters"].children["Opponents"].AddChild(character);
+            this.children["Opponents"].AddChild(character);
         }
 
         private GameObject buildObject(Model model, Vector2 pos, string prefix, int rotationY)

@@ -20,7 +20,7 @@ namespace App
         public HUD(Engine game)
         {
             this.game = game;
-            this.teammates = game.Scene.children["Characters"].children["Teammates"].children;
+            this.teammates = game.Scene.children["Teammates"].children;
             this.avatars = new List<Avatar>();
         }
 
@@ -33,7 +33,7 @@ namespace App
 
             if (!game.PlayMode) {
                 SelectTeammate();
-                SelectDoorOrInteractiveModel();
+                SelectInteractiveObject();
             }
 
             game.spriteBatch.End();
@@ -171,12 +171,12 @@ namespace App
             selectedTeammate = null;
         }
 
-        private void SelectDoorOrInteractiveModel()
+        private void SelectInteractiveObject()
         {
-            String[] sceneObjectsToLoop = { "Doors", "Interactive" };
+            String[] sceneInteractiveObjectsToLoop = { "Doors", "Interactive", "Opponents" };
 
-            foreach (String objectsToLoop in sceneObjectsToLoop) {
-                if (LoopObjectsAndHighlightObjectUnderMouse(game.Scene.children[objectsToLoop].children)) {
+            foreach (String interactiveObjectsToLoop in sceneInteractiveObjectsToLoop) {
+                if (LoopObjectsAndHighlightObjectUnderMouse(game.Scene.children[interactiveObjectsToLoop].children)) {
                     return;
                 }
             }
