@@ -210,7 +210,7 @@ namespace App
         public override void Draw(GameTime gameTime)
         {
             if (this.model != null) {
-                this.DrawModel(model);
+                this.DrawModel(this.model);
             }
         }
 
@@ -218,7 +218,7 @@ namespace App
         {
             // Copy any parent transforms.
             Matrix[] transforms = new Matrix[model.Bones.Count];
-            this.model.CopyAbsoluteBoneTransformsTo(transforms);
+            model.CopyAbsoluteBoneTransformsTo(transforms);
 
             // Draw the model. A model can have multiple meshes, so loop.
             foreach (ModelMesh mesh in model.Meshes) {
