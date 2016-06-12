@@ -28,7 +28,7 @@ namespace App.Collisions
         public IGameObject parent { get; set; }
 
         public Color drawColor = Color.GreenYellow;
-        private BoundingBox box;
+        public BoundingBox box;
         private Engine game;
 
         // TODO: Is this even needed?

@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 using HESOYAM_Production;
 using System;
 using App.Collisions;
+using HESOYAM_Production.App;
 
 namespace App
 {
@@ -12,6 +13,7 @@ namespace App
     {
         const float wallShift = 100;
         GameObject player;
+        public Movement movement;
 
         public GameObject Player {
             get { return player; } 
@@ -42,6 +44,8 @@ namespace App
             this.AddChild(new GameObject(game, "Doors"));
             this.AddChild(new GameObject(game, "Interactive"));
             this.AddChild(new GameObject(game, "Others"));
+
+            movement = new Movement(bmp.Width, bmp.Height, wallShift);
 
             for (int i = 0; i < bmp.Width; i++) {
                 for (int j = 0; j < bmp.Height; j++) {
@@ -102,6 +106,7 @@ namespace App
             this.addColider(wall);
 
             this.children["Walls"].AddChild(wall);
+            movement.addObstacle((int)pos.X, (int)pos.Y);
         }
 
         private void buildWindow(Vector2 pos, int rotationY)
@@ -186,10 +191,25 @@ namespace App
 
         private void insertOpponentCharacter(Model model, Vector2 pos, int rotationY, string texture)
         {
-            GameObject character = this.buildObject(model, pos, "Opponent_", rotationY);
+            Opponent character = this.buildOpponent(model, pos, "Opponent_", rotationY);
             character.setTexture(this.game.Textures[texture]);
 
             this.children["Opponents"].AddChild(character);
+        }
+
+        private Opponent buildOpponent(Model model, Vector2 pos, string prefix, int rotationY)
+        {
+            Opponent gameObject = new Opponent(
+                                        game,
+                                        prefix + pos.X + "x" + pos.Y,
+                                        model,
+                                        new Vector3(pos.X * wallShift, 0f, pos.Y * wallShift),
+                                        new Vector3(0f, (float)(rotationY * Math.PI / 2), 0f)
+                                    );
+
+            this.addColider(gameObject);
+
+            return gameObject;
         }
 
         private GameObject buildObject(Model model, Vector2 pos, string prefix, int rotationY)
