@@ -21,7 +21,7 @@ namespace App
         {
             this.cameraAngle = cameraAngle;
             Vector3 newPosition = position;
-            Vector3 newSize = new Vector3(5.0f, 10.0f, 10.0f);
+            Vector3 newSize = new Vector3(5.0f, 10.0f, 40.0f);
 
             newPosition.X += 50;
             AddCollider("front", new Collider(game, newPosition, newSize, Vector3.Zero));
@@ -29,7 +29,7 @@ namespace App
             newPosition.X -= 100;
             AddCollider("back", new Collider(game, newPosition, newSize, Vector3.Zero));
 
-            newSize = new Vector3(10.0f, 10.0f, 5.0f);
+            newSize = new Vector3(40.0f, 10.0f, 5.0f);
 
             newPosition.X += 50;
             newPosition.Z += 50;

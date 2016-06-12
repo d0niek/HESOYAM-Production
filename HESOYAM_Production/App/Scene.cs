@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 using HESOYAM_Production;
 using System;
 using App.Collisions;
+using HESOYAM_Production.App;
 
 namespace App
 {
@@ -186,10 +187,25 @@ namespace App
 
         private void insertOpponentCharacter(Model model, Vector2 pos, int rotationY, string texture)
         {
-            GameObject character = this.buildObject(model, pos, "Opponent_", rotationY);
+            Opponent character = this.buildOpponent(model, pos, "Opponent_", rotationY);
             character.setTexture(this.game.Textures[texture]);
 
             this.children["Opponents"].AddChild(character);
+        }
+
+        private Opponent buildOpponent(Model model, Vector2 pos, string prefix, int rotationY)
+        {
+            Opponent gameObject = new Opponent(
+                                        game,
+                                        prefix + pos.X + "x" + pos.Y,
+                                        model,
+                                        new Vector3(pos.X * wallShift, 0f, pos.Y * wallShift),
+                                        new Vector3(0f, (float)(rotationY * Math.PI / 2), 0f)
+                                    );
+
+            this.addColider(gameObject);
+
+            return gameObject;
         }
 
         private GameObject buildObject(Model model, Vector2 pos, string prefix, int rotationY)

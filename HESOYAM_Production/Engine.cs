@@ -6,6 +6,7 @@ using App;
 using System.IO;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework.Content;
+using HESOYAM_Production.App;
 
 namespace HESOYAM_Production
 {
@@ -23,7 +24,7 @@ namespace HESOYAM_Production
         GraphicsDeviceManager graphics;
         HUD hud;
         Camera camera;
-        Player player;
+        public Player player;
         Scene scene;
 
         public SpriteBatch spriteBatch;
@@ -84,7 +85,9 @@ namespace HESOYAM_Production
         protected override void Initialize()
         {
             IsMouseVisible = true;
-            graphics.IsFullScreen = false;
+            graphics.IsFullScreen = true;
+            graphics.PreferredBackBufferWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
+            graphics.PreferredBackBufferHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
             base.Initialize();
         }
 
@@ -215,6 +218,10 @@ namespace HESOYAM_Production
             if (PlayMode) {
                 camera.position = camera.PlayModePosition;
                 player.update();
+                foreach(Opponent opponent in scene.children["Opponents"].children.Values)
+                {
+                    opponent.update();
+                }
                 hud.ResetSelectedTeammate();
                 hud.ResetObjectToInteract();
             }
