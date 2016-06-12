@@ -1,12 +1,14 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System;
+using Microsoft.Xna.Framework;
 
 namespace App.Util
 {
 
     public class Mouse
     {
-        private const int borderWidth = 100;
+        private const int borderWidth = 10;
         private GraphicsDevice GraphicsDevice;
 
         public MouseState CurrentMouseState {
@@ -30,6 +32,14 @@ namespace App.Util
         {
             this.LastMouseState = this.CurrentMouseState;
             this.CurrentMouseState = Microsoft.Xna.Framework.Input.Mouse.GetState();
+        }
+
+        public Point GetMouseLocation()
+        {
+            return new Point(
+                CurrentMouseState.X,
+                CurrentMouseState.Y
+            );
         }
 
         public bool isInGameWindow()

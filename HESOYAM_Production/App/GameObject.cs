@@ -10,6 +10,8 @@ namespace App
 
     public class GameObject : DrawableGameComponent, IGameElement, IGameObject
     {
+        bool hover;
+        bool active;
         protected Engine game;
         protected Model model;
         protected Texture2D texture;
@@ -37,6 +39,7 @@ namespace App
             Vector3? scale = null
         ) : base(game)
         {
+            this.hover = false;
             this.game = game;
             this.name = name;
             this.model = model;
@@ -207,6 +210,56 @@ namespace App
             return backup;
         }
 
+        public bool IsMouseOverObject()
+        {
+            Matrix world = Matrix.CreateTranslation(this.position);
+
+            for (int index = 0; index < model.Meshes.Count; index++) {
+                BoundingSphere sphere = model.Meshes[index].BoundingSphere;
+                sphere = sphere.Transform(world);
+                float? distance = IntersectDistance(sphere);
+
+                if (distance != null) {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        private float? IntersectDistance(BoundingSphere sphere)
+        {
+            Ray mouseRay = CalculateRay();
+            return mouseRay.Intersects(sphere);
+        }
+
+        private Ray CalculateRay()
+        {
+            Vector2 mouseLocation = new Vector2(
+                                        this.game.InputState.Mouse.CurrentMouseState.X,
+                                        this.game.InputState.Mouse.CurrentMouseState.Y
+                                    );
+
+            Vector3 nearPoint = this.game.GraphicsDevice.Viewport.Unproject(
+                                    new Vector3(mouseLocation.X, mouseLocation.Y, 0.0f),
+                                    this.game.Camera.ProjectionMatrix,
+                                    this.game.Camera.ViewMatrix,
+                                    Matrix.Identity
+                                );
+
+            Vector3 farPoint = this.game.GraphicsDevice.Viewport.Unproject(
+                                   new Vector3(mouseLocation.X, mouseLocation.Y, 1.0f),
+                                   this.game.Camera.ProjectionMatrix,
+                                   this.game.Camera.ViewMatrix,
+                                   Matrix.Identity
+                               );
+
+            Vector3 direction = farPoint - nearPoint;
+            direction.Normalize();
+
+            return new Ray(nearPoint, direction);
+        }
+
         public override void Draw(GameTime gameTime)
         {
             if (this.model != null) {
@@ -235,6 +288,13 @@ namespace App
                     effect.View = this.game.Camera.ViewMatrix;
                     effect.Projection = this.game.Camera.ProjectionMatrix;
 
+                    // Tmp effect to highlight object under mouse
+                    if (active) {
+                        effect.AmbientLightColor = new Vector3(0, 0, 255);
+                    } else if (hover) {
+                        effect.AmbientLightColor = new Vector3(0, 255, 0);
+                    }
+
                     this.DrawTexture(effect);
                 }
 
@@ -249,6 +309,16 @@ namespace App
                 effect.TextureEnabled = true;
                 effect.Texture = this.texture;
             }
+        }
+
+        public void setHover(bool hover)
+        {
+            this.hover = hover;
+        }
+
+        public void setActive(bool active)
+        {
+            this.active = active;
         }
 
         public void setTexture(Texture2D texture)

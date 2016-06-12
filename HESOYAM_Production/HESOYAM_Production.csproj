@@ -61,6 +61,8 @@
     <Compile Include="App\Scene.cs" />
     <Compile Include="App\Util\Mouse.cs" />
     <Compile Include="App\Wall.cs" />
+    <Compile Include="App\HUD.cs" />
+    <Compile Include="App\Avatar.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Icon.png" />
@@ -114,6 +116,7 @@
     <None Include="Content\Models\drzwi_przyciete.FBX" />
     <None Include="Content\Models\modul_przyciete.FBX" />
     <None Include="Content\Textures\kafelki.png" />
+    <None Include="Content\Fonts\Open Sans.spritefont" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Icon.ico" />
@@ -134,5 +137,6 @@
     <Folder Include="App\Util\" />
     <Folder Include="Content\Models\" />
     <Folder Include="Content\Map\" />
+    <Folder Include="Content\Fonts\" />
   </ItemGroup>
 </Project>

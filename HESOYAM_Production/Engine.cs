@@ -17,17 +17,24 @@ namespace HESOYAM_Production
     {
         InputState inputState;
         String rootDir;
+        Dictionary<String, SpriteFont> fonts;
         Dictionary<String, Model> models;
         Dictionary<String, Texture2D> textures;
         GraphicsDeviceManager graphics;
-        SpriteBatch spriteBatch;
+        HUD hud;
         Camera camera;
         Player player;
         Scene scene;
-        bool playMode;
+
+        public SpriteBatch spriteBatch;
 
         public InputState InputState {
             get { return inputState; }
+            private set { }
+        }
+
+        public Dictionary<String, SpriteFont> Fonts {
+            get { return fonts; }
             private set { }
         }
 
@@ -52,8 +59,8 @@ namespace HESOYAM_Production
         }
 
         public bool PlayMode {
-            get { return playMode; }
-            private set { }
+            get;
+            set;
         }
 
         public Engine()
@@ -61,8 +68,9 @@ namespace HESOYAM_Production
             graphics = new GraphicsDeviceManager(this);
 
             Content.RootDirectory = "Content";
-            playMode = true;
+            PlayMode = true;
             rootDir = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName;
+            fonts = new Dictionary<String, SpriteFont>();
             models = new Dictionary<String, Model>();
             textures = new Dictionary<String, Texture2D>();
         }
@@ -90,6 +98,7 @@ namespace HESOYAM_Production
             spriteBatch = new SpriteBatch(GraphicsDevice);
             inputState = new InputState(GraphicsDevice);
 
+            LoadFonts();
             LoadModels();
             LoadTextures();
 
@@ -98,6 +107,7 @@ namespace HESOYAM_Production
                 "Scene_1",
                 rootDir + "/Content/Map/scene_1"
             );
+            hud = new HUD(this);
 
             Vector3 cameraMove = new Vector3(-500.0f, 500.0f, 500.0f);
             float cameraAngle = (float) (Math.Atan2(cameraMove.X, cameraMove.Z));
@@ -109,6 +119,29 @@ namespace HESOYAM_Production
 
             player.AddChild(camera);
             player.AddChild(scene.Player);
+        }
+
+        private void LoadFonts()
+        {
+            String modelsDir = rootDir + "/Content/Fonts";
+
+            String[] files = Directory.GetFiles(modelsDir);
+            foreach (String file in files) {
+                String name = file.Remove(0, modelsDir.Length + 1).Replace(".spritefont", "");
+
+                LoadFont(name);
+            }
+        }
+
+        private void LoadFont(String name)
+        {
+            try {
+                SpriteFont font = Content.Load<SpriteFont>("Fonts/" + name);
+
+                fonts.Add(name, font);
+            } catch (ContentLoadException e) {
+                Console.WriteLine("Font '" + name + "' does not exists in Content.mgcb");
+            }
         }
 
         private void LoadModels()
@@ -171,7 +204,7 @@ namespace HESOYAM_Production
         {
             inputState.Update();
             if (inputState.IsSpace(PlayerIndex.One)) {
-                playMode = !playMode;
+                TogglePlayMode();
             }
 
             PlayerIndex outPlayerIndex;
@@ -179,9 +212,11 @@ namespace HESOYAM_Production
                 Program.debugMode = !Program.debugMode;
             }
 
-            if (playMode) {
+            if (PlayMode) {
                 camera.position = camera.PlayModePosition;
                 player.update();
+                hud.ResetSelectedTeammate();
+                hud.ResetObjectToInteract();
             }
 
             camera.update();
@@ -202,6 +237,11 @@ namespace HESOYAM_Production
             base.Update(gameTime);
         }
 
+        public void TogglePlayMode()
+        {
+            PlayMode = !PlayMode;
+        }
+
         /// <summary>
         /// This is called when the game should draw itself.
         /// </summary>
@@ -210,7 +250,11 @@ namespace HESOYAM_Production
         {
             graphics.GraphicsDevice.Clear(Color.CornflowerBlue);
 
+            GraphicsDevice.DepthStencilState = DepthStencilState.Default;
+
             base.Draw(gameTime);
+
+            this.hud.Draw();
         }
 
         static float GameTimeFloat(GameTime gameTime)
