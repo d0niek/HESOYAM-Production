@@ -76,7 +76,7 @@ namespace App
                     }
                 }
             }
-
+            
             this.Move(vector.X, 0, vector.Z);
         }
 

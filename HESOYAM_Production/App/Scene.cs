@@ -13,6 +13,7 @@ namespace App
     {
         const float wallShift = 100;
         GameObject player;
+        public Movement movement;
 
         public GameObject Player {
             get { return player; } 
@@ -43,6 +44,8 @@ namespace App
             this.AddChild(new GameObject(game, "Doors"));
             this.AddChild(new GameObject(game, "Interactive"));
             this.AddChild(new GameObject(game, "Others"));
+
+            movement = new Movement(bmp.Width, bmp.Height, wallShift);
 
             for (int i = 0; i < bmp.Width; i++) {
                 for (int j = 0; j < bmp.Height; j++) {
@@ -103,6 +106,7 @@ namespace App
             this.addColider(wall);
 
             this.children["Walls"].AddChild(wall);
+            movement.addObstacle((int)pos.X, (int)pos.Y);
         }
 
         private void buildWindow(Vector2 pos, int rotationY)

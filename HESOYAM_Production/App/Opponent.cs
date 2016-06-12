@@ -46,31 +46,31 @@ namespace HESOYAM_Production.App
 
         public void update()
         {
-            Vector3 delta = Vector3.Subtract(game.player.position, position);
-            float distance = delta.Length();
-            delta.Normalize();
-            bool playerVisible = isPlayerVisible(delta, distance);
+            Vector3 playerDelta = Vector3.Subtract(game.player.position, position);
+            float playerDistance = playerDelta.Length();
+            playerDelta.Normalize();
+            bool playerVisible = isVisible(playerDelta, playerDistance);
 
-            if(playerVisible &&  distance < detectionDistance)
+            if(playerVisible && playerDistance < detectionDistance)
             {
-                chase(delta);
+                moveInDirection(playerDelta);
             }
         }
 
-        private void chase(Vector3 delta)
+        private void moveInDirection(Vector3 direction)
         {
-            delta = Vector3.Multiply(delta, speed);
-            Move(delta.X, delta.Y, delta.Z);
+            direction = Vector3.Multiply(direction, speed);
+            Move(direction.X, direction.Y, direction.Z);
         }
 
-        private bool isPlayerVisible(Vector3 delta, float distance)
+        private bool isVisible(Vector3 direction, float distance)
         {
-            Ray playerRay = new Ray(position, delta);
+            Ray otherRay = new Ray(position, direction);
             foreach(IGameObject wall in game.Scene.children["Walls"].children.Values)
             {
                 foreach(Collider collider in wall.colliders.Values)
                 {
-                    float? rayDistance = playerRay.Intersects(collider.box);
+                    float? rayDistance = otherRay.Intersects(collider.box);
                     if(rayDistance != null && rayDistance < distance)
                     {
                         return false;
