@@ -144,7 +144,7 @@ namespace App
                             game,
                             "Door_" + pos.X + "x" + pos.Y,
                             this.game.Models["drzwi_duze"],
-                            this.game.Models["drzwi_duze"],
+                            this.game.Models["drzwi_duze_przyciete"],
                             new Vector3(pos.X * wallShift, 0f, pos.Y * wallShift),
                             new Vector3(0f, (float) (rotationY * Math.PI / 2), 0f)
                         );
