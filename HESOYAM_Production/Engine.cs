@@ -79,7 +79,7 @@ namespace HESOYAM_Production
         protected override void Initialize()
         {
             IsMouseVisible = true;
-            graphics.IsFullScreen = false;
+            graphics.IsFullScreen = true;
             base.Initialize();
         }
 
@@ -112,19 +112,20 @@ namespace HESOYAM_Production
 
             player.AddChild (camera);
             player.AddChild (scene.Player);
-            Model animation = Content.Load<Model> ("Animation/corridorMaze_doors_centimeter");
-            Model animationPos = Content.Load<Model> ("Animation/corridorMaze_doors_centimeter");
+            Model animation = Content.Load<Model> ("Animation/bohater/bohater_bieg_przod");
+            Model animationPos = Content.Load<Model> ("Animation/bohater");
             Console.WriteLine (animationPos.Meshes.Count);
 
             animated = new AnimatedObject (this, "animation", animation);
             animatedPos = new AnimatedObject (this, "animationPos", animationPos);
+            animatedPos.Move(3200,0,4300);
             AnimationClip clip = animated.Clips [0];
 
             // And play the clip
             AnimationPlayer play = animatedPos.PlayClip (clip);
             play.Looping = true;
 
-            Components.Add(animated);
+            //Components.Add(animated);
             Components.Add(animatedPos);
         }
 
