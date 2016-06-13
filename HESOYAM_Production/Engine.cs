@@ -22,8 +22,6 @@ namespace HESOYAM_Production
         Dictionary<String, Texture2D> textures;
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
-        AnimatedObject animated;
-        AnimatedObject animatedPos;
         Camera camera;
         Player player;
         Scene scene;
@@ -79,7 +77,7 @@ namespace HESOYAM_Production
         protected override void Initialize()
         {
             IsMouseVisible = true;
-            graphics.IsFullScreen = true;
+            graphics.IsFullScreen = false;
             base.Initialize();
         }
 
@@ -115,18 +113,15 @@ namespace HESOYAM_Production
             player.AddChild (scene.Player);
             Model animation = Content.Load<Model> ("Animation/bohater");
             Model animationPos = Content.Load<Model> ("Animation/bohater");
-            Console.WriteLine (animationPos.Meshes.Count);
 
-            animated = new AnimatedObject (this, "animation", animation);
-            animatedPos = new AnimatedObject (this, "animationPos", animationPos);
-            animatedPos.Move(3200,0,4300);
-            AnimationClip clip = animated.Clips [0];
+            AnimatedObject animatedPos = new AnimatedObject (this, "animationPos", animationPos);
+            ModelExtra modelExtra = animation.Tag as ModelExtra;
+            AnimationClip clip = modelExtra.Clips [0];
 
             // And play the clip
             AnimationPlayer play = animatedPos.PlayClip (clip);
             play.Looping = true;
 
-            //Components.Add(animated);
             Components.Add(animatedPos);
         }
 

@@ -174,16 +174,17 @@ namespace App
             Dictionary<String, Model> models = new Dictionary<string, Model>();
             this.game.LoadModels("Animation/" + name, models);
 
-            foreach (Model model in models.Values) {
-                AnimatedObject animated = new AnimatedObject(this.game, "animation", model);
+            foreach (String modelName in models.Keys) {
+                Model model = models[modelName];
+                ModelExtra modelExtra = model.Tag as ModelExtra;
+                String clipName = modelName.Replace(name + "_", "");
 
-                foreach(AnimationClip clip in animated.Clips){
-                    Console.WriteLine(clip.Name);
-                    character.Clips.Add(clip);
+                foreach (AnimationClip clip in modelExtra.Clips) {
+                    character.ClipsToPlay.Add(clipName, clip);
                 }
             }
 
-            character.PlayClip(character.Clips[6]).Looping = true;
+            character.PlayClip("postawa").Looping = true;
 
         }
 

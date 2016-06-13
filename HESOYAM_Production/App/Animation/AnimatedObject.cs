@@ -45,10 +45,7 @@ namespace App.Animation
         /// </summary>
         public List<Bone> Bones { get { return bones; } }
 
-        /// <summary>
-        /// The model animation clips
-        /// </summary>
-        public List<AnimationClip> Clips { get { return modelExtra.Clips; } }
+        public Dictionary<String,AnimationClip> ClipsToPlay { get;}
 
         #endregion
 
@@ -67,6 +64,7 @@ namespace App.Animation
             Vector3? scale = null
         ) : base(game, name, model, position, rotation, scale)
         {
+            this.ClipsToPlay = new Dictionary<string, AnimationClip>();
             this.name = name;
             modelExtra = model.Tag as ModelExtra;
             System.Diagnostics.Debug.Assert(modelExtra != null);
@@ -126,6 +124,11 @@ namespace App.Animation
             // Create a clip player and assign it to this model
             player = new AnimationPlayer(clip, this);
             return player;
+        }
+
+        public AnimationPlayer PlayClip(String name)
+        {
+            return PlayClip(this.ClipsToPlay[name]);
         }
 
         #endregion
