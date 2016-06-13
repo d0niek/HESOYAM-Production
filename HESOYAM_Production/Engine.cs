@@ -84,7 +84,7 @@ namespace HESOYAM_Production
         protected override void Initialize()
         {
             IsMouseVisible = true;
-            graphics.IsFullScreen = false;
+            graphics.IsFullScreen = true;
             base.Initialize();
         }
 

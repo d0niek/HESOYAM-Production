@@ -279,9 +279,11 @@ namespace App
                 // as our camera and projection.
                 foreach (BasicEffect effect in mesh.Effects) {
                     effect.LightingEnabled = true; // turn on the lighting subsystem.
-                    effect.DirectionalLight0.DiffuseColor = new Vector3(1f, 1f, 1f); // a red light
+                    effect.DirectionalLight0.DiffuseColor = new Vector3(0f, 0f,0f); // a red light
                     effect.DirectionalLight0.Direction = new Vector3(1, -0.5f, -1);  // coming along the x-axis
                     effect.DirectionalLight0.SpecularColor = new Vector3(0.5f, 0.5f, 0.5f); // with green highlights
+                    effect.AmbientLightColor = new Vector3(0.2f, 0.2f, 0.2f);
+                    effect.EmissiveColor = new Vector3(1, 0, 0);
 
                     effect.World = transforms[mesh.ParentBone.Index]
                     * Matrix.CreateRotationY(this.rotation.Y)
