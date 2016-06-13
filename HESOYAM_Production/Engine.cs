@@ -93,7 +93,8 @@ namespace HESOYAM_Production
             spriteBatch = new SpriteBatch (GraphicsDevice);
             inputState = new InputState (GraphicsDevice);
 
-            LoadModels ();
+            LoadModels ("Models",models);
+            LoadModels ("Animation",models);
             LoadTextures ();
 
             scene = new Scene (
@@ -112,7 +113,7 @@ namespace HESOYAM_Production
 
             player.AddChild (camera);
             player.AddChild (scene.Player);
-            Model animation = Content.Load<Model> ("Animation/bohater/bohater_bieg_przod");
+            Model animation = Content.Load<Model> ("Animation/bohater");
             Model animationPos = Content.Load<Model> ("Animation/bohater");
             Console.WriteLine (animationPos.Meshes.Count);
 
@@ -129,26 +130,31 @@ namespace HESOYAM_Production
             Components.Add(animatedPos);
         }
 
-        private void LoadModels()
+        public void LoadModels(String dirName, Dictionary<String, Model> models)
         {
-            String modelsDir = rootDir + "/Content/Models";
-
+            String modelsDir = rootDir + "/Content/" + dirName;
             String[] files = Directory.GetFiles(modelsDir);
-            foreach (String file in files) {
-                String name = file.Remove(0, modelsDir.Length + 1).Replace(".FBX", "");
 
-                LoadModel(name);
+            foreach (String file in files) {
+                String name = file.Remove(0, modelsDir.Length + 1).Replace(".FBX", "").Replace(".fbx", "");
+                Model model = LoadModel(dirName, name);
+                
+                if (model != null) {
+                    models.Add(name, model);
+                }
             }
         }
 
-        private void LoadModel(String name)
+        private Model LoadModel(String dirName, String name)
         {
             try {
-                Model model = Content.Load<Model>("Models/" + name);
+                Model model = Content.Load<Model>(dirName + "/" + name);
 
-                models.Add(name, model);
+                return model;
             } catch (ContentLoadException e) {
                 Console.WriteLine("Model '" + name + "' does not exists in Content.mgcb");
+
+                return null;
             }
         }
 

@@ -923,6 +923,25 @@
 /processorParam:TextureFormat=Color
 /build:Textures/zolnierz.png
 
+#begin Animation/bohater.FBX
+/importer:FbxImporter
+/processor:AnimationProcessor
+/processorParam:ColorKeyColor=0,0,0,0
+/processorParam:ColorKeyEnabled=True
+/processorParam:DefaultEffect=SkinnedEffect
+/processorParam:GenerateMipmaps=True
+/processorParam:GenerateTangentFrames=False
+/processorParam:PremultiplyTextureAlpha=True
+/processorParam:PremultiplyVertexColors=True
+/processorParam:ResizeTexturesToPowerOfTwo=False
+/processorParam:RotationX=0
+/processorParam:RotationY=0
+/processorParam:RotationZ=0
+/processorParam:Scale=1
+/processorParam:SwapWindingOrder=False
+/processorParam:TextureFormat=DxtCompressed
+/build:Animation/bohater.FBX
+
 #begin Animation/bohater/bohater_bieg_lewo.fbx
 /importer:FbxImporter
 /processor:AnimationProcessor
@@ -1321,42 +1340,4 @@
 /processorParam:SwapWindingOrder=False
 /processorParam:TextureFormat=DxtCompressed
 /build:Animation/bohater/bohater_strzal.fbx
-
-#begin Animation/bohater.FBX
-/importer:FbxImporter
-/processor:AnimationProcessor
-/processorParam:ColorKeyColor=0,0,0,0
-/processorParam:ColorKeyEnabled=True
-/processorParam:DefaultEffect=SkinnedEffect
-/processorParam:GenerateMipmaps=True
-/processorParam:GenerateTangentFrames=False
-/processorParam:PremultiplyTextureAlpha=True
-/processorParam:PremultiplyVertexColors=True
-/processorParam:ResizeTexturesToPowerOfTwo=False
-/processorParam:RotationX=0
-/processorParam:RotationY=0
-/processorParam:RotationZ=0
-/processorParam:Scale=1
-/processorParam:SwapWindingOrder=False
-/processorParam:TextureFormat=DxtCompressed
-/build:Animation/bohater.FBX
-
-#begin Animation/running.fbx
-/importer:FbxImporter
-/processor:AnimationProcessor
-/processorParam:ColorKeyColor=0,0,0,0
-/processorParam:ColorKeyEnabled=True
-/processorParam:DefaultEffect=SkinnedEffect
-/processorParam:GenerateMipmaps=True
-/processorParam:GenerateTangentFrames=False
-/processorParam:PremultiplyTextureAlpha=True
-/processorParam:PremultiplyVertexColors=True
-/processorParam:ResizeTexturesToPowerOfTwo=False
-/processorParam:RotationX=0
-/processorParam:RotationY=0
-/processorParam:RotationZ=0
-/processorParam:Scale=1
-/processorParam:SwapWindingOrder=False
-/processorParam:TextureFormat=DxtCompressed
-/build:Animation/running.fbx
 

@@ -120,6 +120,7 @@
     <None Include="Content\Models\drzwi_przyciete.FBX" />
     <None Include="Content\Models\modul_przyciete.FBX" />
     <None Include="Content\Textures\kafelki.png" />
+    <None Include="Content\Animation\bohater.FBX" />
     <None Include="Content\Animation\bohater\bohater_bieg_lewo.fbx" />
     <None Include="Content\Animation\bohater\bohater_bieg_prawo.fbx" />
     <None Include="Content\Animation\bohater\bohater_bieg_przod.fbx" />
@@ -141,9 +142,6 @@
     <None Include="Content\Animation\bohater\bohater_postawa.fbx" />
     <None Include="Content\Animation\bohater\bohater_smierc.fbx" />
     <None Include="Content\Animation\bohater\bohater_strzal.fbx" />
-    <None Include="Content\Animation\bohater.FBX" />
-    <None Include="Content\Models\bohater.FBX" />
-    <None Include="Content\Animation\running.fbx" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Icon.ico" />
