@@ -99,10 +99,8 @@
     <None Include="Content\Models\wazon.FBX" />
     <None Include="Content\Models\wozek.FBX" />
     <None Include="packages.config" />
-    <None Include="Content\Animation\corridorMaze_doors_centimeter.FBX" />
     <None Include="Content\Models\podnozek.FBX" />
     <None Include="Content\Map\scene_1.bmp" />
-    <None Include="Content\Models\bohater.FBX" />
     <None Include="Content\Models\chudzielec.FBX" />
     <None Include="Content\Models\grubas.FBX" />
     <None Include="Content\Models\lekarz.FBX" />
@@ -122,6 +120,28 @@
     <None Include="Content\Models\drzwi_przyciete.FBX" />
     <None Include="Content\Models\modul_przyciete.FBX" />
     <None Include="Content\Textures\kafelki.png" />
+    <None Include="Content\Animation\bohater.FBX" />
+    <None Include="Content\Animation\bohater\bohater_bieg_lewo.fbx" />
+    <None Include="Content\Animation\bohater\bohater_bieg_prawo.fbx" />
+    <None Include="Content\Animation\bohater\bohater_bieg_przod.fbx" />
+    <None Include="Content\Animation\bohater\bohater_bohater_chod_prawo.fbx" />
+    <None Include="Content\Animation\bohater\bohater_bujanie.fbx" />
+    <None Include="Content\Animation\bohater\bohater_celowanie.fbx" />
+    <None Include="Content\Animation\bohater\bohater_chod_lewo.fbx" />
+    <None Include="Content\Animation\bohater\bohater_chod_przod.fbx" />
+    <None Include="Content\Animation\bohater\bohater_chod_tyl.fbx" />
+    <None Include="Content\Animation\bohater\bohater_cios_bron.fbx" />
+    <None Include="Content\Animation\bohater\bohater_cois_piesc.fbx" />
+    <None Include="Content\Animation\bohater\bohater_interakcja.fbx" />
+    <None Include="Content\Animation\bohater\bohater_obrot_lewo.fbx" />
+    <None Include="Content\Animation\bohater\bohater_obrot_prawo.fbx" />
+    <None Include="Content\Animation\bohater\bohater_pistolet_chod_lewo.fbx" />
+    <None Include="Content\Animation\bohater\bohater_pistolet_chod_prawo.fbx" />
+    <None Include="Content\Animation\bohater\bohater_pistolet_chod_przod.fbx" />
+    <None Include="Content\Animation\bohater\bohater_pistolet_chod_tyl.fbx" />
+    <None Include="Content\Animation\bohater\bohater_postawa.fbx" />
+    <None Include="Content\Animation\bohater\bohater_smierc.fbx" />
+    <None Include="Content\Animation\bohater\bohater_strzal.fbx" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Icon.ico" />
