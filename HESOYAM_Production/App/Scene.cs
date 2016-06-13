@@ -180,12 +180,11 @@ namespace App
                 String clipName = modelName.Replace(name + "_", "");
 
                 foreach (AnimationClip clip in modelExtra.Clips) {
-                    character.ClipsToPlay.Add(clipName, clip);
+                    character.Clips.Add(clipName, clip);
                 }
             }
 
             character.PlayClip("postawa").Looping = true;
-
         }
 
         private void insertCharacter(Model model, Vector2 pos, int rotationY, string texture)

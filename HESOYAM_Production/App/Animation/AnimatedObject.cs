@@ -45,7 +45,7 @@ namespace App.Animation
         /// </summary>
         public List<Bone> Bones { get { return bones; } }
 
-        public Dictionary<String,AnimationClip> ClipsToPlay { get;}
+        public Dictionary<String,AnimationClip> Clips { get;}
 
         #endregion
 
@@ -64,7 +64,7 @@ namespace App.Animation
             Vector3? scale = null
         ) : base(game, name, model, position, rotation, scale)
         {
-            this.ClipsToPlay = new Dictionary<string, AnimationClip>();
+            this.Clips = new Dictionary<string, AnimationClip>();
             this.name = name;
             modelExtra = model.Tag as ModelExtra;
             System.Diagnostics.Debug.Assert(modelExtra != null);
@@ -128,7 +128,7 @@ namespace App.Animation
 
         public AnimationPlayer PlayClip(String name)
         {
-            return PlayClip(this.ClipsToPlay[name]);
+            return PlayClip(this.Clips[name]);
         }
 
         #endregion
