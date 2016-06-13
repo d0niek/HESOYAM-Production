@@ -278,7 +278,11 @@ namespace App
                 // This is where the mesh orientation is set, as well
                 // as our camera and projection.
                 foreach (BasicEffect effect in mesh.Effects) {
-                    effect.EnableDefaultLighting();
+                    effect.LightingEnabled = true; // turn on the lighting subsystem.
+                    effect.DirectionalLight0.DiffuseColor = new Vector3(1f, 1f, 1f); // a red light
+                    effect.DirectionalLight0.Direction = new Vector3(1, -0.5f, -1);  // coming along the x-axis
+                    effect.DirectionalLight0.SpecularColor = new Vector3(0.5f, 0.5f, 0.5f); // with green highlights
+
                     effect.World = transforms[mesh.ParentBone.Index]
                     * Matrix.CreateRotationY(this.rotation.Y)
                     * Matrix.CreateRotationX(this.rotation.X)

@@ -1073,12 +1073,6 @@
 /processorParam:TextureFormat=Color
 /build:Textures/avatar_hover.png
 
-#begin Fonts/Open Sans.spritefont
-/importer:FontDescriptionImporter
-/processor:FontDescriptionProcessor
-/processorParam:TextureFormat=Color
-/build:Fonts/Open Sans.spritefont
-
 #begin Textures/frame.png
 /importer:TextureImporter
 /processor:TextureProcessor
