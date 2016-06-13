@@ -78,6 +78,11 @@ namespace App
             }
             
             this.Move(vector.X, 0, vector.Z);
+
+            //Tuple<int, int> coords = game.Scene.movement.positionToCoords(position);
+            //System.Console.Write(coords.Item1);
+            //System.Console.Write(' ');
+            //System.Console.WriteLine(coords.Item2);
         }
 
         public new void Move(float x, float y, float z)

@@ -1,5 +1,6 @@
 ﻿using App;
 using App.Collisions;
+using HESOYAM_Production;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -8,7 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HESOYAM_Production.App
+namespace App
 {
     class Opponent : GameObject
     {
@@ -50,11 +51,21 @@ namespace HESOYAM_Production.App
             float playerDistance = playerDelta.Length();
             playerDelta.Normalize();
             bool playerVisible = isVisible(playerDelta, playerDistance);
+            Vector3 targetDelta;
 
-            if(playerVisible && playerDistance < detectionDistance)
+            if(playerVisible)
             {
-                moveInDirection(playerDelta);
+                targetDelta = Vector3.Subtract(game.player.position, position);
             }
+            else
+            {
+                Vector3? aStarTarget = game.Scene.movement.getMovementTarget(position, game.player.position);
+                if(aStarTarget == null) return;
+                targetDelta = Vector3.Subtract((Vector3)aStarTarget, position);
+            }
+
+            targetDelta.Normalize();
+            moveInDirection(targetDelta);
         }
 
         private void moveInDirection(Vector3 direction)
@@ -77,6 +88,7 @@ namespace HESOYAM_Production.App
                     }
                 }
             }
+            System.Console.WriteLine("molte volte");
             return true;
         }
     }
