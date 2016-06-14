@@ -4,6 +4,9 @@ using Microsoft.Xna.Framework.Graphics;
 using HESOYAM_Production;
 using System;
 using App.Collisions;
+using App.Animation;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace App
 {
@@ -11,9 +14,9 @@ namespace App
     public class Scene: GameObject
     {
         const float wallShift = 100;
-        GameObject player;
+        AnimatedObject player;
 
-        public GameObject Player {
+        public AnimatedObject Player {
             get { return player; } 
             private set { }
         }
@@ -170,9 +173,10 @@ namespace App
 
         private void insertPlayerCharacter(Vector2 pos, int rotationY)
         {
-            this.player = this.buildObject(this.game.Models["bohater"], pos, "Player_", rotationY);
+            this.player = this.buildAnimatedObject(this.game.Models["bohater"], pos, "Player_", rotationY);
+            loadAnimationsToCharacter(this.player, "bohater");
             this.player.setTexture(this.game.Textures["bohater"]);
-
+            
             this.children["Player"].AddChild(this.player);
         }
 
@@ -190,6 +194,39 @@ namespace App
             character.setTexture(this.game.Textures[texture]);
 
             this.children["Opponents"].AddChild(character);
+        }
+
+        private void loadAnimationsToCharacter(AnimatedObject character, String name)
+        {
+            Dictionary<String, Model> models = new Dictionary<string, Model>();
+            this.game.LoadModels("Animation/" + name, models);
+
+            foreach (String modelName in models.Keys) {
+                Model model = models[modelName];
+                ModelExtra modelExtra = model.Tag as ModelExtra;
+                String clipName = modelName.Replace(name + "_", "");
+
+                foreach (AnimationClip clip in modelExtra.Clips) {
+                    character.Clips.Add(clipName, clip);
+                }
+            }
+
+            character.PlayClip("postawa").Looping = true;
+        }
+        
+        private AnimatedObject buildAnimatedObject(Model model, Vector2 pos, string prefix, int rotationY)
+        {
+            AnimatedObject gameObject = new AnimatedObject(
+                                            game,
+                                            prefix + pos.X + "x" + pos.Y,
+                                            model,
+                                            new Vector3(pos.X * wallShift, 0f, pos.Y * wallShift),
+                                            new Vector3(0f, (float) (rotationY * Math.PI / 2), 0f)
+                                        );
+
+            this.addColider(gameObject);
+
+            return gameObject;
         }
 
         private GameObject buildObject(Model model, Vector2 pos, string prefix, int rotationY)

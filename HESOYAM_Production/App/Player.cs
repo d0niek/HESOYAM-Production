@@ -3,6 +3,8 @@ using Microsoft.Xna.Framework.Input;
 using System;
 using HESOYAM_Production;
 using App.Collisions;
+using App.Animation;
+using System.Linq;
 
 namespace App
 {
@@ -126,6 +128,12 @@ namespace App
         {
             Vector3 vector = this.readInputAndMovePlayer();
 
+            if (vector != Vector3.Zero) {
+                animatePlayerMove(true);
+            } else {
+                animatePlayerMove(false);
+            }
+
             Matrix rotationMatrixY = Matrix.CreateRotationY(this.rotation.Y + cameraAngle);
             vector = Vector3.Transform(vector, rotationMatrixY);
 
@@ -134,10 +142,27 @@ namespace App
             return vector;
         }
 
+        void animatePlayerMove(bool isMoveing)
+        {
+            AnimatedObject playerModel = (AnimatedObject) this.children["playerModel"];
+            AnimationPlayer clipPlayer = playerModel.player;
+
+            if (isMoveing) {
+                if (clipPlayer.Clip == playerModel.Clips["postawa"]) {
+                    playerModel.PlayClip("bieg_przod").Looping = true;
+                }
+            } else {
+                if (clipPlayer.Clip != playerModel.Clips["postawa"]) {
+                    playerModel.PlayClip("postawa").Looping = true;
+                }
+            }
+        }
+
         private Vector3 readInputAndMovePlayer()
         {
             PlayerIndex playerIndex;
             Vector3 vector = Vector3.Zero;
+
 
             if (game.InputState.IsKeyPressed(Keys.W, PlayerIndex.One, out playerIndex)) {
                 vector.Z = -10;
