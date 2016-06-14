@@ -15,6 +15,7 @@ namespace App
         protected Engine game;
         protected Model model;
         protected Texture2D texture;
+        protected Vector3 emisiveColor = new Vector3(0,0,0);
 
         public string name { get; set; }
 
@@ -278,7 +279,13 @@ namespace App
                 // This is where the mesh orientation is set, as well
                 // as our camera and projection.
                 foreach (BasicEffect effect in mesh.Effects) {
-                    effect.EnableDefaultLighting();
+                    effect.LightingEnabled = true; // turn on the lighting subsystem.
+                    effect.DirectionalLight0.DiffuseColor = new Vector3(0.8f, 0.8f,0.7f); // a red light
+                    effect.DirectionalLight0.Direction = new Vector3(1, -0.5f, -1);  // coming along the x-axis
+                    effect.DirectionalLight0.SpecularColor = new Vector3(0.5f, 0.5f, 0.5f); // with green highlights
+                    effect.AmbientLightColor = new Vector3(0f, 0,0);
+                    effect.EmissiveColor = this.emisiveColor;
+
                     effect.World = transforms[mesh.ParentBone.Index]
                     * Matrix.CreateRotationY(this.rotation.Y)
                     * Matrix.CreateRotationX(this.rotation.X)

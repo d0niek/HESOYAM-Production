@@ -7,6 +7,7 @@ using App.Collisions;
 using App.Animation;
 using System.Collections.Generic;
 using System.Linq;
+using App.Models;
 
 namespace App
 {
@@ -68,7 +69,7 @@ namespace App
             } else if (color.R == 100 && color.G == 100) {
                 this.buildOther(this.game.Models["lozko"], pos, (int) color.B);
             } else if (color.R == 100 && color.G == 50) {
-                this.buildOther(this.game.Models["lampa"], pos, (int) color.B);
+                this.buildLamp(this.game.Models["lampa"], pos, (int) color.B);
             } else if (color.R == 185 && color.G == 67) {
                 this.buildInteractive(this.game.Models["szafka"], pos, (int) color.B);
             } else if (color.R == 185 && color.G == 163) {
@@ -139,6 +140,19 @@ namespace App
             door.setTextureCut(this.game.Textures["modul_przyciete_tekstura"]);
 
             this.children["Doors"].AddChild(door);
+        }
+
+        void buildLamp(Model model, Vector2 pos, int rotationY)
+        {
+            Lamp door = new Lamp(
+                            game,
+                            "Door_" + pos.X + "x" + pos.Y,
+                            this.game.Models["lampa"],
+                            new Vector3(pos.X * wallShift, 0f, pos.Y * wallShift),
+                            new Vector3(0f, (float) (rotationY * Math.PI / 2), 0f)
+                        );
+
+            this.children["Others"].AddChild(door);
         }
 
         private void buildExit(Vector2 pos, int rotationY)
