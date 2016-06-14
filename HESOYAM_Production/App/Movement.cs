@@ -13,7 +13,7 @@ namespace HESOYAM_Production.App
         private bool[,] obstacleMap;
         private float wallShift;
         private Dictionary<Tuple<int, int>, LinkedList<Tuple<int, int>>> recentPaths;
-        private const int maxDepth = 20;
+        private const int maxIterations = 3000;
 
         public Movement(int x, int y, float wallShift)
         {
@@ -60,14 +60,9 @@ namespace HESOYAM_Production.App
                     recentPaths.Remove(targetCoords);
                 }
                 recentPaths.Add(targetCoords, path);
-                //while(recentPaths.Count > 1000)
-                //{
-                //    recentPaths.re
-                //}
             }
 
             return path;
-            //return coordsToPosition(path.Last.Value);
         }
 
         public Tuple<int, int> positionToCoords(Vector3 position)
@@ -116,12 +111,10 @@ namespace HESOYAM_Production.App
                 bestFound[currentDistance] = new LinkedList<LinkedList<Tuple<int, int>>>();
             }
             bestFound[currentDistance].AddLast(currentPath);
-            while(bestFound.Count > 0)
+            int iterations = 0;
+            while(bestFound.Count > 0 && iterations < maxIterations)
             {
-                //if(bestFound.Count < 2)
-                //{
-                //    System.Console.Write('a');
-                //}
+                iterations++;
                 currentPath = bestFound.First().Value.First();
                 bestFound.First().Value.RemoveFirst();
                 if(bestFound.First().Value.Count < 1)
@@ -143,7 +136,7 @@ namespace HESOYAM_Production.App
                     Tuple<int, int> currentStep = step(currentCoords, i);
                     if(!isObstacleAt(currentStep))
                     {
-                        if(!visited[currentStep.Item1, currentStep.Item2] && currentPath.Count + 1 < maxDepth)
+                        if(!visited[currentStep.Item1, currentStep.Item2])
                         {
                             LinkedList<Tuple<int, int>> newPath = new LinkedList<Tuple<int, int>>(currentPath);
                             currentDistance = distance(currentStep, targetCoords);

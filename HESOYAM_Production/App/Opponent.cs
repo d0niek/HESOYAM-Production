@@ -31,26 +31,23 @@ namespace App
 
         private void Setup()
         {
-            speed = 3.0f;
+            speed = 5.0f;
             detectionDistance = 500.0f;
             nextTarget = position;
         }
 
         public void update()
         {
-            System.Console.Write(position.X);
-            System.Console.Write(' ');
-            System.Console.WriteLine(position.Z);
             Vector3 playerDelta = Vector3.Subtract(game.player.position, position);
             float playerDistance = playerDelta.Length();
             playerDelta.Normalize();
             bool playerVisible = isVisible(playerDelta, playerDistance);
 
-           // if(playerVisible)
-            //{
-                //nextTarget = game.player.position;
-            //}
-            //else
+            if(playerVisible)
+            {
+                nextTarget = game.player.position;
+            }
+            else
             {
                 if(Math.Abs(nextTarget.X - position.X) < 10f && Math.Abs(nextTarget.Z - position.Z) < 10f)
                 {
@@ -77,6 +74,7 @@ namespace App
             }
 
             Vector3 targetDelta = Vector3.Subtract(nextTarget, position);
+            if(targetDelta.Length() < 2f) return;
             targetDelta.Normalize();
             if(targetDelta.Length() > 0) moveInDirection(targetDelta);
         }
