@@ -34,9 +34,10 @@ namespace App
 
             if (!game.PlayMode) {
                 SelectTeammate();
-                SelectInteractiveObject();
-                DrawMenuToInteractWithObject();
             }
+
+            SelectInteractiveObject();
+            DrawMenuToInteractWithObject();
 
             game.spriteBatch.End();
         }
