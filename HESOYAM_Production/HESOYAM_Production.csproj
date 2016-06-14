@@ -67,6 +67,8 @@
     <Compile Include="App\Animation\AnimatedObject.cs" />
     <Compile Include="App\Animation\AnimationPlayer.cs" />
     <Compile Include="App\Wall.cs" />
+    <Compile Include="App\HUD.cs" />
+    <Compile Include="App\Avatar.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Icon.png" />
@@ -147,6 +149,7 @@
     <None Include="Content\Animation\bohater\bohater_testowy_5.fbx" />
     <None Include="Content\Animation\bohater\bohater_testowy_4.fbx" />
     <None Include="Content\Animation\bohater\bohater_testowy_3.fbx" />
+    <None Include="Content\Fonts\Open Sans.spritefont" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Icon.ico" />
@@ -167,6 +170,7 @@
     <Folder Include="App\Util\" />
     <Folder Include="Content\Models\" />
     <Folder Include="Content\Map\" />
+    <Folder Include="Content\Fonts\" />
     <Folder Include="Content\Animation\" />
     <Folder Include="App\Animation\" />
   </ItemGroup>
