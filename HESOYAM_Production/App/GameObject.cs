@@ -212,16 +212,15 @@ namespace App
 
         public bool IsMouseOverObject()
         {
-            Matrix world = Matrix.CreateTranslation(this.position);
-
             for (int index = 0; index < model.Meshes.Count; index++) {
-                BoundingBox? box = null;
-                if(colliders.ContainsKey("main")) box = colliders["main"].box;
-                if(box == null) return false;
-                float? distance = IntersectDistance((BoundingBox)box);
+                BoundingBox box;
+                if (colliders.ContainsKey("main")) {
+                    box = colliders["main"].box;
 
-                if (distance != null) {
-                    return true;
+                    float? distance = IntersectDistance((BoundingBox) box);
+                    if (distance != null) {
+                        return true;
+                    }
                 }
             }
 

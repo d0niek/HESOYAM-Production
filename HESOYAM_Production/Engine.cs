@@ -7,7 +7,7 @@ using System.IO;
 using App.Animation;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework.Content;
-using HESOYAM_Production.App;
+using App.Models;
 
 namespace HESOYAM_Production
 {
@@ -25,7 +25,7 @@ namespace HESOYAM_Production
         GraphicsDeviceManager graphics;
         HUD hud;
         Camera camera;
-        public Player player;
+        Player player;
         Scene scene;
 
         public SpriteBatch spriteBatch;
@@ -52,6 +52,11 @@ namespace HESOYAM_Production
 
         public Camera Camera {
             get { return camera; }
+            private set { }
+        }
+
+        public Player Player {
+            get { return player; }
             private set { }
         }
 
@@ -96,34 +101,34 @@ namespace HESOYAM_Production
         /// LoadContent will be called once per game and is the place to load
         /// all of your content.
         /// </summary>
-        protected override void LoadContent ()
+        protected override void LoadContent()
         {
             // Create a new SpriteBatch, which can be used to draw textures.
-            spriteBatch = new SpriteBatch (GraphicsDevice);
-            inputState = new InputState (GraphicsDevice);
+            spriteBatch = new SpriteBatch(GraphicsDevice);
+            inputState = new InputState(GraphicsDevice);
 
             LoadFonts();
-            LoadModels ("Models",models);
-            LoadModels ("Animation",models);
-            LoadTextures ();
+            LoadModels("Models", models);
+            LoadModels("Animation", models);
+            LoadTextures();
 
-            scene = new Scene (
+            scene = new Scene(
                 this,
                 "Scene_1",
                 rootDir + "/Content/Map/scene_1"
             );
             hud = new HUD(this);
 
-            Vector3 cameraMove = new Vector3 (-500.0f, 500.0f, 500.0f);
-            float cameraAngle = (float)(Math.Atan2 (cameraMove.X, cameraMove.Z));
+            Vector3 cameraMove = new Vector3(-500.0f, 500.0f, 500.0f);
+            float cameraAngle = (float) (Math.Atan2(cameraMove.X, cameraMove.Z));
 
-            player = new Player (this, "Player", cameraAngle, scene.Player.position);
-            camera = new Camera (this, "Camera", Vector3.Add (player.position, cameraMove));
+            player = new Player(this, "Player", cameraAngle, scene.Player.position);
+            camera = new Camera(this, "Camera", Vector3.Add(player.position, cameraMove));
 
             camera.LookAtParent = player;
 
-            player.AddChild (camera);
-            player.children.Add("playerModel",scene.Player);
+            player.AddChild(camera);
+            player.children.Add("playerModel", scene.Player);
         }
 
         private void LoadFonts()
@@ -225,16 +230,13 @@ namespace HESOYAM_Production
             if (PlayMode) {
                 camera.position = camera.PlayModePosition;
                 player.update(gameTime);
-                foreach(Opponent opponent in scene.children["Opponents"].children.Values)
-                {
+                foreach (Opponent opponent in scene.children["Opponents"].children.Values) {
                     opponent.update(gameTime);
                 }
-                foreach (InteractiveObject interactiveObject in scene.children["Interactive"].children.Values)
-                {
+                foreach (InteractiveObject interactiveObject in scene.children["Interactive"].children.Values) {
                     interactiveObject.update();
                 }
-                foreach (Door door in scene.children["Doors"].children.Values)
-                {
+                foreach (Door door in scene.children["Doors"].children.Values) {
                     door.update();
                 }
                 hud.ResetSelectedTeammate();

@@ -40,7 +40,6 @@
     </Reference>
     <Reference Include="OpenTK">
       <HintPath>$(MonoGameInstallDirectory)\MonoGame\v3.0\Assemblies\DesktopGL\OpenTK.dll</HintPath>
-      <Package>opentk</Package>
     </Reference>
     <Reference Include="NVorbis">
       <HintPath>$(MonoGameInstallDirectory)\MonoGame\v3.0\Assemblies\DesktopGL\NVorbis.dll</HintPath>
@@ -54,9 +53,6 @@
     <Compile Include="App\Collisions\BoundingBoxRenderer.cs" />
     <Compile Include="App\Collisions\Collider.cs" />
     <Compile Include="App\Movement.cs" />
-    <Compile Include="App\Opponent.cs" />
-    <Compile Include="App\Door.cs" />
-    <Compile Include="App\InteractiveObject.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="App\IGameElement.cs" />
@@ -73,6 +69,9 @@
     <Compile Include="App\Wall.cs" />
     <Compile Include="App\HUD.cs" />
     <Compile Include="App\Avatar.cs" />
+    <Compile Include="App\Models\Door.cs" />
+    <Compile Include="App\Models\Opponent.cs" />
+    <Compile Include="App\Models\InteractiveObject.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Icon.png" />
@@ -171,6 +170,7 @@
   <ItemGroup>
     <Folder Include="Content\Animation\" />
     <Folder Include="App\Animation\" />
+    <Folder Include="App\Models\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\AnimationPipeline\AnimationPipeline.csproj">
