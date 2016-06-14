@@ -97,7 +97,6 @@ namespace HESOYAM_Production
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
             inputState = new InputState(GraphicsDevice);
-
             LoadFonts();
             LoadModels();
             LoadTextures();
