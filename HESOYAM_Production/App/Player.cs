@@ -51,7 +51,7 @@ namespace App
         }
 
         public void update(GameTime gameTime)
-        {   
+        {
             float angle = GetAngleFromMouse();
 
             Rotate(0, angle, 0);

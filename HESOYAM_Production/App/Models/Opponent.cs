@@ -83,8 +83,12 @@ namespace App.Models
             return vector;
         }
 
-        public void update(GameTime gameTime)
+        public override void Update(GameTime gameTime)
         {
+            if (!game.PlayMode) {
+                return;
+            }
+
             foreach (Collider collider in colliders.Values) {
                 collider.drawColor = Color.GreenYellow;
             }

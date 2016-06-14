@@ -23,8 +23,12 @@ namespace App.Models
             this.isOpen = isOpen;
         }
 
-        public void update()
+        public override void Update(GameTime gameTime)
         {
+            if (!game.PlayMode) {
+                return;
+            }
+
             if (colliders.ContainsKey("main") && colliders["main"].CollidesWith(game.Scene.Player.colliders["main"])) {
                 if (game.Player.getKeyInfo("key")) {
                     this.colliders.Remove("main");

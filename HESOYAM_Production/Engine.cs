@@ -230,15 +230,7 @@ namespace HESOYAM_Production
             if (PlayMode) {
                 camera.position = camera.PlayModePosition;
                 player.update(gameTime);
-                foreach (Opponent opponent in scene.children["Opponents"].children.Values) {
-                    opponent.update(gameTime);
-                }
-                foreach (InteractiveObject interactiveObject in scene.children["Interactive"].children.Values) {
-                    interactiveObject.update();
-                }
-                foreach (Door door in scene.children["Doors"].children.Values) {
-                    door.update();
-                }
+
                 hud.ResetSelectedTeammate();
                 hud.ResetObjectToInteract();
             }

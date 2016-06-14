@@ -23,8 +23,12 @@ namespace App.Models
             this.itemName = itemName;
         }
 
-        public void update()
+        public override void Update(GameTime gameTime)
         {
+            if (!game.PlayMode) {
+                return;
+            }
+
             if (colliders["main"].CollidesWith(game.Scene.Player.colliders["main"])) {
                 if (itemName != null) {
                     game.Player.addItemToCollection(itemName);
