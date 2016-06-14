@@ -150,7 +150,7 @@
     <None Include="Content\Animation\bohater\bohater_testowy_5.fbx" />
     <None Include="Content\Animation\bohater\bohater_testowy_4.fbx" />
     <None Include="Content\Animation\bohater\bohater_testowy_3.fbx" />
-    <None Include="Content\Fonts\Open Sans.spritefont" />
+    <None Include="Content\Fonts\OpenSans.spritefont" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Icon.ico" />

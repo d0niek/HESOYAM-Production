@@ -1436,3 +1436,9 @@
 /processorParam:TextureFormat=DxtCompressed
 /build:Animation/bohater/bohater_testowy_7.fbx
 
+#begin Fonts/Open Sans.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:TextureFormat=Compressed
+/build:Fonts/Open Sans.spritefont
+

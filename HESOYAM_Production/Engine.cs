@@ -96,8 +96,8 @@ namespace HESOYAM_Production
         protected override void LoadContent ()
         {
             // Create a new SpriteBatch, which can be used to draw textures.
-            spriteBatch = new SpriteBatch (GraphicsDevice);
-            inputState = new InputState (GraphicsDevice);
+            spriteBatch = new SpriteBatch(GraphicsDevice);
+            inputState = new InputState(GraphicsDevice);
 
             LoadFonts();
             LoadModels ("Models",models);
