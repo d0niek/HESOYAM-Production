@@ -45,6 +45,7 @@ namespace App
             this.AddChild(new GameObject(game, "Walls"));
             this.AddChild(new GameObject(game, "Windows"));
             this.AddChild(new GameObject(game, "Doors"));
+            this.AddChild(new GameObject(game, "ExitDoors"));
             this.AddChild(new GameObject(game, "Interactive"));
             this.AddChild(new GameObject(game, "Others"));
 
@@ -65,16 +66,16 @@ namespace App
                 this.buildWall(pos);
             } else if (color.R == 255 && color.G == 0) {
                 this.buildWindow(pos, (int) color.B);
-            } else if (color.R == 0 && color.G == 255) {
-                this.buildDoor(pos, (int) color.B);
+            } else if (color.R < 2 && color.G == 255) {
+                this.buildDoor(pos, (int) color.B, (int) color.R);
             } else if (color.R == 164 && color.G == 255) {
                 this.buildExit(pos, (int) color.B);
             } else if (color.R == 100 && color.G == 100) {
                 this.buildOther(this.game.Models["lozko"], pos, (int) color.B);
             } else if (color.R == 100 && color.G == 50) {
                 this.buildOther(this.game.Models["lampa"], pos, (int) color.B);
-            } else if (color.R == 185 && color.G == 67) {
-                this.buildInteractive(this.game.Models["szafka"], pos, (int) color.B);
+            } else if (color.R == 185 && color.G > 60 && color.G < 63) {
+                this.buildInteractive(this.game.Models["szafka"], pos, (int) color.B, (int)color.G);
             } else if (color.R == 185 && color.G == 163) {
                 this.buildOther(this.game.Models["biurko"], pos, (int) color.B);
             } else if (color.R == 46 && color.G == 163) {
@@ -130,13 +131,19 @@ namespace App
             this.children["Windows"].AddChild(window);
         }
 
-        private void buildDoor(Vector2 pos, int rotationY)
+        private void buildDoor(Vector2 pos, int rotationY, int doorState)
         {
-            Wall door = new Wall(
+            bool isOpen = false;
+            if (doorState == 1) isOpen = false;
+            else if (doorState == 0) isOpen = true;
+
+
+            Door door = new Door(
                             game,
                             "Door_" + pos.X + "x" + pos.Y,
                             this.game.Models["drzwi"],
                             this.game.Models["drzwi_przyciete"],
+                            isOpen,
                             new Vector3(pos.X * wallShift, 0f, pos.Y * wallShift),
                             new Vector3(0f, (float) (rotationY * Math.PI / 2), 0f)
                         );
@@ -144,13 +151,18 @@ namespace App
             door.setTextureCut(this.game.Textures["modul_przyciete_tekstura"]);
 
             this.children["Doors"].AddChild(door);
+
+            if (!isOpen)
+            {
+                this.addColider(door);
+            }
         }
 
         private void buildExit(Vector2 pos, int rotationY)
         {
             Wall exit = new Wall(
                             game,
-                            "Door_" + pos.X + "x" + pos.Y,
+                            "ExitDoor_" + pos.X + "x" + pos.Y,
                             this.game.Models["drzwi_duze"],
                             this.game.Models["drzwi_duze_przyciete"],
                             new Vector3(pos.X * wallShift, 0f, pos.Y * wallShift),
@@ -159,12 +171,17 @@ namespace App
             exit.setTextureNormal(this.game.Textures["drzwi_duze_tekstura"]);
             exit.setTextureCut(this.game.Textures["drzwi_duze_tekstura"]);
 
-            this.children["Doors"].AddChild(exit);
+            this.children["ExitDoors"].AddChild(exit);
+
         }
 
-        private void buildInteractive(Model model, Vector2 pos, int rotationY)
+        private void buildInteractive(Model model, Vector2 pos, int rotationY, int type)
         {
-            GameObject interactive = this.buildObject(model, pos, "Other_", rotationY);
+            String itemName = null;
+            if (type == 61) itemName = "key";
+            else if (type == 62) itemName = "weapon";
+
+            InteractiveObject interactive = this.buildInteractiveObject(model, pos, "Other_", itemName, rotationY);
 
             this.children["Interactive"].AddChild(interactive);
         }
@@ -257,6 +274,22 @@ namespace App
                                         model,
                                         new Vector3(pos.X * wallShift, 0f, pos.Y * wallShift),
                                         new Vector3(0f, (float) (rotationY * Math.PI / 2), 0f)
+                                    );
+
+            this.addColider(gameObject);
+
+            return gameObject;
+        }
+
+        private InteractiveObject buildInteractiveObject(Model model, Vector2 pos, string prefix, string itemName, int rotationY)
+        {
+            InteractiveObject gameObject = new InteractiveObject(
+                                        game,
+                                        prefix + pos.X + "x" + pos.Y,
+                                        model,
+                                        itemName,
+                                        new Vector3(pos.X * wallShift, 0f, pos.Y * wallShift),
+                                        new Vector3(0f, (float)(rotationY * Math.PI / 2), 0f)
                                     );
 
             this.addColider(gameObject);

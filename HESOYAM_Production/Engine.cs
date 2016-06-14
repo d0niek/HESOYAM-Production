@@ -229,6 +229,14 @@ namespace HESOYAM_Production
                 {
                     opponent.update();
                 }
+                foreach (InteractiveObject interactiveObject in scene.children["Interactive"].children.Values)
+                {
+                    interactiveObject.update();
+                }
+                foreach (Door door in scene.children["Doors"].children.Values)
+                {
+                    door.update();
+                }
                 hud.ResetSelectedTeammate();
                 hud.ResetObjectToInteract();
             }
