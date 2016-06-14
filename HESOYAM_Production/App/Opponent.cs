@@ -15,17 +15,7 @@ namespace App
     {
         public float speed;
         public float detectionDistance;
-
-        public Opponent(
-            Engine game,
-            string name,
-            float cameraAngle,
-            Vector3 position = default(Vector3),
-            Vector3 rotation = default(Vector3)
-        ) : base(game, name, position, rotation)
-        {
-            Setup();
-        }
+        private Vector3 nextTarget;
 
         public Opponent(
             Engine game,
@@ -43,29 +33,52 @@ namespace App
         {
             speed = 3.0f;
             detectionDistance = 500.0f;
+            nextTarget = position;
         }
 
         public void update()
         {
+            System.Console.Write(position.X);
+            System.Console.Write(' ');
+            System.Console.WriteLine(position.Z);
             Vector3 playerDelta = Vector3.Subtract(game.player.position, position);
             float playerDistance = playerDelta.Length();
             playerDelta.Normalize();
             bool playerVisible = isVisible(playerDelta, playerDistance);
-            Vector3 targetDelta;
 
-            if(playerVisible)
+           // if(playerVisible)
+            //{
+                //nextTarget = game.player.position;
+            //}
+            //else
             {
-                targetDelta = Vector3.Subtract(game.player.position, position);
-            }
-            else
-            {
-                Vector3? aStarTarget = game.Scene.movement.getMovementTarget(position, game.player.position);
-                if(aStarTarget == null) return;
-                targetDelta = Vector3.Subtract((Vector3)aStarTarget, position);
+                if(Math.Abs(nextTarget.X - position.X) < 10f && Math.Abs(nextTarget.Z - position.Z) < 10f)
+                {
+                    LinkedList<Tuple<int, int>> newPath = game.Scene.movement.getPathToTarget(position, game.player.position);
+                    if(newPath != null && newPath.Count > 0)
+                    {
+                        LinkedListNode<Tuple<int, int>> candidateNode = newPath.First;
+                        do
+                        {
+                            Vector3 candidatePosition = game.Scene.movement.coordsToPosition(candidateNode.Value);
+                            Vector3 candidateDelta = Vector3.Subtract(candidatePosition, position);
+                            float candidateDistance = candidateDelta.Length();
+                            candidateDelta.Normalize();
+                            if(isVisible(candidateDelta, candidateDistance))
+                            {
+                                nextTarget = candidatePosition;
+                            }
+                            else break;
+                            candidateNode = candidateNode.Next;
+                        }
+                        while(candidateNode != null);
+                    }
+                }
             }
 
+            Vector3 targetDelta = Vector3.Subtract(nextTarget, position);
             targetDelta.Normalize();
-            moveInDirection(targetDelta);
+            if(targetDelta.Length() > 0) moveInDirection(targetDelta);
         }
 
         private void moveInDirection(Vector3 direction)
@@ -88,7 +101,6 @@ namespace App
                     }
                 }
             }
-            System.Console.WriteLine("molte volte");
             return true;
         }
     }

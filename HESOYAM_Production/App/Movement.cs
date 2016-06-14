@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,11 +12,14 @@ namespace HESOYAM_Production.App
     {
         private bool[,] obstacleMap;
         private float wallShift;
+        private Dictionary<Tuple<int, int>, LinkedList<Tuple<int, int>>> recentPaths;
+        private const int maxDepth = 20;
 
         public Movement(int x, int y, float wallShift)
         {
             obstacleMap = new bool[x, y];
             this.wallShift = wallShift;
+            recentPaths = new Dictionary<Tuple<int, int>, LinkedList<Tuple<int, int>>>();
         }
 
         public void addObstacle(int x, int y)
@@ -23,19 +27,46 @@ namespace HESOYAM_Production.App
             obstacleMap[x, y] = true;
         }
 
-        public Vector3? getMovementTarget(Vector3 sourcePosition, Vector3 targetPosition)
+        public LinkedList<Tuple<int, int>> getPathToTarget(Vector3 sourcePosition, Vector3 targetPosition)
         {
-            /*System.Console.Write(positionToCoords(sourcePosition).Item1);
-            System.Console.Write(' ');
-            System.Console.WriteLine(positionToCoords(sourcePosition).Item2);*/
             Tuple<int, int> sourceCoords = positionToCoords(sourcePosition);
             Tuple<int, int> targetCoords = positionToCoords(targetPosition);
 
-            LinkedList<Tuple<int, int>> path = aStar(sourceCoords, targetCoords);
-            if(path == null) return null;
-            if(path.First.Next == null) return null;
-            if(path.First.Next.Next == null) return null;
-            return coordsToPosition(path.First.Next.Next.Value);
+            LinkedList<Tuple<int, int>> path = new LinkedList<Tuple<int, int>>();
+            bool aStarize = false;
+
+            if(recentPaths.ContainsKey(targetCoords))
+            {
+                if(recentPaths[targetCoords] == null) return null;
+                LinkedListNode<Tuple<int, int>> sourceNode = recentPaths[targetCoords].Find(sourceCoords);
+                if(sourceNode != null)
+                {
+                    path.AddLast(sourceNode.Value);
+                    while(sourceNode.Next != null)
+                    {
+                        sourceNode = sourceNode.Next;
+                        path.AddLast(sourceNode.Value);
+                    }
+                }
+                else aStarize = true;
+            }
+            else aStarize = true;
+
+            if(aStarize)
+            {
+                path = aStar(sourceCoords, targetCoords);
+                if(recentPaths.ContainsKey(targetCoords))
+                {
+                    recentPaths.Remove(targetCoords);
+                }
+                recentPaths.Add(targetCoords, path);
+                //while(recentPaths.Count > 1000)
+                //{
+                //    recentPaths.re
+                //}
+            }
+
+            return path;
             //return coordsToPosition(path.Last.Value);
         }
 
@@ -47,7 +78,7 @@ namespace HESOYAM_Production.App
 
         public Vector3 coordsToPosition(Tuple<int, int> coords)
         {
-            Vector3 result = new Vector3((coords.Item1 * wallShift) + (wallShift / 2.0f), 0, (coords.Item2 * wallShift) + (wallShift / 2.0f));
+            Vector3 result = new Vector3(coords.Item1 * wallShift, 0, coords.Item2 * wallShift);
             return result;
         }
 
@@ -112,7 +143,7 @@ namespace HESOYAM_Production.App
                     Tuple<int, int> currentStep = step(currentCoords, i);
                     if(!isObstacleAt(currentStep))
                     {
-                        if(!visited[currentStep.Item1, currentStep.Item2])
+                        if(!visited[currentStep.Item1, currentStep.Item2] && currentPath.Count + 1 < maxDepth)
                         {
                             LinkedList<Tuple<int, int>> newPath = new LinkedList<Tuple<int, int>>(currentPath);
                             currentDistance = distance(currentStep, targetCoords);
