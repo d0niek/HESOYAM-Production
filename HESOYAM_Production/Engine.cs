@@ -111,18 +111,6 @@ namespace HESOYAM_Production
 
             player.AddChild (camera);
             player.children.Add("playerModel",scene.Player);
-            Model animation = Content.Load<Model> ("Animation/bohater/bohater_testowy_3");
-            Model animationPos = Content.Load<Model> ("Animation/bohater/bohater_testowy_3");
-
-            AnimatedObject animatedPos = new AnimatedObject (this, "animationPos", animationPos);
-            ModelExtra modelExtra = animation.Tag as ModelExtra;
-            AnimationClip clip = modelExtra.Clips [0];
-
-            // And play the clip
-            AnimationPlayer play = animatedPos.PlayClip (clip);
-            play.Looping = true;
-
-            Components.Add(animatedPos);
         }
 
         public void LoadModels(String dirName, Dictionary<String, Model> models)
