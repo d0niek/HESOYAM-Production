@@ -27,6 +27,11 @@ namespace HESOYAM_Production.App
             obstacleMap[x, y] = true;
         }
 
+        public void removeObstacle(int x, int y)
+        {
+            obstacleMap[x, y] = false;
+        }
+
         public LinkedList<Tuple<int, int>> getPathToTarget(Vector3 sourcePosition, Vector3 targetPosition)
         {
             Tuple<int, int> sourceCoords = positionToCoords(sourcePosition);

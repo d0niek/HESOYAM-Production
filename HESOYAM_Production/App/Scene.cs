@@ -129,6 +129,7 @@ namespace App
             this.addColider(window);
 
             this.children["Windows"].AddChild(window);
+            movement.addObstacle((int)pos.X, (int)pos.Y);
         }
 
         private void buildDoor(Vector2 pos, int rotationY, int doorState)
@@ -184,6 +185,7 @@ namespace App
             InteractiveObject interactive = this.buildInteractiveObject(model, pos, "Other_", itemName, rotationY);
 
             this.children["Interactive"].AddChild(interactive);
+            movement.addObstacle((int)pos.X, (int)pos.Y);
         }
 
         private void buildOther(Model model, Vector2 pos, int rotationY)

@@ -17,6 +17,8 @@ namespace App
         public float detectionDistance;
         private Vector3 nextTarget;
         private bool isChasing;
+        private TimeSpan lastAttack;
+        private TimeSpan attackDelay;
 
         public Opponent(
             Engine game,
@@ -28,6 +30,24 @@ namespace App
         ) : base(game, name, model, position, rotation)
         {
             Setup();
+
+            Vector3 newPosition = position;
+            Vector3 newSize = new Vector3(5.0f, 10.0f, 40.0f);
+
+            newPosition.X += 50;
+            AddCollider("front", new Collider(game, newPosition, newSize, Vector3.Zero));
+
+            newPosition.X -= 100;
+            AddCollider("back", new Collider(game, newPosition, newSize, Vector3.Zero));
+
+            newSize = new Vector3(40.0f, 10.0f, 5.0f);
+
+            newPosition.X += 50;
+            newPosition.Z += 50;
+            AddCollider("right", new Collider(game, newPosition, newSize, Vector3.Zero));
+
+            newPosition.Z -= 100;
+            AddCollider("left", new Collider(game, newPosition, newSize, Vector3.Zero));
         }
 
         private void Setup()
@@ -36,10 +56,46 @@ namespace App
             detectionDistance = 500.0f;
             nextTarget = position;
             isChasing = false;
+            lastAttack = TimeSpan.Zero;
+            attackDelay = new TimeSpan(0, 0, 1);
         }
 
-        public void update()
+        private Vector3 checkSensors(Collider collider, Vector3 vector)
         {
+            if(this.colliders["right"].CollidesWith(collider))
+            {
+                this.colliders["right"].drawColor = Color.OrangeRed;
+                vector.Z = (vector.Z > 0 ? 0 : vector.Z);
+            }
+
+            if(this.colliders["left"].CollidesWith(collider))
+            {
+                this.colliders["left"].drawColor = Color.OrangeRed;
+                vector.Z = (vector.Z < 0 ? 0 : vector.Z);
+            }
+
+            if(this.colliders["front"].CollidesWith(collider))
+            {
+                this.colliders["front"].drawColor = Color.OrangeRed;
+                vector.X = (vector.X > 0 ? 0 : vector.X);
+            }
+
+            if(this.colliders["back"].CollidesWith(collider))
+            {
+                this.colliders["back"].drawColor = Color.OrangeRed;
+                vector.X = (vector.X < 0 ? 0 : vector.X);
+            }
+
+            return vector;
+        }
+
+        public void update(GameTime gameTime)
+        {
+            foreach(Collider collider in colliders.Values)
+            {
+                collider.drawColor = Color.GreenYellow;
+            }
+
             Vector3 playerDelta = Vector3.Subtract(game.player.position, position);
             float playerDistance = playerDelta.Length();
             playerDelta.Normalize();
@@ -48,6 +104,15 @@ namespace App
             if(playerVisible)
             {
                 nextTarget = game.player.position;
+                if(Math.Abs(nextTarget.X - position.X) < 120f && Math.Abs(nextTarget.Z - position.Z) < 120f)
+                {
+                    if(lastAttack + attackDelay < gameTime.TotalGameTime)
+                    {
+                        System.Console.WriteLine("Opponent attacked");
+                        lastAttack = gameTime.TotalGameTime;
+                    }
+                    nextTarget = position;
+                }
                 isChasing = true;
             }
             else if(isChasing)
@@ -78,6 +143,30 @@ namespace App
 
             Vector3 targetDelta = Vector3.Subtract(nextTarget, position);
             if(targetDelta.Length() < 2f) return;
+
+            foreach(IGameObject wall in game.Scene.children["Walls"].children.Values)
+            {
+                foreach(Collider collider in wall.colliders.Values)
+                {
+                    targetDelta = checkSensors(collider, targetDelta);
+                }
+            }
+
+            foreach(IGameObject interactiveObject in game.Scene.children["Interactive"].children.Values)
+            {
+                foreach(Collider collider in interactiveObject.colliders.Values)
+                {
+                    targetDelta = checkSensors(collider, targetDelta);
+                }
+            }
+
+            foreach(IGameObject opponent in game.Scene.children["Opponents"].children.Values)
+            {
+                if(opponent != this) targetDelta = checkSensors(opponent.colliders["main"], targetDelta);
+            }
+
+            targetDelta = checkSensors(game.Scene.Player.colliders["main"], targetDelta);
+
             targetDelta.Normalize();
             if(targetDelta.Length() > 0) moveInDirection(targetDelta);
         }
