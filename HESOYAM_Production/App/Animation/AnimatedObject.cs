@@ -34,7 +34,7 @@ namespace App.Animation
         /// <summary>
         /// An associated animation clip player
         /// </summary>
-        private AnimationPlayer player = null;
+        public AnimationPlayer player = null;
 
         #endregion
 

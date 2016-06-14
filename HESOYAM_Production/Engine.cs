@@ -110,9 +110,9 @@ namespace HESOYAM_Production
             camera.LookAtParent = player;
 
             player.AddChild (camera);
-            player.AddChild (scene.Player);
-            Model animation = Content.Load<Model> ("Animation/bohater");
-            Model animationPos = Content.Load<Model> ("Animation/bohater");
+            player.children.Add("playerModel",scene.Player);
+            Model animation = Content.Load<Model> ("Animation/bohater/bohater_testowy_3");
+            Model animationPos = Content.Load<Model> ("Animation/bohater/bohater_testowy_3");
 
             AnimatedObject animatedPos = new AnimatedObject (this, "animationPos", animationPos);
             ModelExtra modelExtra = animation.Tag as ModelExtra;
