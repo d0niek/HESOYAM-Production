@@ -17,7 +17,7 @@ namespace App.Models
             Vector3? scale = null
         ) : base(game, name, model, position, rotation, scale)
         {
-            this.emisiveColor = new Vector3(0.3f,0.3f,0.2f);
+            this.emisiveColor = new Vector3(0.4f,0.4f,0.2f);
         }
     }
 }

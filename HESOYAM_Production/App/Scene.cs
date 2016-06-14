@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 using HESOYAM_Production;
 using System;
 using App.Collisions;
+using HESOYAM_Production.App;
 using App.Animation;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,6 +17,7 @@ namespace App
     {
         const float wallShift = 100;
         AnimatedObject player;
+        public Movement movement;
 
         public AnimatedObject Player {
             get { return player; } 
@@ -44,8 +46,11 @@ namespace App
             this.AddChild(new GameObject(game, "Walls"));
             this.AddChild(new GameObject(game, "Windows"));
             this.AddChild(new GameObject(game, "Doors"));
+            this.AddChild(new GameObject(game, "ExitDoors"));
             this.AddChild(new GameObject(game, "Interactive"));
             this.AddChild(new GameObject(game, "Others"));
+
+            movement = new Movement(bmp.Width, bmp.Height, wallShift);
 
             for (int i = 0; i < bmp.Width; i++) {
                 for (int j = 0; j < bmp.Height; j++) {
@@ -62,16 +67,16 @@ namespace App
                 this.buildWall(pos);
             } else if (color.R == 255 && color.G == 0) {
                 this.buildWindow(pos, (int) color.B);
-            } else if (color.R == 0 && color.G == 255) {
-                this.buildDoor(pos, (int) color.B);
+            } else if (color.R < 2 && color.G == 255) {
+                this.buildDoor(pos, (int) color.B, (int) color.R);
             } else if (color.R == 164 && color.G == 255) {
                 this.buildExit(pos, (int) color.B);
             } else if (color.R == 100 && color.G == 100) {
                 this.buildOther(this.game.Models["lozko"], pos, (int) color.B);
             } else if (color.R == 100 && color.G == 50) {
                 this.buildLamp(this.game.Models["lampa"], pos, (int) color.B);
-            } else if (color.R == 185 && color.G == 67) {
-                this.buildInteractive(this.game.Models["szafka"], pos, (int) color.B);
+            } else if (color.R == 185 && color.G > 60 && color.G < 63) {
+                this.buildInteractive(this.game.Models["szafka"], pos, (int) color.B, (int)color.G);
             } else if (color.R == 185 && color.G == 163) {
                 this.buildOther(this.game.Models["biurko"], pos, (int) color.B);
             } else if (color.R == 46 && color.G == 163) {
@@ -106,6 +111,7 @@ namespace App
             this.addColider(wall);
 
             this.children["Walls"].AddChild(wall);
+            movement.addObstacle((int)pos.X, (int)pos.Y);
         }
 
         private void buildWindow(Vector2 pos, int rotationY)
@@ -124,15 +130,22 @@ namespace App
             this.addColider(window);
 
             this.children["Windows"].AddChild(window);
+            movement.addObstacle((int)pos.X, (int)pos.Y);
         }
 
-        private void buildDoor(Vector2 pos, int rotationY)
+        private void buildDoor(Vector2 pos, int rotationY, int doorState)
         {
-            Wall door = new Wall(
+            bool isOpen = false;
+            if (doorState == 1) isOpen = false;
+            else if (doorState == 0) isOpen = true;
+
+
+            Door door = new Door(
                             game,
                             "Door_" + pos.X + "x" + pos.Y,
                             this.game.Models["drzwi"],
                             this.game.Models["drzwi_przyciete"],
+                            isOpen,
                             new Vector3(pos.X * wallShift, 0f, pos.Y * wallShift),
                             new Vector3(0f, (float) (rotationY * Math.PI / 2), 0f)
                         );
@@ -140,6 +153,11 @@ namespace App
             door.setTextureCut(this.game.Textures["modul_przyciete_tekstura"]);
 
             this.children["Doors"].AddChild(door);
+
+            if (!isOpen)
+            {
+                this.addColider(door);
+            }
         }
 
         void buildLamp(Model model, Vector2 pos, int rotationY)
@@ -159,7 +177,7 @@ namespace App
         {
             Wall exit = new Wall(
                             game,
-                            "Door_" + pos.X + "x" + pos.Y,
+                            "ExitDoor_" + pos.X + "x" + pos.Y,
                             this.game.Models["drzwi_duze"],
                             this.game.Models["drzwi_duze_przyciete"],
                             new Vector3(pos.X * wallShift, 0f, pos.Y * wallShift),
@@ -168,14 +186,20 @@ namespace App
             exit.setTextureNormal(this.game.Textures["drzwi_duze_tekstura"]);
             exit.setTextureCut(this.game.Textures["drzwi_duze_tekstura"]);
 
-            this.children["Doors"].AddChild(exit);
+            this.children["ExitDoors"].AddChild(exit);
+
         }
 
-        private void buildInteractive(Model model, Vector2 pos, int rotationY)
+        private void buildInteractive(Model model, Vector2 pos, int rotationY, int type)
         {
-            GameObject interactive = this.buildObject(model, pos, "Other_", rotationY);
+            String itemName = null;
+            if (type == 61) itemName = "key";
+            else if (type == 62) itemName = "weapon";
+
+            InteractiveObject interactive = this.buildInteractiveObject(model, pos, "Other_", itemName, rotationY);
 
             this.children["Interactive"].AddChild(interactive);
+            movement.addObstacle((int)pos.X, (int)pos.Y);
         }
 
         private void buildOther(Model model, Vector2 pos, int rotationY)
@@ -204,10 +228,25 @@ namespace App
 
         private void insertOpponentCharacter(Model model, Vector2 pos, int rotationY, string texture)
         {
-            GameObject character = this.buildObject(model, pos, "Opponent_", rotationY);
+            Opponent character = this.buildOpponent(model, pos, "Opponent_", rotationY);
             character.setTexture(this.game.Textures[texture]);
 
             this.children["Opponents"].AddChild(character);
+        }
+        
+        private Opponent buildOpponent(Model model, Vector2 pos, string prefix, int rotationY)
+        {
+            Opponent gameObject = new Opponent(
+                                        game,
+                                        prefix + pos.X + "x" + pos.Y,
+                                        model,
+                                        new Vector3(pos.X * wallShift, 0f, pos.Y * wallShift),
+                                        new Vector3(0f, (float)(rotationY * Math.PI / 2), 0f)
+                                    );
+
+            this.addColider(gameObject);
+
+            return gameObject;
         }
 
         private void loadAnimationsToCharacter(AnimatedObject character, String name)
@@ -251,6 +290,22 @@ namespace App
                                         model,
                                         new Vector3(pos.X * wallShift, 0f, pos.Y * wallShift),
                                         new Vector3(0f, (float) (rotationY * Math.PI / 2), 0f)
+                                    );
+
+            this.addColider(gameObject);
+
+            return gameObject;
+        }
+
+        private InteractiveObject buildInteractiveObject(Model model, Vector2 pos, string prefix, string itemName, int rotationY)
+        {
+            InteractiveObject gameObject = new InteractiveObject(
+                                        game,
+                                        prefix + pos.X + "x" + pos.Y,
+                                        model,
+                                        itemName,
+                                        new Vector3(pos.X * wallShift, 0f, pos.Y * wallShift),
+                                        new Vector3(0f, (float)(rotationY * Math.PI / 2), 0f)
                                     );
 
             this.addColider(gameObject);

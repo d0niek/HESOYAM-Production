@@ -15,7 +15,7 @@ namespace App
         protected Engine game;
         protected Model model;
         protected Texture2D texture;
-        protected Vector3 emisiveColor = new Vector3(0,0,0);
+        protected Vector3 emisiveColor = Vector3.Zero;
 
         public string name { get; set; }
 
