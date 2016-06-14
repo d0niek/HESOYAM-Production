@@ -215,9 +215,10 @@ namespace App
             Matrix world = Matrix.CreateTranslation(this.position);
 
             for (int index = 0; index < model.Meshes.Count; index++) {
-                BoundingSphere sphere = model.Meshes[index].BoundingSphere;
-                sphere = sphere.Transform(world);
-                float? distance = IntersectDistance(sphere);
+                BoundingBox? box = null;
+                if(colliders.ContainsKey("main")) box = colliders["main"].box;
+                if(box == null) return false;
+                float? distance = IntersectDistance((BoundingBox)box);
 
                 if (distance != null) {
                     return true;
@@ -227,10 +228,10 @@ namespace App
             return false;
         }
 
-        private float? IntersectDistance(BoundingSphere sphere)
+        private float? IntersectDistance(BoundingBox box)
         {
             Ray mouseRay = CalculateRay();
-            return mouseRay.Intersects(sphere);
+            return mouseRay.Intersects(box);
         }
 
         private Ray CalculateRay()
