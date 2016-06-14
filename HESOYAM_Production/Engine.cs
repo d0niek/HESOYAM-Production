@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using App;
 using System.IO;
+using App.Animation;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework.Content;
 
@@ -92,32 +93,34 @@ namespace HESOYAM_Production
         /// LoadContent will be called once per game and is the place to load
         /// all of your content.
         /// </summary>
-        protected override void LoadContent()
+        protected override void LoadContent ()
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
             inputState = new InputState(GraphicsDevice);
-            LoadFonts();
-            LoadModels();
-            LoadTextures();
 
-            scene = new Scene(
+            LoadFonts();
+            LoadModels ("Models",models);
+            LoadModels ("Animation",models);
+            LoadTextures ();
+
+            scene = new Scene (
                 this,
                 "Scene_1",
                 rootDir + "/Content/Map/scene_1"
             );
             hud = new HUD(this);
 
-            Vector3 cameraMove = new Vector3(-500.0f, 500.0f, 500.0f);
-            float cameraAngle = (float) (Math.Atan2(cameraMove.X, cameraMove.Z));
+            Vector3 cameraMove = new Vector3 (-500.0f, 500.0f, 500.0f);
+            float cameraAngle = (float)(Math.Atan2 (cameraMove.X, cameraMove.Z));
 
-            player = new Player(this, "Player", cameraAngle, scene.Player.position);
-            camera = new Camera(this, "Camera", Vector3.Add(player.position, cameraMove));
+            player = new Player (this, "Player", cameraAngle, scene.Player.position);
+            camera = new Camera (this, "Camera", Vector3.Add (player.position, cameraMove));
 
             camera.LookAtParent = player;
 
-            player.AddChild(camera);
-            player.AddChild(scene.Player);
+            player.AddChild (camera);
+            player.children.Add("playerModel",scene.Player);
         }
 
         private void LoadFonts()
@@ -143,26 +146,31 @@ namespace HESOYAM_Production
             }
         }
 
-        private void LoadModels()
+        public void LoadModels(String dirName, Dictionary<String, Model> models)
         {
-            String modelsDir = rootDir + "/Content/Models";
-
+            String modelsDir = rootDir + "/Content/" + dirName;
             String[] files = Directory.GetFiles(modelsDir);
-            foreach (String file in files) {
-                String name = file.Remove(0, modelsDir.Length + 1).Replace(".FBX", "");
 
-                LoadModel(name);
+            foreach (String file in files) {
+                String name = file.Remove(0, modelsDir.Length + 1).Replace(".FBX", "").Replace(".fbx", "");
+                Model model = LoadModel(dirName, name);
+                
+                if (model != null) {
+                    models.Add(name, model);
+                }
             }
         }
 
-        private void LoadModel(String name)
+        private Model LoadModel(String dirName, String name)
         {
             try {
-                Model model = Content.Load<Model>("Models/" + name);
+                Model model = Content.Load<Model>(dirName + "/" + name);
 
-                models.Add(name, model);
+                return model;
             } catch (ContentLoadException e) {
                 Console.WriteLine("Model '" + name + "' does not exists in Content.mgcb");
+
+                return null;
             }
         }
 

@@ -34,9 +34,10 @@ namespace App
 
             if (!game.PlayMode) {
                 SelectTeammate();
-                SelectInteractiveObject();
-                DrawMenuToInteractWithObject();
             }
+
+            SelectInteractiveObject();
+            DrawMenuToInteractWithObject();
 
             game.spriteBatch.End();
         }
@@ -139,15 +140,19 @@ namespace App
             teammate.setHover(true);
             hoverTeammate = teammate;
 
-            OnMouseLeftButtonClick(() => UpdateSelectedTeammate(teammate));
+            OnMouseLeftButtonClick(() => UpdateSelectedTeammateAndSetCameraOnHim(teammate));
         }
 
-        private void UpdateSelectedTeammate(GameObject teammate)
+        private void UpdateSelectedTeammateAndSetCameraOnHim(GameObject teammate)
         {
-            ResetSelectedTeammate();
+            if (selectedTeammate != teammate) {
+                ResetSelectedTeammate();
 
-            teammate.setActive(true);
-            selectedTeammate = teammate;
+                teammate.setActive(true);
+                selectedTeammate = teammate;
+            } else {
+                SetCameraOnTeammate(teammate);
+            }
         }
 
         public void ResetSelectedTeammate()
@@ -159,10 +164,16 @@ namespace App
             selectedTeammate = null;
         }
 
+        private void SetCameraOnTeammate(GameObject teammate)
+        {
+            Vector3 cameraMove = game.Camera.position - game.Camera.CameraLookAt;
+            game.Camera.position = Vector3.Add(teammate.position, cameraMove);
+            game.Camera.CameraLookAt = teammate.position;
+        }
+
         private void SelectInteractiveObject()
         {
             String[] sceneInteractiveObjectsToLoop = { "Doors", "Interactive", "Opponents" };
-
 
             foreach (String interactiveObjectsToLoop in sceneInteractiveObjectsToLoop) {
                 GameObject highlightObject = LoopObjectsAndHighlightObjectUnderMouse(

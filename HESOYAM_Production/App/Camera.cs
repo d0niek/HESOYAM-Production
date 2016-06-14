@@ -8,7 +8,6 @@ namespace App
     public class Camera : GameObject
     {
         Vector3 playModePosition;
-        Vector3 cameraLookAt;
         Matrix viewMatrix;
         Matrix projectionMatrix;
 
@@ -18,8 +17,8 @@ namespace App
         }
 
         public Vector3 CameraLookAt {
-            get { return cameraLookAt; }
-            private set { }
+            get;
+            set;
         }
 
         public IGameElement LookAtParent {
@@ -59,11 +58,11 @@ namespace App
                     this.moveCamera();
                 }
             } else {
-                this.cameraLookAt = this.LookAtParent != null ? this.LookAtParent.position : Vector3.Zero;
+                this.CameraLookAt = this.LookAtParent != null ? this.LookAtParent.position : Vector3.Zero;
                 this.playModePosition = this.position;
             }
 
-            this.viewMatrix = Matrix.CreateLookAt(this.position, this.cameraLookAt, Vector3.Up);
+            this.viewMatrix = Matrix.CreateLookAt(this.position, this.CameraLookAt, Vector3.Up);
             this.projectionMatrix = Matrix.CreatePerspectiveFieldOfView(
                 MathHelper.ToRadians(45.0f),
                 this.GraphicsDevice.Viewport.AspectRatio,
@@ -114,11 +113,11 @@ namespace App
 
         public new void Move(float x, float y, float z)
         {
-            Vector3 newLookAt = this.cameraLookAt - this.position;
+            Vector3 newLookAt = this.CameraLookAt - this.position;
 
             base.Move(x, y, z);
 
-            this.cameraLookAt = Vector3.Add(this.position, newLookAt);
+            this.CameraLookAt = Vector3.Add(this.position, newLookAt);
         }
     }
 }
