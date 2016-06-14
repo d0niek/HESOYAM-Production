@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Input;
 using System;
 using HESOYAM_Production;
 using App.Collisions;
+using System.Collections.Generic;
 
 namespace App
 {
@@ -10,6 +11,7 @@ namespace App
     public class Player : GameObject
     {
         float cameraAngle;
+        List<string> pickedUpObjects;
 
         public Player(
             Engine game,
@@ -20,6 +22,7 @@ namespace App
         ) : base(game, name, position, rotation)
         {
             this.cameraAngle = cameraAngle;
+            pickedUpObjects = new List<string>();
             Vector3 newPosition = position;
             Vector3 newSize = new Vector3(5.0f, 10.0f, 40.0f);
 
@@ -77,6 +80,66 @@ namespace App
                 }
             }
             
+            foreach (IGameObject interactiveObject in game.Scene.children["Interactive"].children.Values)
+            {
+                foreach (Collider collider in interactiveObject.colliders.Values)
+                {
+                    if (this.colliders["right"].CollidesWith(collider))
+                    {
+                        this.colliders["right"].drawColor = Color.OrangeRed;
+                        vector.Z = (vector.Z > 0 ? 0 : vector.Z);
+                    }
+
+                    if (this.colliders["left"].CollidesWith(collider))
+                    {
+                        this.colliders["left"].drawColor = Color.OrangeRed;
+                        vector.Z = (vector.Z < 0 ? 0 : vector.Z);
+                    }
+
+                    if (this.colliders["front"].CollidesWith(collider))
+                    {
+                        this.colliders["front"].drawColor = Color.OrangeRed;
+                        vector.X = (vector.X > 0 ? 0 : vector.X);
+                    }
+
+                    if (this.colliders["back"].CollidesWith(collider))
+                    {
+                        this.colliders["back"].drawColor = Color.OrangeRed;
+                        vector.X = (vector.X < 0 ? 0 : vector.X);
+                    }
+                }
+            }
+
+            foreach (IGameObject door in game.Scene.children["Doors"].children.Values)
+            {
+                foreach (Collider collider in door.colliders.Values)
+                {
+                    if (this.colliders["right"].CollidesWith(collider))
+                    {
+                        this.colliders["right"].drawColor = Color.OrangeRed;
+                        vector.Z = (vector.Z > 0 ? 0 : vector.Z);
+                    }
+
+                    if (this.colliders["left"].CollidesWith(collider))
+                    {
+                        this.colliders["left"].drawColor = Color.OrangeRed;
+                        vector.Z = (vector.Z < 0 ? 0 : vector.Z);
+                    }
+
+                    if (this.colliders["front"].CollidesWith(collider))
+                    {
+                        this.colliders["front"].drawColor = Color.OrangeRed;
+                        vector.X = (vector.X > 0 ? 0 : vector.X);
+                    }
+
+                    if (this.colliders["back"].CollidesWith(collider))
+                    {
+                        this.colliders["back"].drawColor = Color.OrangeRed;
+                        vector.X = (vector.X < 0 ? 0 : vector.X);
+                    }
+                }
+            }
+
             this.Move(vector.X, 0, vector.Z);
 
             //Tuple<int, int> coords = game.Scene.movement.positionToCoords(position);
@@ -106,6 +169,17 @@ namespace App
                     child.SetRotation(x, y, z);
                 }
             }
+        }
+
+        public void addItemToCollection(string itemName)
+        {
+            pickedUpObjects.Add(itemName);
+            System.Console.WriteLine("Podniesiono " + itemName);
+        }
+        public bool getKeyInfo(string itemName)
+        {
+            if (pickedUpObjects.Contains(itemName)) return true;
+            else return false;
         }
 
         private float getAngleFromMouse()

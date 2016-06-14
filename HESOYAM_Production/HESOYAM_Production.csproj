@@ -51,6 +51,8 @@
     <Compile Include="App\Collisions\Collider.cs" />
     <Compile Include="App\Movement.cs" />
     <Compile Include="App\Opponent.cs" />
+    <Compile Include="App\Door.cs" />
+    <Compile Include="App\InteractiveObject.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="App\IGameElement.cs" />
