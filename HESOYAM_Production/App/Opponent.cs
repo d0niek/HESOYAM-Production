@@ -16,6 +16,7 @@ namespace App
         public float speed;
         public float detectionDistance;
         private Vector3 nextTarget;
+        private bool isChasing;
 
         public Opponent(
             Engine game,
@@ -34,6 +35,7 @@ namespace App
             speed = 5.0f;
             detectionDistance = 500.0f;
             nextTarget = position;
+            isChasing = false;
         }
 
         public void update()
@@ -46,8 +48,9 @@ namespace App
             if(playerVisible)
             {
                 nextTarget = game.player.position;
+                isChasing = true;
             }
-            else
+            else if(isChasing)
             {
                 if(Math.Abs(nextTarget.X - position.X) < 10f && Math.Abs(nextTarget.Z - position.Z) < 10f)
                 {

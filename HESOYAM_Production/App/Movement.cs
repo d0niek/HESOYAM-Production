@@ -13,7 +13,7 @@ namespace HESOYAM_Production.App
         private bool[,] obstacleMap;
         private float wallShift;
         private Dictionary<Tuple<int, int>, LinkedList<Tuple<int, int>>> recentPaths;
-        private const int maxIterations = 3000;
+        private const int maxIterations = 2000;
 
         public Movement(int x, int y, float wallShift)
         {
