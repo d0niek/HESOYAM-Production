@@ -23,7 +23,7 @@ namespace App
             private get { return ""; }
             set {
                 message = value;
-
+                messageStart = TimeSpan.Zero;
             }
         }
 
@@ -250,12 +250,7 @@ namespace App
 
             if (message != "" && messageStart + messageDelay > gameTime.TotalGameTime) {
                 Vector2 pos = DrawBackgroundForMessage();
-                game.spriteBatch.DrawString(
-                    game.Fonts["Open Sans"],
-                    message,
-                    pos,
-                    Color.DarkOrange
-                );
+                game.spriteBatch.DrawString(game.Fonts["Open Sans"], message, pos, Color.DarkOrange);
             } else {
                 message = "";
                 messageStart = TimeSpan.Zero;
