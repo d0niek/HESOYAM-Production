@@ -329,5 +329,10 @@ namespace App
         {
             game.InputState.Mouse.OnMouseLeftButtonClick(action);
         }
+
+        protected void OnMouseLeftButtonPressed(Action action)
+        {
+            game.InputState.Mouse.OnMouseLeftButtonPressed(action);
+        }
     }
 }

@@ -201,15 +201,11 @@ namespace App
 
         private Vector3 CheckCollisionWithOpponents(Vector3 vector, GameTime gameTime)
         {
-            foreach (IGameObject opponent in game.Scene.children["Opponents"].children.Values) {
+            foreach (Opponent opponent in game.Scene.children["Opponents"].children.Values) {
                 vector = CheckSensors(opponent.colliders["main"], vector);
-                if (game.Scene.Player.colliders["main"].CollidesWith(opponent.colliders["main"])) {
-                    if (game.InputState.Mouse.CurrentMouseState.LeftButton.Equals(ButtonState.Pressed)) {
-                        if (lastAttack + attackDelay < gameTime.TotalGameTime) {
-                            Console.WriteLine("Player attacked");
-                            lastAttack = gameTime.TotalGameTime;
-                        }
-                    }
+
+                if (IsCollisionWithOpponent(opponent) && opponent.IsMouseOverObject()) {
+                    OnMouseLeftButtonPressed(() => AttackOpponent(opponent, gameTime));
                 }
             }
 
@@ -239,6 +235,19 @@ namespace App
             }
 
             return vector;
+        }
+
+        private bool IsCollisionWithOpponent(Opponent opponent)
+        {
+            return game.Scene.Player.colliders["main"].CollidesWith(opponent.colliders["main"]);
+        }
+
+        private void AttackOpponent(Opponent opponent, GameTime gameTime)
+        {
+            if (lastAttack + attackDelay < gameTime.TotalGameTime) {
+                Console.WriteLine("Player attacked");
+                lastAttack = gameTime.TotalGameTime;
+            }
         }
 
         public new void Move(float x, float y, float z)

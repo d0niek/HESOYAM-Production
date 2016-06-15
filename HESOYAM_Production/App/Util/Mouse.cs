@@ -53,6 +53,13 @@ namespace App.Util
             }
         }
 
+        public void OnMouseLeftButtonPressed(Action action)
+        {
+            if (IsMouseLeftButtonPressed()) {
+                action();
+            }
+        }
+
         private bool IsMouseLeftButtonPressed()
         {
             return CurrentMouseState.LeftButton == ButtonState.Pressed;

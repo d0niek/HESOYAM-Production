@@ -36,9 +36,14 @@ namespace App.Models
 
         private void CheckCollisionWithPlayer()
         {
-            if (colliders["main"].CollidesWith(game.Scene.Player.colliders["main"])) {
+            if (IsCollisionWithPlayer() && IsMouseOverObject()) {
                 OnMouseLeftButtonClick(PickupItem);
             }
+        }
+
+        private bool IsCollisionWithPlayer()
+        {
+            return colliders["main"].CollidesWith(game.Scene.Player.colliders["main"]);
         }
 
         private void PickupItem()
