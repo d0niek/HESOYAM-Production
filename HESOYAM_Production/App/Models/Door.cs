@@ -52,13 +52,22 @@ namespace App.Models
             if (isLock) {
                 TryToUnlockDoor();
             } else {
-                isOpen = !isOpen;
+                OpenOrCloseDoor();
             }
         }
 
         private void TryToUnlockDoor()
         {
-            Console.WriteLine("Need key");
+            game.Hud.Message = "Need key to open door";
+        }
+
+        private void OpenOrCloseDoor()
+        {
+            isOpen = !isOpen;
+            String modelDoor = isOpen ? "drzwi_otwarte" : "drzwi";
+
+            model = game.Models[modelDoor];
+            modelCut = game.Models[modelDoor + "_przyciete"];
         }
     }
 }
