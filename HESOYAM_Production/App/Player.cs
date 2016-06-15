@@ -5,6 +5,7 @@ using HESOYAM_Production;
 using App.Collisions;
 using App.Animation;
 using System.Collections.Generic;
+using App.Models;
 
 namespace App
 {
@@ -163,11 +164,13 @@ namespace App
 
         private Vector3 CheckCollisionsWithSceneObjects(Vector3 vector)
         {
-            String[] objectsListInTheScene = { "Walls", "Interactive", "Doors", "Windows", "Others" };
+            String[] objectsListInTheScene = { "Walls", "Interactive", "Windows", "Others" };
 
             foreach (String objectsList in objectsListInTheScene) {
                 vector = CheckCollisionsWithObjects(objectsList, vector);
             }
+
+            vector = CheckCollisionWithDoors(vector);
 
             return vector;
         }
@@ -177,6 +180,19 @@ namespace App
             foreach (IGameObject objectOnScene in game.Scene.children[objectsList].children.Values) {
                 foreach (Collider collider in objectOnScene.colliders.Values) {
                     vector = CheckSensors(collider, vector);
+                }
+            }
+
+            return vector;
+        }
+
+        private Vector3 CheckCollisionWithDoors(Vector3 vector)
+        {
+            foreach (Door door in game.Scene.children["Doors"].children.Values) {
+                if (!door.IsOpen) {
+                    foreach (Collider collider in door.colliders.Values) {
+                        vector = CheckSensors(collider, vector);
+                    }
                 }
             }
 
