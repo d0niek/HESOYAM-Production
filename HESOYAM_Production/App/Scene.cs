@@ -181,7 +181,7 @@ namespace App
         {
             Cupboard cupboard = new Cupboard(
                                     game,
-                                    "Window_" + pos.X + "x" + pos.Y,
+                                    "Cupboard_" + pos.X + "x" + pos.Y,
                                     game.Models["szafka"],
                                     hasItem,
                                     new Vector3(pos.X * wallShift, 0f, pos.Y * wallShift),

@@ -2,7 +2,6 @@
 using Microsoft.Xna.Framework;
 using System;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
 
 namespace App
@@ -13,7 +12,6 @@ namespace App
         readonly Engine game;
         readonly Dictionary<String, IGameObject> teammates;
         List<Avatar> avatars;
-        bool mouseLeftClicked = false;
         GameObject hoverTeammate;
         GameObject selectedTeammate;
         GameObject objectToInteract;
@@ -119,7 +117,7 @@ namespace App
                     return;
                 }
 
-                teammate.setHover(false);
+                teammate.Hover = false;
             }
 
             foreach (Avatar avatar in avatars) {
@@ -129,7 +127,7 @@ namespace App
                     return;
                 }
 
-                avatar.Character.setHover(false);
+                avatar.Character.Hover = false;
             }
 
             hoverTeammate = null;
@@ -137,7 +135,7 @@ namespace App
 
         private void HighlightTeammateAndCheckIfUserClickLeftButton(GameObject teammate)
         {
-            teammate.setHover(true);
+            teammate.Hover = true;
             hoverTeammate = teammate;
 
             OnMouseLeftButtonClick(() => UpdateSelectedTeammateAndSetCameraOnHim(teammate));
@@ -192,11 +190,11 @@ namespace App
         {
             foreach (GameObject interactive in gameObjects.Values) {
                 if (interactive.IsMouseOverObject()) {
-                    interactive.setHover(true);
+                    interactive.Hover = true;
                     return interactive;
                 }
 
-                interactive.setHover(false);
+                interactive.Hover = false;
             }
 
             return null;
@@ -232,17 +230,7 @@ namespace App
 
         private void OnMouseLeftButtonClick(Action action)
         {
-            if (IsMouseLeftButtonPressed() && !mouseLeftClicked) {
-                action();
-                mouseLeftClicked = true;
-            } else if (!IsMouseLeftButtonPressed()) {
-                mouseLeftClicked = false;
-            }
-        }
-
-        private bool IsMouseLeftButtonPressed()
-        {
-            return game.InputState.Mouse.CurrentMouseState.LeftButton == ButtonState.Pressed;
+            game.InputState.Mouse.OnMouseLeftButtonClick(action);
         }
 
         private void DrawStringCloseToMouse(String text)

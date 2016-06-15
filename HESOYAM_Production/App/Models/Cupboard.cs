@@ -1,6 +1,7 @@
 ﻿using HESOYAM_Production;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
+using System;
 
 namespace App.Models
 {
@@ -21,6 +22,37 @@ namespace App.Models
         {
             this.hasItem = hasItem;
         }
+
+        public override void Update(GameTime gameTime)
+        {
+            if (!game.PlayMode) {
+                return;
+            }
+
+            if (hasItem) {
+                CheckCollisionWithPlayer();
+            }
+        }
+
+        private void CheckCollisionWithPlayer()
+        {
+            if (colliders["main"].CollidesWith(game.Scene.Player.colliders["main"])) {
+                OnMouseLeftButtonClick(PickupItem);
+            }
+        }
+
+        private void PickupItem()
+        {
+            Console.WriteLine("Picked");
+            MoveCupboardFromInteractiveObjectToOther();
+            hasItem = false;
+        }
+
+        private void MoveCupboardFromInteractiveObjectToOther()
+        {
+            game.Scene.children["Interactive"].RemoveChild(this);
+            game.Scene.children["Others"].AddChild(this);
+            this.Hover = false;
+        }
     }
 }
-

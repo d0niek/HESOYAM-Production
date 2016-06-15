@@ -8,8 +8,9 @@ namespace App.Util
 
     public class Mouse
     {
-        private const int borderWidth = 10;
-        private GraphicsDevice GraphicsDevice;
+        const int borderWidth = 10;
+        GraphicsDevice GraphicsDevice;
+        bool mouseLeftClicked = false;
 
         public MouseState CurrentMouseState {
             get;
@@ -40,6 +41,21 @@ namespace App.Util
                 CurrentMouseState.X,
                 CurrentMouseState.Y
             );
+        }
+
+        public void OnMouseLeftButtonClick(Action action)
+        {
+            if (IsMouseLeftButtonPressed() && !mouseLeftClicked) {
+                action();
+                mouseLeftClicked = true;
+            } else if (!IsMouseLeftButtonPressed()) {
+                mouseLeftClicked = false;
+            }
+        }
+
+        private bool IsMouseLeftButtonPressed()
+        {
+            return CurrentMouseState.LeftButton == ButtonState.Pressed;
         }
 
         public bool isInGameWindow()
