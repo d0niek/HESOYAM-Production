@@ -65,8 +65,10 @@ namespace App
                 buildWall(pos);
             } else if (color.R == 255 && color.G == 0) {
                 buildWindow(pos, (int) color.B);
-            } else if (color.R < 2 && color.G == 255) {
-                buildDoor(pos, (int) color.B, (int) color.R);
+            } else if (color.R == 0 && color.G == 255) {
+                buildDoor(pos, (int) color.B, false);
+            } else if (color.R == 1 && color.G == 255) {
+                buildDoor(pos, (int) color.B, true);
             } else if (color.R == 164 && color.G == 255) {
                 buildExit(pos, (int) color.B);
             } else if (color.R == 100 && color.G == 100) {
@@ -133,31 +135,23 @@ namespace App
             movement.addObstacle((int) pos.X, (int) pos.Y);
         }
 
-        private void buildDoor(Vector2 pos, int rotationY, int doorState)
+        private void buildDoor(Vector2 pos, int rotationY, bool isLock)
         {
-            bool isOpen = false;
-            if (doorState == 1)
-                isOpen = false;
-            else if (doorState == 0)
-                isOpen = true;
-
             Door door = new Door(
                             game,
                             "Door_" + pos.X + "x" + pos.Y,
                             game.Models["drzwi"],
                             game.Models["drzwi_przyciete"],
-                            isOpen,
+                            isLock,
                             new Vector3(pos.X * wallShift, 0f, pos.Y * wallShift),
                             new Vector3(0f, (float) (rotationY * Math.PI / 2), 0f)
                         );
             door.TextureNormal = game.Textures["drzwi_tekstura"];
             door.TextureCut = game.Textures["modul_przyciete_tekstura"];
 
-            children["Doors"].AddChild(door);
+            addColider(door);
 
-            if (!isOpen) {
-                addColider(door);
-            }
+            children["Doors"].AddChild(door);
         }
 
         private void buildExit(Vector2 pos, int rotationY)
