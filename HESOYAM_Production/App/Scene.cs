@@ -73,8 +73,10 @@ namespace App
                 buildOther(game.Models["lozko"], pos, (int) color.B);
             } else if (color.R == 100 && color.G == 50) {
                 buildOther(game.Models["lampa"], pos, (int) color.B);
-            } else if (color.R == 185 && color.G > 60 && color.G < 63) {
-                buildInteractive(game.Models["szafka"], pos, (int) color.B, (int) color.G);
+            } else if (color.R == 185 && color.G == 61) {
+                buildCupboard(pos, (int) color.B, true);
+            } else if (color.R == 185 && color.G == 62) {
+                buildCupboard(pos, (int) color.B, false);
             } else if (color.R == 185 && color.G == 163) {
                 buildOther(game.Models["biurko"], pos, (int) color.B);
             } else if (color.R == 46 && color.G == 163) {
@@ -175,17 +177,22 @@ namespace App
 
         }
 
-        private void buildInteractive(Model model, Vector2 pos, int rotationY, int type)
+        private void buildCupboard(Vector2 pos, int rotationY, bool hasItem)
         {
-            String itemName = null;
-            if (type == 61)
-                itemName = "key";
-            else if (type == 62)
-                itemName = "weapon";
+            Cupboard cupboard = new Cupboard(
+                                    game,
+                                    "Window_" + pos.X + "x" + pos.Y,
+                                    game.Models["szafka"],
+                                    hasItem,
+                                    new Vector3(pos.X * wallShift, 0f, pos.Y * wallShift),
+                                    new Vector3(0f, (float) (rotationY * Math.PI / 2), 0f)
+                                );
 
-            InteractiveObject interactive = buildInteractiveObject(model, pos, "Other_", itemName, rotationY);
+            addColider(cupboard);
 
-            children["Interactive"].AddChild(interactive);
+            String childrensList = hasItem ? "Interactive" : "Others";
+
+            children[childrensList].AddChild(cupboard);
             movement.addObstacle((int) pos.X, (int) pos.Y);
         }
 
