@@ -15,15 +15,29 @@ namespace App
         GameObject hoverTeammate;
         GameObject selectedTeammate;
         GameObject objectToInteract;
+        String message;
+        TimeSpan messageStart;
+        TimeSpan messageDelay;
+
+        public String Message {
+            private get { return ""; }
+            set {
+                message = value;
+
+            }
+        }
 
         public HUD(Engine game)
         {
             this.game = game;
             this.teammates = game.Scene.children["Teammates"].children;
             this.avatars = new List<Avatar>();
+            this.message = "";
+            this.messageStart = TimeSpan.Zero;
+            this.messageDelay = new TimeSpan(0, 0, 5);
         }
 
-        public void Draw()
+        public void Draw(GameTime gameTime)
         {
             game.spriteBatch.Begin();
             DrawAvatars();
@@ -36,6 +50,8 @@ namespace App
 
             SelectInteractiveObject();
             DrawMenuToInteractWithObject();
+
+            DrawMessage(gameTime);
 
             game.spriteBatch.End();
         }
@@ -226,6 +242,48 @@ namespace App
                     Color.DarkOrange
                 );
             }
+        }
+
+        private void DrawMessage(GameTime gameTime)
+        {
+            SetMessageStartTime(gameTime);
+
+            if (message != "" && messageStart + messageDelay > gameTime.TotalGameTime) {
+                Vector2 pos = DrawBackgroundForMessage();
+                game.spriteBatch.DrawString(
+                    game.Fonts["Open Sans"],
+                    message,
+                    pos,
+                    Color.DarkOrange
+                );
+            } else {
+                message = "";
+                messageStart = TimeSpan.Zero;
+            }
+        }
+
+        private void SetMessageStartTime(GameTime gameTime)
+        {
+            if (message != "" && messageStart == TimeSpan.Zero) {
+                messageStart = gameTime.TotalGameTime;
+            }
+        }
+
+        private Vector2 DrawBackgroundForMessage()
+        {
+            Vector2 messageSize = game.Fonts["Open Sans"].MeasureString(message);
+            const int padding = 15;
+            int x = (game.GraphicsDevice.Viewport.Width / 2) - (int) (messageSize.X / 2) - padding;
+            const int y = 50;
+            Rectangle rec = new Rectangle(
+                                x,
+                                y,
+                                (int) messageSize.X + padding * 2,
+                                (int) messageSize.Y + padding * 2
+                            );
+            game.spriteBatch.Draw(game.Textures["message_background"], rec, Color.White);
+
+            return new Vector2(x + 15, y + 15);
         }
 
         private void OnMouseLeftButtonClick(Action action)

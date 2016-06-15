@@ -58,6 +58,11 @@ namespace HESOYAM_Production
             private set { }
         }
 
+        public HUD Hud {
+            get { return hud; }
+            private set { }
+        }
+
         public Scene Scene {
             get { return scene; }
             private set { }
@@ -277,7 +282,7 @@ namespace HESOYAM_Production
 
             base.Draw(gameTime);
 
-            this.hud.Draw();
+            this.hud.Draw(gameTime);
         }
 
         static float GameTimeFloat(GameTime gameTime)

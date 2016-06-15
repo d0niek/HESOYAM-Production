@@ -48,6 +48,7 @@ namespace App.Models
 
         private void PickupItem()
         {
+            game.Hud.Message = "PickedPickedPickedPicked";
             Console.WriteLine("Picked");
             MoveCupboardFromInteractiveObjectToOther();
             hasItem = false;
