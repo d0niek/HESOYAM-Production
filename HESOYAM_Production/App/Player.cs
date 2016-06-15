@@ -50,18 +50,18 @@ namespace App
             attackDelay = new TimeSpan(0, 0, 1);
         }
 
-        public void update(GameTime gameTime)
+        public override void Update(GameTime gameTime)
         {
-            float angle = GetAngleFromMouse();
+            if (!game.PlayMode) {
+                return;
+            }
 
+            float angle = GetAngleFromMouse();
             Rotate(0, angle, 0);
 
             Vector3 vector = MovePlayer();
 
-            foreach (Collider collider in colliders.Values) {
-                collider.drawColor = Color.GreenYellow;
-            }
-
+            ResetCollidersColor();
             vector = CheckCollisionsWithSceneObjects(vector);
             vector = CheckCollisionWithOpponents(vector, gameTime);
 
@@ -154,9 +154,16 @@ namespace App
             }
         }
 
+        private void ResetCollidersColor()
+        {
+            foreach (Collider collider in colliders.Values) {
+                collider.drawColor = Color.GreenYellow;
+            }
+        }
+
         private Vector3 CheckCollisionsWithSceneObjects(Vector3 vector)
         {
-            String[] objectsListInTheScene = { "Walls", "Interactive", "Doors" };
+            String[] objectsListInTheScene = { "Walls", "Interactive", "Doors", "Windows", "Others" };
 
             foreach (String objectsList in objectsListInTheScene) {
                 vector = CheckCollisionsWithObjects(objectsList, vector);

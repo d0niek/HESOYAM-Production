@@ -4,10 +4,8 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using App;
 using System.IO;
-using App.Animation;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework.Content;
-using App.Models;
 
 namespace HESOYAM_Production
 {
@@ -129,6 +127,9 @@ namespace HESOYAM_Production
 
             player.AddChild(camera);
             player.children.Add("playerModel", scene.Player);
+
+            Components.Add(player);
+            Components.Add(camera);
         }
 
         private void LoadFonts()
@@ -220,22 +221,10 @@ namespace HESOYAM_Production
             inputState.Update();
             if (inputState.IsSpace(PlayerIndex.One)) {
                 TogglePlayMode();
+                OnPlayMode();
             }
 
-            PlayerIndex outPlayerIndex;
-            if (inputState.IsNewKeyPress(Keys.F5, null, out outPlayerIndex)) {
-                Program.debugMode = !Program.debugMode;
-            }
-
-            if (PlayMode) {
-                camera.position = camera.PlayModePosition;
-                player.update(gameTime);
-
-                hud.ResetSelectedTeammate();
-                hud.ResetObjectToInteract();
-            }
-
-            camera.update();
+            ToggleDebugMode();
 
             // For Mobile devices, this logic will close the Game when the Back button is pressed
             // Exit() is obsolete on iOS
@@ -256,6 +245,24 @@ namespace HESOYAM_Production
         public void TogglePlayMode()
         {
             PlayMode = !PlayMode;
+        }
+
+        private void OnPlayMode()
+        {
+            if (PlayMode) {
+                camera.position = camera.PlayModePosition;
+
+                hud.ResetSelectedTeammate();
+                hud.ResetObjectToInteract();
+            }
+        }
+
+        private void ToggleDebugMode()
+        {
+            PlayerIndex outPlayerIndex;
+            if (inputState.IsNewKeyPress(Keys.F5, null, out outPlayerIndex)) {
+                Program.debugMode = !Program.debugMode;
+            }
         }
 
         /// <summary>
