@@ -31,7 +31,7 @@ namespace App.Models
 
             if (colliders["main"].CollidesWith(game.Scene.Player.colliders["main"])) {
                 if (itemName != null) {
-                    game.Player.addItemToCollection(itemName);
+                    game.Player.addItemToBag(itemName);
                     itemName = null;
                 }
             }

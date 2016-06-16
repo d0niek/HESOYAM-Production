@@ -6,12 +6,12 @@ namespace App
 
     public class Avatar
     {
-        GameObject character;
+        Character character;
         String textureName;
         int x;
         int y;
 
-        public GameObject Character {
+        public Character Character {
             get { return character; }
             private set { }
         }
@@ -31,7 +31,7 @@ namespace App
             private set { }
         }
 
-        public Avatar(GameObject character, String textureName, int x, int y)
+        public Avatar(Character character, String textureName, int x, int y)
         {
             this.character = character;
             this.textureName = textureName;

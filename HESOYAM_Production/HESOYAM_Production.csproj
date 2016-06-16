@@ -72,6 +72,10 @@
     <Compile Include="App\Models\Door.cs" />
     <Compile Include="App\Models\Opponent.cs" />
     <Compile Include="App\Models\InteractiveObject.cs" />
+    <Compile Include="App\Models\Cupboard.cs" />
+    <Compile Include="App\ICharacter.cs" />
+    <Compile Include="App\Character.cs" />
+    <Compile Include="App\Models\Teammate.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Icon.png" />

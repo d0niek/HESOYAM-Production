@@ -2,8 +2,8 @@
 using Microsoft.Xna.Framework;
 using System;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
+using App.Models;
 
 namespace App
 {
@@ -13,19 +13,32 @@ namespace App
         readonly Engine game;
         readonly Dictionary<String, IGameObject> teammates;
         List<Avatar> avatars;
-        bool mouseLeftClicked = false;
         GameObject hoverTeammate;
         GameObject selectedTeammate;
         GameObject objectToInteract;
+        String message;
+        TimeSpan messageStart;
+        TimeSpan messageDelay;
+
+        public String Message {
+            private get { return ""; }
+            set {
+                message = value;
+                messageStart = TimeSpan.Zero;
+            }
+        }
 
         public HUD(Engine game)
         {
             this.game = game;
             this.teammates = game.Scene.children["Teammates"].children;
             this.avatars = new List<Avatar>();
+            this.message = "";
+            this.messageStart = TimeSpan.Zero;
+            this.messageDelay = new TimeSpan(0, 0, 5);
         }
 
-        public void Draw()
+        public void Draw(GameTime gameTime)
         {
             game.spriteBatch.Begin();
             DrawAvatars();
@@ -38,6 +51,8 @@ namespace App
 
             SelectInteractiveObject();
             DrawMenuToInteractWithObject();
+
+            DrawMessage(gameTime);
 
             game.spriteBatch.End();
         }
@@ -52,8 +67,11 @@ namespace App
             const int padding = 10;
             int i = 1;
 
-            foreach (GameObject teammate in teammates.Values) {
-                Avatar avatar = new Avatar(teammate, "avatar_" + i, padding, 40 + (i - 1) * 50 + (i - 1) * padding);
+            Avatar avatar = new Avatar(game.Player, "avatar_bohater", padding, padding);
+            DrawAvatar(avatar);
+
+            foreach (Teammate teammate in teammates.Values) {
+                avatar = new Avatar(teammate, "avatar_" + i, padding, 40 + i * 50 + (i - 1) * padding);
                 avatars.Add(avatar);
                 DrawAvatar(avatar);
                 i++;
@@ -69,12 +87,24 @@ namespace App
             }
 
             game.spriteBatch.Draw(game.Textures[avatar.TextureName], avatar.GetAvatarRectangle(), Color.White);
+            DrawLifeBar(avatar);
         }
 
         private void DrawAvatarBorder(Avatar avatar, String avatarBorder)
         {
             Rectangle rec = new Rectangle(avatar.X - 3, avatar.Y - 3, 56, 56);
             game.spriteBatch.Draw(game.Textures["avatar_" + avatarBorder], rec, Color.White);
+        }
+
+        private void DrawLifeBar(Avatar avatar)
+        {
+            int x = avatar.X + 55;
+            Rectangle rec = new Rectangle(x, avatar.Y, 5, 50);
+            game.spriteBatch.Draw(game.Textures["life_background"], rec, Color.White);
+
+            int y = (int) (avatar.Character.Life * 50 / avatar.Character.MaxLife);
+            rec = new Rectangle(x, avatar.Y + (50 - y), 5, y);
+            game.spriteBatch.Draw(game.Textures["life"], rec, Color.White);
         }
 
         private void DrawPlayPauseButton()
@@ -119,7 +149,7 @@ namespace App
                     return;
                 }
 
-                teammate.setHover(false);
+                teammate.Hover = false;
             }
 
             foreach (Avatar avatar in avatars) {
@@ -129,7 +159,7 @@ namespace App
                     return;
                 }
 
-                avatar.Character.setHover(false);
+                avatar.Character.Hover = false;
             }
 
             hoverTeammate = null;
@@ -137,7 +167,7 @@ namespace App
 
         private void HighlightTeammateAndCheckIfUserClickLeftButton(GameObject teammate)
         {
-            teammate.setHover(true);
+            teammate.Hover = true;
             hoverTeammate = teammate;
 
             OnMouseLeftButtonClick(() => UpdateSelectedTeammateAndSetCameraOnHim(teammate));
@@ -192,11 +222,11 @@ namespace App
         {
             foreach (GameObject interactive in gameObjects.Values) {
                 if (interactive.IsMouseOverObject()) {
-                    interactive.setHover(true);
+                    interactive.Hover = true;
                     return interactive;
                 }
 
-                interactive.setHover(false);
+                interactive.Hover = false;
             }
 
             return null;
@@ -230,19 +260,46 @@ namespace App
             }
         }
 
-        private void OnMouseLeftButtonClick(Action action)
+        private void DrawMessage(GameTime gameTime)
         {
-            if (IsMouseLeftButtonPressed() && !mouseLeftClicked) {
-                action();
-                mouseLeftClicked = true;
-            } else if (!IsMouseLeftButtonPressed()) {
-                mouseLeftClicked = false;
+            SetMessageStartTime(gameTime);
+
+            if (message != "" && messageStart + messageDelay > gameTime.TotalGameTime) {
+                Vector2 pos = DrawBackgroundForMessage();
+                game.spriteBatch.DrawString(game.Fonts["Open Sans"], message, pos, Color.White);
+            } else {
+                message = "";
+                messageStart = TimeSpan.Zero;
             }
         }
 
-        private bool IsMouseLeftButtonPressed()
+        private void SetMessageStartTime(GameTime gameTime)
         {
-            return game.InputState.Mouse.CurrentMouseState.LeftButton == ButtonState.Pressed;
+            if (message != "" && messageStart == TimeSpan.Zero) {
+                messageStart = gameTime.TotalGameTime;
+            }
+        }
+
+        private Vector2 DrawBackgroundForMessage()
+        {
+            Vector2 messageSize = game.Fonts["Open Sans"].MeasureString(message);
+            const int padding = 15;
+            int x = (game.GraphicsDevice.Viewport.Width / 2) - (int) (messageSize.X / 2) - padding;
+            const int y = 50;
+            Rectangle rec = new Rectangle(
+                                x,
+                                y,
+                                (int) messageSize.X + padding * 2,
+                                (int) messageSize.Y + padding * 2
+                            );
+            game.spriteBatch.Draw(game.Textures["message_background"], rec, Color.White);
+
+            return new Vector2(x + 15, y + 15);
+        }
+
+        private void OnMouseLeftButtonClick(Action action)
+        {
+            game.InputState.Mouse.OnMouseLeftButtonClick(action);
         }
 
         private void DrawStringCloseToMouse(String text)

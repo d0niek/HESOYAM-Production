@@ -7,7 +7,7 @@ namespace App
 
     public class Wall : GameObject
     {
-        Model modelCut;
+        protected Model modelCut;
 
         public Texture2D TextureNormal {
             private get;

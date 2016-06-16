@@ -5,14 +5,15 @@ using HESOYAM_Production;
 using App.Collisions;
 using App.Animation;
 using System.Collections.Generic;
+using App.Models;
 
 namespace App
 {
 
-    public class Player : GameObject
+    public class Player : Character
     {
         float cameraAngle;
-        List<string> pickedUpObjects;
+        List<string> bag;
         private TimeSpan lastAttack;
         private TimeSpan attackDelay;
 
@@ -25,7 +26,7 @@ namespace App
         ) : base(game, name, position, rotation)
         {
             this.cameraAngle = cameraAngle;
-            pickedUpObjects = new List<string>();
+            bag = new List<string>();
             Vector3 newPosition = position;
             Vector3 newSize = new Vector3(5.0f, 10.0f, 40.0f);
 
@@ -163,11 +164,13 @@ namespace App
 
         private Vector3 CheckCollisionsWithSceneObjects(Vector3 vector)
         {
-            String[] objectsListInTheScene = { "Walls", "Interactive", "Doors", "Windows", "Others" };
+            String[] objectsListInTheScene = { "Walls", "Interactive", "Windows", "Others" };
 
             foreach (String objectsList in objectsListInTheScene) {
                 vector = CheckCollisionsWithObjects(objectsList, vector);
             }
+
+            vector = CheckCollisionWithDoors(vector);
 
             return vector;
         }
@@ -183,19 +186,31 @@ namespace App
             return vector;
         }
 
-        private Vector3 CheckCollisionWithOpponents(Vector3 vector, GameTime gameTime)
+        private Vector3 CheckCollisionWithDoors(Vector3 vector)
         {
-            foreach (IGameObject opponent in game.Scene.children["Opponents"].children.Values) {
-                vector = CheckSensors(opponent.colliders["main"], vector);
-                if (game.Scene.Player.colliders["main"].CollidesWith(opponent.colliders["main"])) {
-                    if (game.InputState.Mouse.CurrentMouseState.LeftButton.Equals(ButtonState.Pressed)) {
-                        if (lastAttack + attackDelay < gameTime.TotalGameTime) {
-                            Console.WriteLine("Player attacked");
-                            lastAttack = gameTime.TotalGameTime;
-                        }
+            foreach (Door door in game.Scene.children["Doors"].children.Values) {
+                if (!door.IsOpen) {
+                    foreach (Collider collider in door.colliders.Values) {
+                        vector = CheckSensors(collider, vector);
                     }
                 }
             }
+
+            return vector;
+        }
+
+        private Vector3 CheckCollisionWithOpponents(Vector3 vector, GameTime gameTime)
+        {
+            List<String> opponentsToRemove = new List<String>();
+            foreach (Opponent opponent in game.Scene.children["Opponents"].children.Values) {
+                vector = CheckSensors(opponent.colliders["main"], vector);
+
+                if (IsCollisionWithOpponent(opponent) && opponent.IsMouseOverObject()) {
+                    OnMouseLeftButtonPressed(() => AttackOpponent(opponent, gameTime, opponentsToRemove));
+                }
+            }
+
+            RemoveOpponentsFromScene(opponentsToRemove);
 
             return vector;
         }
@@ -225,6 +240,28 @@ namespace App
             return vector;
         }
 
+        private bool IsCollisionWithOpponent(Opponent opponent)
+        {
+            return game.Scene.Player.colliders["main"].CollidesWith(opponent.colliders["main"]);
+        }
+
+        private void AttackOpponent(Opponent opponent, GameTime gameTime, List<String> opponentsToRemove)
+        {
+            if (lastAttack + attackDelay < gameTime.TotalGameTime) {
+                opponent.ReduceLife(100f);
+                opponentsToRemove.Add(opponent.name);
+                lastAttack = gameTime.TotalGameTime;
+            }
+        }
+
+        private void RemoveOpponentsFromScene(List<string> opponentsToRemove)
+        {
+            foreach (String opponentToRemove in opponentsToRemove) {
+                IGameComponent opponent = game.Scene.children["Opponents"].RemoveChild(opponentToRemove) as IGameComponent;
+                game.Components.Remove(opponent);
+            }
+        }
+
         public new void Move(float x, float y, float z)
         {
             Vector3 delta = new Vector3(x, y, z);
@@ -248,15 +285,15 @@ namespace App
             }
         }
 
-        public void addItemToCollection(string itemName)
+        public void addItemToBag(String item)
         {
-            pickedUpObjects.Add(itemName);
-            Console.WriteLine("Podniesiono " + itemName);
+            bag.Add(item);
+            game.Hud.Message = "You have obtained a \"" + item + "\"";
         }
 
-        public bool getKeyInfo(string itemName)
+        public bool hasItemInBag(String item)
         {
-            return pickedUpObjects.Contains(itemName);
+            return bag.Contains(item);
         }
     }
 }

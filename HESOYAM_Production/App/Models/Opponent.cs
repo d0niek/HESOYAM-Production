@@ -9,7 +9,7 @@ using System.Collections.Generic;
 namespace App.Models
 {
 
-    class Opponent : GameObject
+    class Opponent : Character
     {
         public float speed;
         public float detectionDistance;
@@ -102,7 +102,7 @@ namespace App.Models
                 nextTarget = game.Player.position;
                 if (Math.Abs(nextTarget.X - position.X) < 120f && Math.Abs(nextTarget.Z - position.Z) < 120f) {
                     if (lastAttack + attackDelay < gameTime.TotalGameTime) {
-                        System.Console.WriteLine("Opponent attacked");
+                        game.Player.ReduceLife(2f);
                         lastAttack = gameTime.TotalGameTime;
                     }
                     nextTarget = position;
