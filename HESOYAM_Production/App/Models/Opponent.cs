@@ -102,6 +102,7 @@ namespace App.Models
                 nextTarget = game.Player.position;
                 if (Math.Abs(nextTarget.X - position.X) < 120f && Math.Abs(nextTarget.Z - position.Z) < 120f) {
                     if (lastAttack + attackDelay < gameTime.TotalGameTime) {
+                        game.Player.ReduceLife(2f);
                         System.Console.WriteLine("Opponent attacked");
                         lastAttack = gameTime.TotalGameTime;
                     }

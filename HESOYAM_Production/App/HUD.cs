@@ -103,7 +103,7 @@ namespace App
             game.spriteBatch.Draw(game.Textures["life_background"], rec, Color.White);
 
             int y = (int) (avatar.Character.Life * 50 / avatar.Character.MaxLife);
-            rec = new Rectangle(x, avatar.Y - (50 - y), 5, 50);
+            rec = new Rectangle(x, avatar.Y + (50 - y), 5, y);
             game.spriteBatch.Draw(game.Textures["life"], rec, Color.White);
         }
 
