@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 using System;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
+using App.Models;
 
 namespace App
 {
@@ -66,8 +67,11 @@ namespace App
             const int padding = 10;
             int i = 1;
 
-            foreach (GameObject teammate in teammates.Values) {
-                Avatar avatar = new Avatar(teammate, "avatar_" + i, padding, 40 + (i - 1) * 50 + (i - 1) * padding);
+            Avatar avatar = new Avatar(game.Player, "avatar_bohater", padding, padding);
+            DrawAvatar(avatar);
+
+            foreach (Teammate teammate in teammates.Values) {
+                avatar = new Avatar(teammate, "avatar_" + i, padding, 40 + i * 50 + (i - 1) * padding);
                 avatars.Add(avatar);
                 DrawAvatar(avatar);
                 i++;
@@ -83,12 +87,24 @@ namespace App
             }
 
             game.spriteBatch.Draw(game.Textures[avatar.TextureName], avatar.GetAvatarRectangle(), Color.White);
+            DrawLifeBar(avatar);
         }
 
         private void DrawAvatarBorder(Avatar avatar, String avatarBorder)
         {
             Rectangle rec = new Rectangle(avatar.X - 3, avatar.Y - 3, 56, 56);
             game.spriteBatch.Draw(game.Textures["avatar_" + avatarBorder], rec, Color.White);
+        }
+
+        private void DrawLifeBar(Avatar avatar)
+        {
+            int x = avatar.X + 55;
+            Rectangle rec = new Rectangle(x, avatar.Y, 5, 50);
+            game.spriteBatch.Draw(game.Textures["life_background"], rec, Color.White);
+
+            int y = (int) (avatar.Character.Life * 50 / avatar.Character.MaxLife);
+            rec = new Rectangle(x, avatar.Y - (50 - y), 5, 50);
+            game.spriteBatch.Draw(game.Textures["life"], rec, Color.White);
         }
 
         private void DrawPlayPauseButton()
@@ -250,7 +266,7 @@ namespace App
 
             if (message != "" && messageStart + messageDelay > gameTime.TotalGameTime) {
                 Vector2 pos = DrawBackgroundForMessage();
-                game.spriteBatch.DrawString(game.Fonts["Open Sans"], message, pos, Color.DarkOrange);
+                game.spriteBatch.DrawString(game.Fonts["Open Sans"], message, pos, Color.White);
             } else {
                 message = "";
                 messageStart = TimeSpan.Zero;
