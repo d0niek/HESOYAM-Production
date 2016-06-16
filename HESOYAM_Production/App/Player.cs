@@ -201,13 +201,16 @@ namespace App
 
         private Vector3 CheckCollisionWithOpponents(Vector3 vector, GameTime gameTime)
         {
+            List<String> opponentsToRemove = new List<String>();
             foreach (Opponent opponent in game.Scene.children["Opponents"].children.Values) {
                 vector = CheckSensors(opponent.colliders["main"], vector);
 
                 if (IsCollisionWithOpponent(opponent) && opponent.IsMouseOverObject()) {
-                    OnMouseLeftButtonPressed(() => AttackOpponent(opponent, gameTime));
+                    OnMouseLeftButtonPressed(() => AttackOpponent(opponent, gameTime, opponentsToRemove));
                 }
             }
+
+            RemoveOpponentsFromScene(opponentsToRemove);
 
             return vector;
         }
@@ -242,11 +245,20 @@ namespace App
             return game.Scene.Player.colliders["main"].CollidesWith(opponent.colliders["main"]);
         }
 
-        private void AttackOpponent(Opponent opponent, GameTime gameTime)
+        private void AttackOpponent(Opponent opponent, GameTime gameTime, List<String> opponentsToRemove)
         {
             if (lastAttack + attackDelay < gameTime.TotalGameTime) {
-                Console.WriteLine("Player attacked");
+                opponent.ReduceLife(100f);
+                opponentsToRemove.Add(opponent.name);
                 lastAttack = gameTime.TotalGameTime;
+            }
+        }
+
+        private void RemoveOpponentsFromScene(List<string> opponentsToRemove)
+        {
+            foreach (String opponentToRemove in opponentsToRemove) {
+                IGameComponent opponent = game.Scene.children["Opponents"].RemoveChild(opponentToRemove) as IGameComponent;
+                game.Components.Remove(opponent);
             }
         }
 
