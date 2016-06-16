@@ -58,7 +58,14 @@ namespace App.Models
 
         private void TryToUnlockDoor()
         {
-            game.Hud.Message = "Need key to open door";
+            String message = "Need key to open the door";
+            if (game.Player.hasItemInBag("key")) {
+                OpenOrCloseDoor();
+                message = "The door is unlocked";
+                isLock = false;
+            }
+
+            game.Hud.Message = message;
         }
 
         private void OpenOrCloseDoor()
