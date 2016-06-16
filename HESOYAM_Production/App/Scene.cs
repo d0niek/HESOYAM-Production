@@ -208,33 +208,34 @@ namespace App
 
         private void insertTeammateCharacter(Model model, Vector2 pos, int rotationY, string texture)
         {
-            GameObject character = buildObject(model, pos, "Teammate_", rotationY);
-            character.setTexture(game.Textures[texture]);
-
-            children["Teammates"].AddChild(character);
-        }
-
-        private void insertOpponentCharacter(Model model, Vector2 pos, int rotationY, string texture)
-        {
-            Opponent character = buildOpponent(model, pos, "Opponent_", rotationY);
-            character.setTexture(game.Textures[texture]);
-
-            children["Opponents"].AddChild(character);
-        }
-
-        private Opponent buildOpponent(Model model, Vector2 pos, string prefix, int rotationY)
-        {
-            Opponent gameObject = new Opponent(
+            GameObject teammate = new Teammate(
                                       game,
-                                      prefix + pos.X + "x" + pos.Y,
+                                      "Teammate_" + pos.X + "x" + pos.Y,
                                       model,
                                       new Vector3(pos.X * wallShift, 0f, pos.Y * wallShift),
                                       new Vector3(0f, (float) (rotationY * Math.PI / 2), 0f)
                                   );
+            teammate.setTexture(game.Textures[texture]);
 
-            addColider(gameObject);
+            addColider(teammate);
 
-            return gameObject;
+            children["Teammates"].AddChild(teammate);
+        }
+
+        private void insertOpponentCharacter(Model model, Vector2 pos, int rotationY, string texture)
+        {
+            Opponent opponent = new Opponent(
+                                    game,
+                                    "Opponent_" + pos.X + "x" + pos.Y,
+                                    model,
+                                    new Vector3(pos.X * wallShift, 0f, pos.Y * wallShift),
+                                    new Vector3(0f, (float) (rotationY * Math.PI / 2), 0f)
+                                );
+            opponent.setTexture(game.Textures[texture]);
+
+            addColider(opponent);
+
+            children["Opponents"].AddChild(opponent);
         }
 
         private void loadAnimationsToCharacter(AnimatedObject character, String name)

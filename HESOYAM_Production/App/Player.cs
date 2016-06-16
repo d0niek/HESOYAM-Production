@@ -10,7 +10,7 @@ using App.Models;
 namespace App
 {
 
-    public class Player : GameObject
+    public class Player : Character
     {
         float cameraAngle;
         List<string> bag;

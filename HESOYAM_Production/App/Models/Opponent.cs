@@ -9,7 +9,7 @@ using System.Collections.Generic;
 namespace App.Models
 {
 
-    class Opponent : GameObject
+    class Opponent : Character
     {
         public float speed;
         public float detectionDistance;
