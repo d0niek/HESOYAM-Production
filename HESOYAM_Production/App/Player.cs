@@ -13,7 +13,7 @@ namespace App
     public class Player : GameObject
     {
         float cameraAngle;
-        List<string> pickedUpObjects;
+        List<string> bag;
         private TimeSpan lastAttack;
         private TimeSpan attackDelay;
 
@@ -26,7 +26,7 @@ namespace App
         ) : base(game, name, position, rotation)
         {
             this.cameraAngle = cameraAngle;
-            pickedUpObjects = new List<string>();
+            bag = new List<string>();
             Vector3 newPosition = position;
             Vector3 newSize = new Vector3(5.0f, 10.0f, 40.0f);
 
@@ -273,15 +273,15 @@ namespace App
             }
         }
 
-        public void addItemToCollection(string itemName)
+        public void addItemToBag(String item)
         {
-            pickedUpObjects.Add(itemName);
-            Console.WriteLine("Podniesiono " + itemName);
+            bag.Add(item);
+            game.Hud.Message = "You have obtained a \"" + item + "\"";
         }
 
-        public bool getKeyInfo(string itemName)
+        public bool hasItemInBag(String item)
         {
-            return pickedUpObjects.Contains(itemName);
+            return bag.Contains(item);
         }
     }
 }

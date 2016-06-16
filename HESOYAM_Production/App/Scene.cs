@@ -76,9 +76,9 @@ namespace App
             } else if (color.R == 100 && color.G == 50) {
                 buildOther(game.Models["lampa"], pos, (int) color.B);
             } else if (color.R == 185 && color.G == 61) {
-                buildCupboard(pos, (int) color.B, true);
-            } else if (color.R == 185 && color.G == 62) {
-                buildCupboard(pos, (int) color.B, false);
+                buildCupboard(pos, (int) color.B, "key");
+            } else if (color.R == 185 && color.G == 99) {
+                buildCupboard(pos, (int) color.B, "");
             } else if (color.R == 185 && color.G == 163) {
                 buildOther(game.Models["biurko"], pos, (int) color.B);
             } else if (color.R == 46 && color.G == 163) {
@@ -171,20 +171,20 @@ namespace App
 
         }
 
-        private void buildCupboard(Vector2 pos, int rotationY, bool hasItem)
+        private void buildCupboard(Vector2 pos, int rotationY, String item)
         {
             Cupboard cupboard = new Cupboard(
                                     game,
                                     "Cupboard_" + pos.X + "x" + pos.Y,
                                     game.Models["szafka"],
-                                    hasItem,
+                                    item,
                                     new Vector3(pos.X * wallShift, 0f, pos.Y * wallShift),
                                     new Vector3(0f, (float) (rotationY * Math.PI / 2), 0f)
                                 );
 
             addColider(cupboard);
 
-            String childrensList = hasItem ? "Interactive" : "Others";
+            String childrensList = item != "" ? "Interactive" : "Others";
 
             children[childrensList].AddChild(cupboard);
             movement.addObstacle((int) pos.X, (int) pos.Y);

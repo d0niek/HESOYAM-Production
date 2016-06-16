@@ -8,19 +8,19 @@ namespace App.Models
 
     public class Cupboard : GameObject
     {
-        bool hasItem;
+        String item;
 
         public Cupboard(
             Engine game,
             string name,
             Model model,
-            bool hasItem,
+            String item,
             Vector3 position = default(Vector3),
             Vector3 rotation = default(Vector3),
             Vector3? scale = null
         ) : base(game, name, model, position, rotation, scale)
         {
-            this.hasItem = hasItem;
+            this.item = item;
         }
 
         public override void Update(GameTime gameTime)
@@ -29,7 +29,7 @@ namespace App.Models
                 return;
             }
 
-            if (hasItem) {
+            if (item != "") {
                 CheckCollisionWithPlayer();
             }
         }
@@ -48,10 +48,9 @@ namespace App.Models
 
         private void PickupItem()
         {
-            game.Hud.Message = "PickedPickedPickedPicked";
-            Console.WriteLine("Picked");
+            game.Player.addItemToBag(item);
             MoveCupboardFromInteractiveObjectToOther();
-            hasItem = false;
+            item = "";
         }
 
         private void MoveCupboardFromInteractiveObjectToOther()
