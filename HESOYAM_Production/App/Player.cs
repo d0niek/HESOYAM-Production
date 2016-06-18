@@ -154,7 +154,7 @@ namespace App
             } else if (rotationY <= (0.75*Math.PI) && rotationY > Math.PI/4) {
                 playerModel.PlayClip("bieg_prawo").Looping = true;
             } else {
-                playerModel.PlayClip("chod_tyl").Looping = true;
+                playerModel.PlayClip("bieg_tyl").Looping = true;
             }
         }
 

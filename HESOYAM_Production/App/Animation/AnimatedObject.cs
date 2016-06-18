@@ -217,8 +217,7 @@ namespace App.Animation
                     * Matrix.CreateTranslation(this.position);
                         seffect.View = this.game.Camera.ViewMatrix;
                         seffect.Projection = this.game.Camera.ProjectionMatrix;
-                        if(this.parent.name != "Player")
-                        seffect.EnableDefaultLighting();
+                        //seffect.EnableDefaultLighting();
                         seffect.PreferPerPixelLighting = true;
                         seffect.SetBoneTransforms(skeleton);
                     }
@@ -242,8 +241,7 @@ namespace App.Animation
                 if (effect is SkinnedEffect) {
                     SkinnedEffect seffect = effect as SkinnedEffect;
                     seffect.Texture = this.texture;
-                    if(this.parent.name == "Player")
-                    seffect.EmissiveColor = new Vector3(0.8f,0.8f,0.8f);
+                    seffect.EmissiveColor = new Vector3(0.7f,0.7f,0.7f);
                 }
             }
         }

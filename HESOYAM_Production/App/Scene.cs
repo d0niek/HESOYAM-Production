@@ -92,9 +92,9 @@ namespace App
             } else if (color.R == 200 && color.G == 200) {
                 insertTeammateCharacter(game.Models["manekin"], pos, (int) color.B, "miesniak");
             } else if (color.R == 75 && color.G == 25) {
-                insertOpponentCharacter(game.Models["manekin"], pos, (int) color.B, "zolnierz");
+                insertOpponentCharacter(game.Models["lekarz"], pos, (int) color.B, "lekarz");//zolnierz
             } else if (color.R == 25 && color.G == 57) {
-                insertOpponentCharacter(game.Models["manekin"], pos, (int) color.B, "lekarz");
+                insertOpponentCharacter(game.Models["lekarz"], pos, (int) color.B, "lekarz");
             }
         }
 
@@ -245,7 +245,7 @@ namespace App
                                     new Vector3(0f, (float) (rotationY * Math.PI / 2), 0f)
                                 );
             opponent.setTexture(game.Textures[texture]);
-            loadAnimationsToCharacter(opponent,"manekin");
+            loadAnimationsToCharacter(opponent,texture);
             addColider(opponent);
 
             children["Opponents"].AddChild(opponent);
