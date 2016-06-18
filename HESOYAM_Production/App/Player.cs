@@ -53,6 +53,8 @@ namespace App
 
         public override void Update(GameTime gameTime)
         {
+            base.Update(gameTime);
+
             if (!game.PlayMode) {
                 return;
             }
@@ -92,10 +94,14 @@ namespace App
         {
             Vector3 vector = ReadInputAndMovePlayer();
 
-            if (vector != Vector3.Zero) {
-                AnimatePlayerMove(true);
+            if (this.IsDead()) {
+                this.OnDead();
             } else {
-                AnimatePlayerMove(false);
+                if (vector != Vector3.Zero) {
+                    OnMove();
+                } else {
+                    OnIdle();
+                }
             }
 
             Matrix rotationMatrixY = Matrix.CreateRotationY(rotation.Y + cameraAngle);
@@ -130,20 +136,22 @@ namespace App
             return vector;
         }
 
-        void AnimatePlayerMove(bool isMoveing)
+        protected void OnMove()
         {
             AnimatedObject playerModel = (AnimatedObject) children["playerModel"];
-            AnimationPlayer clipPlayer = playerModel.player;
+            playerModel.PlayClip("bieg_przod").Looping = true;
+        }
 
-            if (isMoveing) {
-                if (clipPlayer.Clip == playerModel.Clips["postawa"]) {
-                    playerModel.PlayClip("bieg_przod").Looping = true;
-                }
-            } else {
-                if (clipPlayer.Clip != playerModel.Clips["postawa"]) {
-                    playerModel.PlayClip("postawa").Looping = true;
-                }
-            }
+        protected void OnIdle()
+        {
+            AnimatedObject playerModel = (AnimatedObject) children["playerModel"];
+            playerModel.PlayClip("postawa").Looping = true;
+        }
+
+        protected void OnDead()
+        {
+            AnimatedObject playerModel = (AnimatedObject) children["playerModel"];
+            playerModel.PlayClip("smierc").Looping = false;
         }
 
         private void FixSpeedOfMovingDiagonally(Vector3 vector)
@@ -201,16 +209,16 @@ namespace App
 
         private Vector3 CheckCollisionWithOpponents(Vector3 vector, GameTime gameTime)
         {
-            List<String> opponentsToRemove = new List<String>();
+            //List<String> opponentsToRemove = new List<String>();
             foreach (Opponent opponent in game.Scene.children["Opponents"].children.Values) {
                 vector = CheckSensors(opponent.colliders["main"], vector);
 
                 if (IsCollisionWithOpponent(opponent) && opponent.IsMouseOverObject()) {
-                    OnMouseLeftButtonPressed(() => AttackOpponent(opponent, gameTime, opponentsToRemove));
+                    OnMouseLeftButtonPressed(() => AttackOpponent(opponent, gameTime));
                 }
             }
 
-            RemoveOpponentsFromScene(opponentsToRemove);
+            //RemoveOpponentsFromScene(opponentsToRemove);
 
             return vector;
         }
@@ -245,11 +253,10 @@ namespace App
             return game.Scene.Player.colliders["main"].CollidesWith(opponent.colliders["main"]);
         }
 
-        private void AttackOpponent(Opponent opponent, GameTime gameTime, List<String> opponentsToRemove)
+        private void AttackOpponent(Opponent opponent, GameTime gameTime)
         {
             if (lastAttack + attackDelay < gameTime.TotalGameTime) {
                 opponent.ReduceLife(100f);
-                opponentsToRemove.Add(opponent.name);
                 lastAttack = gameTime.TotalGameTime;
             }
         }

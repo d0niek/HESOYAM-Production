@@ -85,7 +85,14 @@ namespace App.Models
 
         public override void Update(GameTime gameTime)
         {
+            base.Update(gameTime);
+
             if (!game.PlayMode) {
+                return;
+            }
+
+            if (this.IsDead()) {
+                OnDead();
                 return;
             }
 
@@ -152,10 +159,16 @@ namespace App.Models
             }
 
             targetDelta = checkSensors(game.Scene.Player.colliders["main"], targetDelta);
-
+            float targetLenght = (float)Math.Sqrt(targetDelta.X * targetDelta.X + targetDelta.Z * targetDelta.Z);
             targetDelta.Normalize();
-            if (targetDelta.Length() > 0)
+
+
+            if (targetLenght > 200f) {
                 moveInDirection(targetDelta);
+                OnMove();
+            } else {
+                OnIdle();
+            }
         }
 
         private void moveInDirection(Vector3 direction)

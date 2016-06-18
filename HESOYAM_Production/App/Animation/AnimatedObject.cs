@@ -19,22 +19,17 @@ namespace App.Animation
         /// <summary>
         /// Extra data associated with the XNA model
         /// </summary>
-        private ModelExtra modelExtra = null;
+        protected ModelExtra modelExtra = null;
 
         /// <summary>
         /// The model bones
         /// </summary>
-        private List<Bone> bones = new List<Bone>();
-
-        /// <summary>
-        /// The model asset name
-        /// </summary>
-        private string name = "";
+        protected List<Bone> bones = new List<Bone>();
 
         /// <summary>
         /// An associated animation clip player
         /// </summary>
-        public AnimationPlayer player = null;
+        protected AnimationPlayer player = null;
 
         #endregion
 
@@ -65,10 +60,20 @@ namespace App.Animation
         ) : base(game, name, model, position, rotation, scale)
         {
             this.Clips = new Dictionary<string, AnimationClip>();
-            this.name = name;
             modelExtra = model.Tag as ModelExtra;
             System.Diagnostics.Debug.Assert(modelExtra != null);
             ObtainBones();
+        }
+
+        public AnimatedObject(
+            Engine game,
+            string name,
+            Vector3 position = default(Vector3), 
+            Vector3 rotation = default(Vector3), 
+            Vector3? scale = null
+        ) : base(game, name, position, rotation, scale)
+        {
+            this.Clips = new Dictionary<string, AnimationClip>();
         }
 
 
@@ -80,7 +85,7 @@ namespace App.Animation
         /// Get the bones from the model and create a bone class object for
         /// each bone. We use our bone class to do the real animated bone work.
         /// </summary>
-        private void ObtainBones()
+        protected void ObtainBones()
         {
             bones.Clear();
             foreach (ModelBone bone in model.Bones) {
@@ -121,7 +126,10 @@ namespace App.Animation
         /// <returns>The player that will play this clip</returns>
         public AnimationPlayer PlayClip(AnimationClip clip)
         {
-            // Create a clip player and assign it to this model
+            if (this.player != null && this.player.Clip == clip) {
+                return this.player;
+            }
+
             player = new AnimationPlayer(clip, this);
             return player;
         }
