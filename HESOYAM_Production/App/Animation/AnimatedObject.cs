@@ -217,6 +217,7 @@ namespace App.Animation
                     * Matrix.CreateTranslation(this.position);
                         seffect.View = this.game.Camera.ViewMatrix;
                         seffect.Projection = this.game.Camera.ProjectionMatrix;
+                        if(!this.texture.Name = "bohater")
                         seffect.EnableDefaultLighting();
                         seffect.PreferPerPixelLighting = true;
                         seffect.SetBoneTransforms(skeleton);
@@ -241,7 +242,8 @@ namespace App.Animation
                 if (effect is SkinnedEffect) {
                     SkinnedEffect seffect = effect as SkinnedEffect;
                     seffect.Texture = this.texture;
-                    //seffect.EmissiveColor = new Vector3(0.8f,0.8f,0.8f);
+                    if(this.texture.Name = "bohater")
+                    seffect.EmissiveColor = new Vector3(0.8f,0.8f,0.8f);
                 }
             }
         }
