@@ -10,7 +10,7 @@ namespace App
 
     public class GameObject : DrawableGameComponent, IGameElement, IGameObject
     {
-        bool active;
+        public bool active;
         protected Engine game;
         protected Model model;
         protected Texture2D texture;
