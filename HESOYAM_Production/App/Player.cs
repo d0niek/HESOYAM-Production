@@ -30,19 +30,19 @@ namespace App
             Vector3 newPosition = position;
             Vector3 newSize = new Vector3(5.0f, 10.0f, 40.0f);
 
-            newPosition.X += 50;
+            newPosition.X += 45;
             AddCollider("front", new Collider(game, newPosition, newSize, Vector3.Zero));
 
-            newPosition.X -= 100;
+            newPosition.X -= 90;
             AddCollider("back", new Collider(game, newPosition, newSize, Vector3.Zero));
 
             newSize = new Vector3(40.0f, 10.0f, 5.0f);
 
-            newPosition.X += 50;
-            newPosition.Z += 50;
+            newPosition.X += 45;
+            newPosition.Z += 45;
             AddCollider("right", new Collider(game, newPosition, newSize, Vector3.Zero));
 
-            newPosition.Z -= 100;
+            newPosition.Z -= 90;
             AddCollider("left", new Collider(game, newPosition, newSize, Vector3.Zero));
 
             AddCollidersToGame();
