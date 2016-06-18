@@ -40,6 +40,7 @@
     </Reference>
     <Reference Include="OpenTK">
       <HintPath>$(MonoGameInstallDirectory)\MonoGame\v3.0\Assemblies\DesktopGL\OpenTK.dll</HintPath>
+      <Package>opentk</Package>
     </Reference>
     <Reference Include="NVorbis">
       <HintPath>$(MonoGameInstallDirectory)\MonoGame\v3.0\Assemblies\DesktopGL\NVorbis.dll</HintPath>
@@ -156,7 +157,7 @@
     <None Include="Content\Animation\bohater\bohater_testowy_5.fbx" />
     <None Include="Content\Animation\bohater\bohater_testowy_4.fbx" />
     <None Include="Content\Animation\bohater\bohater_testowy_3.fbx" />
-    <None Include="Content\Fonts\Open Sans.spritefont" />
+    <None Include="Content\Fonts\OpenSans.spritefont" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Icon.ico" />

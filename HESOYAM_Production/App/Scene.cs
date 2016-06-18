@@ -154,6 +154,19 @@ namespace App
             children["Doors"].AddChild(door);
         }
 
+        void buildLamp(Model model, Vector2 pos, int rotationY)
+        {
+            Lamp door = new Lamp(
+                            game,
+                            "Door_" + pos.X + "x" + pos.Y,
+                            this.game.Models["lampa"],
+                            new Vector3(pos.X * wallShift, 0f, pos.Y * wallShift),
+                            new Vector3(0f, (float) (rotationY * Math.PI / 2), 0f)
+                        );
+
+            this.children["Others"].AddChild(door);
+        }
+
         private void buildExit(Vector2 pos, int rotationY)
         {
             Wall exit = new Wall(
