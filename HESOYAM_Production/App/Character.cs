@@ -2,11 +2,12 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
+using App.Animation;
 
 namespace App
 {
 
-    public class Character : GameObject, ICharacter
+    public class Character : AnimatedObject, ICharacter
     {
         float life;
         float maxLife;
@@ -56,6 +57,11 @@ namespace App
             }
         }
 
+        public override void Update(GameTime gameTime)
+        {
+            base.Update(gameTime);
+        }
+
         public void IncreaseLife(float increaseBy)
         {
             life += increaseBy;
@@ -67,6 +73,21 @@ namespace App
         public bool IsDead()
         {
             return life <= 0;
+        }
+
+        protected void OnDead()
+        {
+            this.PlayClip("smierc").Looping = false;
+        }
+
+        protected void OnMove()
+        {
+            this.PlayClip("bieg_przod").Looping = true;
+        }
+
+        protected void OnIdle()
+        {
+            this.PlayClip("postawa").Looping = true;
         }
 
         #endregion

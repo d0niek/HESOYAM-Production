@@ -166,7 +166,7 @@ namespace HESOYAM_Production
             String[] files = Directory.GetFiles(modelsDir);
 
             foreach (String file in files) {
-                String name = file.Remove(0, modelsDir.Length + 1).Replace(".FBX", "").Replace(".fbx", "");
+                String name = file.Remove(0, modelsDir.Length + 1).Replace(".FBX", "").Replace(".fbx", "").Replace(".x", "").Replace(".X", "");
                 Model model = LoadModel(dirName, name);
                 
                 if (model != null) {

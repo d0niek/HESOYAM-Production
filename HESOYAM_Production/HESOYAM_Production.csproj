@@ -113,7 +113,6 @@
     <None Include="Content\Models\podnozek.FBX" />
     <None Include="Content\Map\scene_1.bmp" />
     <None Include="Content\Models\chudzielec.FBX" />
-    <None Include="Content\Models\grubas.FBX" />
     <None Include="Content\Models\lekarz.FBX" />
     <None Include="Content\Models\miesniak.FBX" />
     <None Include="Content\Models\policjant.FBX" />

@@ -86,15 +86,15 @@ namespace App
             } else if (color.R == 250 && color.G == 250) {
                 insertPlayerCharacter(pos, (int) color.B);
             } else if (color.R == 250 && color.G == 200) {
-                insertTeammateCharacter(game.Models["chudzielec"], pos, (int) color.B, "chudzielec");
+                insertTeammateCharacter(game.Models["manekin"], pos, (int) color.B, "chudzielec");
             } else if (color.R == 200 && color.G == 250) {
-                insertTeammateCharacter(game.Models["grubas"], pos, (int) color.B, "grubas");
+                insertTeammateCharacter(game.Models["manekin"], pos, (int) color.B, "grubas");
             } else if (color.R == 200 && color.G == 200) {
-                insertTeammateCharacter(game.Models["miesniak"], pos, (int) color.B, "miesniak");
+                insertTeammateCharacter(game.Models["manekin"], pos, (int) color.B, "miesniak");
             } else if (color.R == 75 && color.G == 25) {
-                insertOpponentCharacter(game.Models["zolnierz"], pos, (int) color.B, "zolnierz");
+                insertOpponentCharacter(game.Models["manekin"], pos, (int) color.B, "zolnierz");
             } else if (color.R == 25 && color.G == 57) {
-                insertOpponentCharacter(game.Models["lekarz"], pos, (int) color.B, "lekarz");
+                insertOpponentCharacter(game.Models["manekin"], pos, (int) color.B, "lekarz");
             }
         }
 
@@ -229,7 +229,7 @@ namespace App
                                       new Vector3(0f, (float) (rotationY * Math.PI / 2), 0f)
                                   );
             teammate.setTexture(game.Textures[texture]);
-
+            loadAnimationsToCharacter((AnimatedObject)teammate,"manekin");
             addColider(teammate);
 
             children["Teammates"].AddChild(teammate);
@@ -245,7 +245,7 @@ namespace App
                                     new Vector3(0f, (float) (rotationY * Math.PI / 2), 0f)
                                 );
             opponent.setTexture(game.Textures[texture]);
-
+            loadAnimationsToCharacter(opponent,"manekin");
             addColider(opponent);
 
             children["Opponents"].AddChild(opponent);
