@@ -4,11 +4,9 @@ using Microsoft.Xna.Framework.Graphics;
 using HESOYAM_Production;
 using System;
 using App.Collisions;
-using HESOYAM_Production.App;
+using App.Models;
 using App.Animation;
 using System.Collections.Generic;
-using System.Linq;
-using App.Models;
 
 namespace App
 {
@@ -32,23 +30,23 @@ namespace App
         {
             Bitmap bmp = (Bitmap) Image.FromFile(bitmapPath + ".bmp");
 
-            this.buildMap(bmp);
-            this.drawFloor(bmp.Width, bmp.Height);
+            buildMap(bmp);
+            drawFloor(bmp.Width, bmp.Height);
 
-            this.AddChildrenToGame(true, true);
+            AddChildrenToGame(true, true);
         }
 
         private void buildMap(Bitmap bmp)
         {
-            this.AddChild(new GameObject(game, "Player"));
-            this.AddChild(new GameObject(game, "Teammates"));
-            this.AddChild(new GameObject(game, "Opponents"));
-            this.AddChild(new GameObject(game, "Walls"));
-            this.AddChild(new GameObject(game, "Windows"));
-            this.AddChild(new GameObject(game, "Doors"));
-            this.AddChild(new GameObject(game, "ExitDoors"));
-            this.AddChild(new GameObject(game, "Interactive"));
-            this.AddChild(new GameObject(game, "Others"));
+            AddChild(new GameObject(game, "Player"));
+            AddChild(new GameObject(game, "Teammates"));
+            AddChild(new GameObject(game, "Opponents"));
+            AddChild(new GameObject(game, "Walls"));
+            AddChild(new GameObject(game, "Windows"));
+            AddChild(new GameObject(game, "Doors"));
+            AddChild(new GameObject(game, "ExitDoors"));
+            AddChild(new GameObject(game, "Interactive"));
+            AddChild(new GameObject(game, "Others"));
 
             movement = new Movement(bmp.Width, bmp.Height, wallShift);
 
@@ -56,7 +54,7 @@ namespace App
                 for (int j = 0; j < bmp.Height; j++) {
                     System.Drawing.Color color = bmp.GetPixel(i, j);
 
-                    this.buildMapObject(color, new Vector2(i, j));
+                    buildMapObject(color, new Vector2(i, j));
                 }
             }
         }
@@ -64,35 +62,39 @@ namespace App
         private void buildMapObject(System.Drawing.Color color, Vector2 pos)
         {
             if (color.R == 0 && color.G == 0) {
-                this.buildWall(pos);
+                buildWall(pos);
             } else if (color.R == 255 && color.G == 0) {
-                this.buildWindow(pos, (int) color.B);
-            } else if (color.R < 2 && color.G == 255) {
-                this.buildDoor(pos, (int) color.B, (int) color.R);
+                buildWindow(pos, (int) color.B);
+            } else if (color.R == 0 && color.G == 255) {
+                buildDoor(pos, (int) color.B, false);
+            } else if (color.R == 1 && color.G == 255) {
+                buildDoor(pos, (int) color.B, true);
             } else if (color.R == 164 && color.G == 255) {
-                this.buildExit(pos, (int) color.B);
+                buildExit(pos, (int) color.B);
             } else if (color.R == 100 && color.G == 100) {
-                this.buildOther(this.game.Models["lozko"], pos, (int) color.B);
+                buildOther(game.Models["lozko"], pos, (int) color.B);
             } else if (color.R == 100 && color.G == 50) {
-                this.buildLamp(this.game.Models["lampa"], pos, (int) color.B);
-            } else if (color.R == 185 && color.G > 60 && color.G < 63) {
-                this.buildInteractive(this.game.Models["szafka"], pos, (int) color.B, (int)color.G);
+                buildOther(game.Models["lampa"], pos, (int) color.B);
+            } else if (color.R == 185 && color.G == 61) {
+                buildCupboard(pos, (int) color.B, "key");
+            } else if (color.R == 185 && color.G == 99) {
+                buildCupboard(pos, (int) color.B, "");
             } else if (color.R == 185 && color.G == 163) {
-                this.buildOther(this.game.Models["biurko"], pos, (int) color.B);
+                buildOther(game.Models["biurko"], pos, (int) color.B);
             } else if (color.R == 46 && color.G == 163) {
-                this.buildOther(this.game.Models["krzeslo"], pos, (int) color.B);
+                buildOther(game.Models["krzeslo"], pos, (int) color.B);
             } else if (color.R == 250 && color.G == 250) {
-                this.insertPlayerCharacter(pos, (int) color.B);
+                insertPlayerCharacter(pos, (int) color.B);
             } else if (color.R == 250 && color.G == 200) {
-                this.insertTeammateCharacter(this.game.Models["chudzielec"], pos, (int) color.B, "chudzielec");
+                insertTeammateCharacter(game.Models["chudzielec"], pos, (int) color.B, "chudzielec");
             } else if (color.R == 200 && color.G == 250) {
-                this.insertTeammateCharacter(this.game.Models["grubas"], pos, (int) color.B, "grubas");
+                insertTeammateCharacter(game.Models["grubas"], pos, (int) color.B, "grubas");
             } else if (color.R == 200 && color.G == 200) {
-                this.insertTeammateCharacter(this.game.Models["miesniak"], pos, (int) color.B, "miesniak");
+                insertTeammateCharacter(game.Models["miesniak"], pos, (int) color.B, "miesniak");
             } else if (color.R == 75 && color.G == 25) {
-                this.insertOpponentCharacter(this.game.Models["zolnierz"], pos, (int) color.B, "zolnierz");
+                insertOpponentCharacter(game.Models["zolnierz"], pos, (int) color.B, "zolnierz");
             } else if (color.R == 25 && color.G == 57) {
-                this.insertOpponentCharacter(this.game.Models["lekarz"], pos, (int) color.B, "lekarz");
+                insertOpponentCharacter(game.Models["lekarz"], pos, (int) color.B, "lekarz");
             }
         }
 
@@ -101,17 +103,17 @@ namespace App
             Wall wall = new Wall(
                             game,
                             "Wall_" + pos.X + "x" + pos.Y,
-                            this.game.Models["sciana"],
-                            this.game.Models["modul_przyciete"],
+                            game.Models["sciana"],
+                            game.Models["modul_przyciete"],
                             new Vector3(pos.X * wallShift, 0f, pos.Y * wallShift)
                         );
-            wall.setTextureNormal(this.game.Textures["sciana_tekstura"]);
-            wall.setTextureCut(this.game.Textures["modul_przyciete_tekstura"]);
+            wall.TextureNormal = game.Textures["sciana_tekstura"];
+            wall.TextureCut = game.Textures["modul_przyciete_tekstura"];
 
-            this.addColider(wall);
+            addColider(wall);
 
-            this.children["Walls"].AddChild(wall);
-            movement.addObstacle((int)pos.X, (int)pos.Y);
+            children["Walls"].AddChild(wall);
+            movement.addObstacle((int) pos.X, (int) pos.Y);
         }
 
         private void buildWindow(Vector2 pos, int rotationY)
@@ -119,45 +121,37 @@ namespace App
             Wall window = new Wall(
                               game,
                               "Window_" + pos.X + "x" + pos.Y,
-                              this.game.Models["okno"],
-                              this.game.Models["modul_przyciete"],
+                              game.Models["okno"],
+                              game.Models["modul_przyciete"],
                               new Vector3(pos.X * wallShift, 0f, pos.Y * wallShift),
                               new Vector3(0f, (float) (rotationY * Math.PI / 2), 0f)
                           );
-            window.setTextureNormal(this.game.Textures["okno_tekstura"]);
-            window.setTextureCut(this.game.Textures["modul_przyciete_tekstura"]);
+            window.TextureNormal = game.Textures["okno_tekstura"];
+            window.TextureCut = game.Textures["modul_przyciete_tekstura"];
 
-            this.addColider(window);
+            addColider(window);
 
-            this.children["Windows"].AddChild(window);
-            movement.addObstacle((int)pos.X, (int)pos.Y);
+            children["Windows"].AddChild(window);
+            movement.addObstacle((int) pos.X, (int) pos.Y);
         }
 
-        private void buildDoor(Vector2 pos, int rotationY, int doorState)
+        private void buildDoor(Vector2 pos, int rotationY, bool isLock)
         {
-            bool isOpen = false;
-            if (doorState == 1) isOpen = false;
-            else if (doorState == 0) isOpen = true;
-
-
             Door door = new Door(
                             game,
                             "Door_" + pos.X + "x" + pos.Y,
-                            this.game.Models["drzwi"],
-                            this.game.Models["drzwi_przyciete"],
-                            isOpen,
+                            game.Models["drzwi"],
+                            game.Models["drzwi_przyciete"],
+                            isLock,
                             new Vector3(pos.X * wallShift, 0f, pos.Y * wallShift),
                             new Vector3(0f, (float) (rotationY * Math.PI / 2), 0f)
                         );
-            door.setTextureNormal(this.game.Textures["drzwi_tekstura"]);
-            door.setTextureCut(this.game.Textures["modul_przyciete_tekstura"]);
+            door.TextureNormal = game.Textures["drzwi_tekstura"];
+            door.TextureCut = game.Textures["modul_przyciete_tekstura"];
 
-            this.children["Doors"].AddChild(door);
+            addColider(door);
 
-            if (!isOpen)
-            {
-                this.addColider(door);
-            }
+            children["Doors"].AddChild(door);
         }
 
         void buildLamp(Model model, Vector2 pos, int rotationY)
@@ -178,81 +172,89 @@ namespace App
             Wall exit = new Wall(
                             game,
                             "ExitDoor_" + pos.X + "x" + pos.Y,
-                            this.game.Models["drzwi_duze"],
-                            this.game.Models["drzwi_duze_przyciete"],
+                            game.Models["drzwi_duze"],
+                            game.Models["drzwi_duze_przyciete"],
                             new Vector3(pos.X * wallShift, 0f, pos.Y * wallShift),
                             new Vector3(0f, (float) (rotationY * Math.PI / 2), 0f)
                         );
-            exit.setTextureNormal(this.game.Textures["drzwi_duze_tekstura"]);
-            exit.setTextureCut(this.game.Textures["drzwi_duze_tekstura"]);
+            exit.TextureNormal = game.Textures["drzwi_duze_tekstura"];
+            exit.TextureCut = game.Textures["drzwi_duze_tekstura"];
 
-            this.children["ExitDoors"].AddChild(exit);
+            children["ExitDoors"].AddChild(exit);
 
         }
 
-        private void buildInteractive(Model model, Vector2 pos, int rotationY, int type)
+        private void buildCupboard(Vector2 pos, int rotationY, String item)
         {
-            String itemName = null;
-            if (type == 61) itemName = "key";
-            else if (type == 62) itemName = "weapon";
+            Cupboard cupboard = new Cupboard(
+                                    game,
+                                    "Cupboard_" + pos.X + "x" + pos.Y,
+                                    game.Models["szafka"],
+                                    item,
+                                    new Vector3(pos.X * wallShift, 0f, pos.Y * wallShift),
+                                    new Vector3(0f, (float) (rotationY * Math.PI / 2), 0f)
+                                );
 
-            InteractiveObject interactive = this.buildInteractiveObject(model, pos, "Other_", itemName, rotationY);
+            addColider(cupboard);
 
-            this.children["Interactive"].AddChild(interactive);
-            movement.addObstacle((int)pos.X, (int)pos.Y);
+            String childrensList = item != "" ? "Interactive" : "Others";
+
+            children[childrensList].AddChild(cupboard);
+            movement.addObstacle((int) pos.X, (int) pos.Y);
         }
 
         private void buildOther(Model model, Vector2 pos, int rotationY)
         {
-            GameObject other = this.buildObject(model, pos, "Other_", rotationY);
+            GameObject other = buildObject(model, pos, "Other_", rotationY);
 
-            this.children["Others"].AddChild(other);
+            children["Others"].AddChild(other);
         }
 
         private void insertPlayerCharacter(Vector2 pos, int rotationY)
         {
-            this.player = this.buildAnimatedObject(this.game.Models["bohater"], pos, "Player_", rotationY);
-            loadAnimationsToCharacter(this.player, "bohater");
-            this.player.setTexture(this.game.Textures["bohater"]);
+            player = buildAnimatedObject(game.Models["bohater"], pos, "Player_", rotationY);
+            loadAnimationsToCharacter(player, "bohater");
+            player.setTexture(game.Textures["bohater"]);
             
-            this.children["Player"].AddChild(this.player);
+            children["Player"].AddChild(player);
         }
 
         private void insertTeammateCharacter(Model model, Vector2 pos, int rotationY, string texture)
         {
-            GameObject character = this.buildObject(model, pos, "Teammate_", rotationY);
-            character.setTexture(this.game.Textures[texture]);
+            GameObject teammate = new Teammate(
+                                      game,
+                                      "Teammate_" + pos.X + "x" + pos.Y,
+                                      model,
+                                      new Vector3(pos.X * wallShift, 0f, pos.Y * wallShift),
+                                      new Vector3(0f, (float) (rotationY * Math.PI / 2), 0f)
+                                  );
+            teammate.setTexture(game.Textures[texture]);
 
-            this.children["Teammates"].AddChild(character);
+            addColider(teammate);
+
+            children["Teammates"].AddChild(teammate);
         }
 
         private void insertOpponentCharacter(Model model, Vector2 pos, int rotationY, string texture)
         {
-            Opponent character = this.buildOpponent(model, pos, "Opponent_", rotationY);
-            character.setTexture(this.game.Textures[texture]);
+            Opponent opponent = new Opponent(
+                                    game,
+                                    "Opponent_" + pos.X + "x" + pos.Y,
+                                    model,
+                                    new Vector3(pos.X * wallShift, 0f, pos.Y * wallShift),
+                                    new Vector3(0f, (float) (rotationY * Math.PI / 2), 0f)
+                                );
+            opponent.setTexture(game.Textures[texture]);
 
-            this.children["Opponents"].AddChild(character);
-        }
-        
-        private Opponent buildOpponent(Model model, Vector2 pos, string prefix, int rotationY)
-        {
-            Opponent gameObject = new Opponent(
-                                        game,
-                                        prefix + pos.X + "x" + pos.Y,
-                                        model,
-                                        new Vector3(pos.X * wallShift, 0f, pos.Y * wallShift),
-                                        new Vector3(0f, (float)(rotationY * Math.PI / 2), 0f)
-                                    );
+            addColider(opponent);
 
-            this.addColider(gameObject);
-
-            return gameObject;
+            children["Opponents"].AddChild(opponent);
         }
 
         private void loadAnimationsToCharacter(AnimatedObject character, String name)
         {
             Dictionary<String, Model> models = new Dictionary<string, Model>();
-            this.game.LoadModels("Animation/" + name, models);
+            game.LoadModels("Animation/" + name, models);
 
             foreach (String modelName in models.Keys) {
                 Model model = models[modelName];
@@ -266,7 +268,7 @@ namespace App
 
             character.PlayClip("postawa").Looping = true;
         }
-        
+
         private AnimatedObject buildAnimatedObject(Model model, Vector2 pos, string prefix, int rotationY)
         {
             AnimatedObject gameObject = new AnimatedObject(
@@ -277,7 +279,7 @@ namespace App
                                             new Vector3(0f, (float) (rotationY * Math.PI / 2), 0f)
                                         );
 
-            this.addColider(gameObject);
+            addColider(gameObject);
 
             return gameObject;
         }
@@ -292,23 +294,29 @@ namespace App
                                         new Vector3(0f, (float) (rotationY * Math.PI / 2), 0f)
                                     );
 
-            this.addColider(gameObject);
+            addColider(gameObject);
 
             return gameObject;
         }
 
-        private InteractiveObject buildInteractiveObject(Model model, Vector2 pos, string prefix, string itemName, int rotationY)
+        private InteractiveObject buildInteractiveObject(
+            Model model,
+            Vector2 pos,
+            string prefix,
+            string itemName,
+            int rotationY
+        )
         {
             InteractiveObject gameObject = new InteractiveObject(
-                                        game,
-                                        prefix + pos.X + "x" + pos.Y,
-                                        model,
-                                        itemName,
-                                        new Vector3(pos.X * wallShift, 0f, pos.Y * wallShift),
-                                        new Vector3(0f, (float)(rotationY * Math.PI / 2), 0f)
-                                    );
+                                               game,
+                                               prefix + pos.X + "x" + pos.Y,
+                                               model,
+                                               itemName,
+                                               new Vector3(pos.X * wallShift, 0f, pos.Y * wallShift),
+                                               new Vector3(0f, (float) (rotationY * Math.PI / 2), 0f)
+                                           );
 
-            this.addColider(gameObject);
+            addColider(gameObject);
 
             return gameObject;
         }
@@ -338,15 +346,15 @@ namespace App
             float positionZ = Height * wallShift / 2 - modelWidth;
 
             GameObject floor = new GameObject(
-                                   this.game,
+                                   game,
                                    "Floor",
-                                   this.game.Models["sciana"],
+                                   game.Models["sciana"],
                                    new Vector3(positionX, 0f, positionZ),
                                    Vector3.Zero,
                                    new Vector3((float) Width, 0f, (float) Height)
                                );
 
-            this.AddChild(floor);
+            AddChild(floor);
         }
     }
 }

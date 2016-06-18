@@ -5,15 +5,15 @@ using HESOYAM_Production;
 using App.Collisions;
 using App.Animation;
 using System.Collections.Generic;
-using System.Linq;
+using App.Models;
 
 namespace App
 {
 
-    public class Player : GameObject
+    public class Player : Character
     {
         float cameraAngle;
-        List<string> pickedUpObjects;
+        List<string> bag;
         private TimeSpan lastAttack;
         private TimeSpan attackDelay;
 
@@ -26,7 +26,7 @@ namespace App
         ) : base(game, name, position, rotation)
         {
             this.cameraAngle = cameraAngle;
-            pickedUpObjects = new List<string>();
+            bag = new List<string>();
             Vector3 newPosition = position;
             Vector3 newSize = new Vector3(5.0f, 10.0f, 40.0f);
 
@@ -51,87 +51,215 @@ namespace App
             attackDelay = new TimeSpan(0, 0, 1);
         }
 
-        public void update(GameTime gameTime)
-        {   
-            float angle = this.getAngleFromMouse();
+        public override void Update(GameTime gameTime)
+        {
+            if (!game.PlayMode) {
+                return;
+            }
 
-            this.Rotate(0, angle, 0);
+            float angle = GetAngleFromMouse();
+            Rotate(0, angle, 0);
 
-            Vector3 vector = this.movePlayer();
+            Vector3 vector = MovePlayer();
 
+            ResetCollidersColor();
+            vector = CheckCollisionsWithSceneObjects(vector);
+            vector = CheckCollisionWithOpponents(vector, gameTime);
+
+            Move(vector.X, 0, vector.Z);
+        }
+
+        private float GetAngleFromMouse()
+        {
+            float angle = rotation.Y;
+
+            if (game.InputState.Mouse.isInGameWindow()) {
+                Vector2 mousePos = new Vector2(
+                                       game.InputState.Mouse.CurrentMouseState.X, 
+                                       game.InputState.Mouse.CurrentMouseState.Y
+                                   );
+
+                mousePos.X -= Game.GraphicsDevice.Viewport.Width / 2;
+                mousePos.Y -= Game.GraphicsDevice.Viewport.Height / 2;
+
+                angle = (float) (Math.Atan2(mousePos.X, mousePos.Y)) + cameraAngle;
+            }
+
+            return angle;
+        }
+
+        private Vector3 MovePlayer()
+        {
+            Vector3 vector = ReadInputAndMovePlayer();
+
+            if (vector != Vector3.Zero) {
+                AnimatePlayerMove(true);
+            } else {
+                AnimatePlayerMove(false);
+            }
+
+            Matrix rotationMatrixY = Matrix.CreateRotationY(rotation.Y + cameraAngle);
+            vector = Vector3.Transform(vector, rotationMatrixY);
+
+            FixSpeedOfMovingDiagonally(vector);
+
+            return vector;
+        }
+
+        private Vector3 ReadInputAndMovePlayer()
+        {
+            PlayerIndex playerIndex;
+            Vector3 vector = Vector3.Zero;
+
+            if (game.InputState.IsKeyPressed(Keys.W, PlayerIndex.One, out playerIndex)) {
+                vector.Z = -10;
+            }
+
+            if (game.InputState.IsKeyPressed(Keys.S, PlayerIndex.One, out playerIndex)) {
+                vector.Z = 10;
+            }
+
+            if (game.InputState.IsKeyPressed(Keys.A, PlayerIndex.One, out playerIndex)) {
+                vector.X = -10;
+            }
+
+            if (game.InputState.IsKeyPressed(Keys.D, PlayerIndex.One, out playerIndex)) {
+                vector.X = 10;
+            }
+
+            return vector;
+        }
+
+        void AnimatePlayerMove(bool isMoveing)
+        {
+            AnimatedObject playerModel = (AnimatedObject) children["playerModel"];
+            AnimationPlayer clipPlayer = playerModel.player;
+
+            if (isMoveing) {
+                if (clipPlayer.Clip == playerModel.Clips["postawa"]) {
+                    playerModel.PlayClip("bieg_przod").Looping = true;
+                }
+            } else {
+                if (clipPlayer.Clip != playerModel.Clips["postawa"]) {
+                    playerModel.PlayClip("postawa").Looping = true;
+                }
+            }
+        }
+
+        private void FixSpeedOfMovingDiagonally(Vector3 vector)
+        {
+            if (vector.X == 0f) {
+                vector.Z /= (float) Math.Sqrt(2);
+            } else if (vector.Z == 0f) {
+                vector.X /= (float) Math.Sqrt(2);
+            }
+        }
+
+        private void ResetCollidersColor()
+        {
             foreach (Collider collider in colliders.Values) {
                 collider.drawColor = Color.GreenYellow;
             }
+        }
 
-            foreach (IGameObject wall in game.Scene.children["Walls"].children.Values) {
-                foreach (Collider collider in wall.colliders.Values) {
-                    vector = checkSensors(collider, vector);
-                }
-            }
-            
-            foreach (IGameObject interactiveObject in game.Scene.children["Interactive"].children.Values)
-            {
-                foreach (Collider collider in interactiveObject.colliders.Values)
-                {
-                    vector = checkSensors(collider, vector);
-                }
+        private Vector3 CheckCollisionsWithSceneObjects(Vector3 vector)
+        {
+            String[] objectsListInTheScene = { "Walls", "Interactive", "Windows", "Others" };
+
+            foreach (String objectsList in objectsListInTheScene) {
+                vector = CheckCollisionsWithObjects(objectsList, vector);
             }
 
-            foreach (IGameObject door in game.Scene.children["Doors"].children.Values)
-            {
-                foreach (Collider collider in door.colliders.Values)
-                {
-                    vector = checkSensors(collider, vector);
+            vector = CheckCollisionWithDoors(vector);
+
+            return vector;
+        }
+
+        private Vector3 CheckCollisionsWithObjects(String objectsList, Vector3 vector)
+        {
+            foreach (IGameObject objectOnScene in game.Scene.children[objectsList].children.Values) {
+                foreach (Collider collider in objectOnScene.colliders.Values) {
+                    vector = CheckSensors(collider, vector);
                 }
             }
 
-            foreach(IGameObject opponent in game.Scene.children["Opponents"].children.Values)
-            {
-                vector = checkSensors(opponent.colliders["main"], vector);
-                if(game.Scene.Player.colliders["main"].CollidesWith(opponent.colliders["main"]))
-                {
-                    if(game.InputState.Mouse.CurrentMouseState.LeftButton.Equals(ButtonState.Pressed))
-                    {
-                        if(lastAttack + attackDelay < gameTime.TotalGameTime)
-                        {
-                            System.Console.WriteLine("Player attacked");
-                            lastAttack = gameTime.TotalGameTime;
-                        }
+            return vector;
+        }
 
+        private Vector3 CheckCollisionWithDoors(Vector3 vector)
+        {
+            foreach (Door door in game.Scene.children["Doors"].children.Values) {
+                if (!door.IsOpen) {
+                    foreach (Collider collider in door.colliders.Values) {
+                        vector = CheckSensors(collider, vector);
                     }
                 }
             }
 
-            this.Move(vector.X, 0, vector.Z);
+            return vector;
         }
 
-        private Vector3 checkSensors(Collider collider, Vector3 vector)
+        private Vector3 CheckCollisionWithOpponents(Vector3 vector, GameTime gameTime)
         {
-            if(this.colliders["right"].CollidesWith(collider))
-            {
-                this.colliders["right"].drawColor = Color.OrangeRed;
+            List<String> opponentsToRemove = new List<String>();
+            foreach (Opponent opponent in game.Scene.children["Opponents"].children.Values) {
+                vector = CheckSensors(opponent.colliders["main"], vector);
+
+                if (IsCollisionWithOpponent(opponent) && opponent.IsMouseOverObject()) {
+                    OnMouseLeftButtonPressed(() => AttackOpponent(opponent, gameTime, opponentsToRemove));
+                }
+            }
+
+            RemoveOpponentsFromScene(opponentsToRemove);
+
+            return vector;
+        }
+
+        private Vector3 CheckSensors(Collider collider, Vector3 vector)
+        {
+            if (colliders["right"].CollidesWith(collider)) {
+                colliders["right"].drawColor = Color.OrangeRed;
                 vector.Z = (vector.Z > 0 ? 0 : vector.Z);
             }
 
-            if(this.colliders["left"].CollidesWith(collider))
-            {
-                this.colliders["left"].drawColor = Color.OrangeRed;
+            if (colliders["left"].CollidesWith(collider)) {
+                colliders["left"].drawColor = Color.OrangeRed;
                 vector.Z = (vector.Z < 0 ? 0 : vector.Z);
             }
 
-            if(this.colliders["front"].CollidesWith(collider))
-            {
-                this.colliders["front"].drawColor = Color.OrangeRed;
+            if (colliders["front"].CollidesWith(collider)) {
+                colliders["front"].drawColor = Color.OrangeRed;
                 vector.X = (vector.X > 0 ? 0 : vector.X);
             }
 
-            if(this.colliders["back"].CollidesWith(collider))
-            {
-                this.colliders["back"].drawColor = Color.OrangeRed;
+            if (colliders["back"].CollidesWith(collider)) {
+                colliders["back"].drawColor = Color.OrangeRed;
                 vector.X = (vector.X < 0 ? 0 : vector.X);
             }
 
             return vector;
+        }
+
+        private bool IsCollisionWithOpponent(Opponent opponent)
+        {
+            return game.Scene.Player.colliders["main"].CollidesWith(opponent.colliders["main"]);
+        }
+
+        private void AttackOpponent(Opponent opponent, GameTime gameTime, List<String> opponentsToRemove)
+        {
+            if (lastAttack + attackDelay < gameTime.TotalGameTime) {
+                opponent.ReduceLife(100f);
+                opponentsToRemove.Add(opponent.name);
+                lastAttack = gameTime.TotalGameTime;
+            }
+        }
+
+        private void RemoveOpponentsFromScene(List<string> opponentsToRemove)
+        {
+            foreach (String opponentToRemove in opponentsToRemove) {
+                IGameComponent opponent = game.Scene.children["Opponents"].RemoveChild(opponentToRemove) as IGameComponent;
+                game.Components.Remove(opponent);
+            }
         }
 
         public new void Move(float x, float y, float z)
@@ -157,102 +285,15 @@ namespace App
             }
         }
 
-        public void addItemToCollection(string itemName)
+        public void addItemToBag(String item)
         {
-            pickedUpObjects.Add(itemName);
-            System.Console.WriteLine("Podniesiono " + itemName);
-        }
-        public bool getKeyInfo(string itemName)
-        {
-            if (pickedUpObjects.Contains(itemName)) return true;
-            else return false;
+            bag.Add(item);
+            game.Hud.Message = "You have obtained a \"" + item + "\"";
         }
 
-        private float getAngleFromMouse()
+        public bool hasItemInBag(String item)
         {
-            float angle = this.rotation.Y;
-
-            if (game.InputState.Mouse.isInGameWindow()) {
-                Vector2 mousePos = new Vector2(
-                                       game.InputState.Mouse.CurrentMouseState.X, 
-                                       game.InputState.Mouse.CurrentMouseState.Y
-                                   );
-
-                mousePos.X -= this.Game.GraphicsDevice.Viewport.Width / 2;
-                mousePos.Y -= this.Game.GraphicsDevice.Viewport.Height / 2;
-
-                angle = (float) (Math.Atan2(mousePos.X, mousePos.Y)) + this.cameraAngle;
-            }
-
-            return angle;
-        }
-
-        private Vector3 movePlayer()
-        {
-            Vector3 vector = this.readInputAndMovePlayer();
-
-            if (vector != Vector3.Zero) {
-                animatePlayerMove(true);
-            } else {
-                animatePlayerMove(false);
-            }
-
-            Matrix rotationMatrixY = Matrix.CreateRotationY(this.rotation.Y + cameraAngle);
-            vector = Vector3.Transform(vector, rotationMatrixY);
-
-            this.fixSpeedOfMovingDiagonally(vector);
-
-            return vector;
-        }
-
-        void animatePlayerMove(bool isMoveing)
-        {
-            AnimatedObject playerModel = (AnimatedObject) this.children["playerModel"];
-            AnimationPlayer clipPlayer = playerModel.player;
-
-            if (isMoveing) {
-                if (clipPlayer.Clip == playerModel.Clips["postawa"]) {
-                    playerModel.PlayClip("bieg_przod").Looping = true;
-                }
-            } else {
-                if (clipPlayer.Clip != playerModel.Clips["postawa"]) {
-                    playerModel.PlayClip("postawa").Looping = true;
-                }
-            }
-        }
-
-        private Vector3 readInputAndMovePlayer()
-        {
-            PlayerIndex playerIndex;
-            Vector3 vector = Vector3.Zero;
-
-
-            if (game.InputState.IsKeyPressed(Keys.W, PlayerIndex.One, out playerIndex)) {
-                vector.Z = -10;
-            }
-
-            if (game.InputState.IsKeyPressed(Keys.S, PlayerIndex.One, out playerIndex)) {
-                vector.Z = 10;
-            }
-
-            if (game.InputState.IsKeyPressed(Keys.A, PlayerIndex.One, out playerIndex)) {
-                vector.X = -10;
-            }
-
-            if (game.InputState.IsKeyPressed(Keys.D, PlayerIndex.One, out playerIndex)) {
-                vector.X = 10;
-            }
-
-            return vector;
-        }
-
-        private void fixSpeedOfMovingDiagonally(Vector3 vector)
-        {
-            if (vector.X == 0f) {
-                vector.Z /= (float) Math.Sqrt(2);
-            } else if (vector.Z == 0f) {
-                vector.X /= (float) Math.Sqrt(2);
-            }
+            return bag.Contains(item);
         }
     }
 }

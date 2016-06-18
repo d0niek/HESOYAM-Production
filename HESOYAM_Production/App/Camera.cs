@@ -49,7 +49,7 @@ namespace App
             this.playModePosition = this.position;
         }
 
-        public void update()
+        public override void Update(GameTime gameTime)
         {
             this.Zoom();
 

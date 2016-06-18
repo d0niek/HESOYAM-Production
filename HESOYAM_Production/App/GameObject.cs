@@ -10,7 +10,6 @@ namespace App
 
     public class GameObject : DrawableGameComponent, IGameElement, IGameObject
     {
-        bool hover;
         bool active;
         protected Engine game;
         protected Model model;
@@ -31,6 +30,11 @@ namespace App
 
         public Dictionary<String, Collider> colliders { get; set; }
 
+        public bool Hover {
+            private get;
+            set;
+        }
+
         public GameObject(
             Engine game,
             string name,
@@ -40,7 +44,7 @@ namespace App
             Vector3? scale = null
         ) : base(game)
         {
-            this.hover = false;
+            this.Hover = false;
             this.game = game;
             this.name = name;
             this.model = model;
@@ -213,25 +217,25 @@ namespace App
 
         public bool IsMouseOverObject()
         {
-            Matrix world = Matrix.CreateTranslation(this.position);
-
             for (int index = 0; index < model.Meshes.Count; index++) {
-                BoundingSphere sphere = model.Meshes[index].BoundingSphere;
-                sphere = sphere.Transform(world);
-                float? distance = IntersectDistance(sphere);
+                BoundingBox box;
+                if (colliders.ContainsKey("main")) {
+                    box = colliders["main"].box;
 
-                if (distance != null) {
-                    return true;
+                    float? distance = IntersectDistance((BoundingBox) box);
+                    if (distance != null) {
+                        return true;
+                    }
                 }
             }
 
             return false;
         }
 
-        private float? IntersectDistance(BoundingSphere sphere)
+        private float? IntersectDistance(BoundingBox box)
         {
             Ray mouseRay = CalculateRay();
-            return mouseRay.Intersects(sphere);
+            return mouseRay.Intersects(box);
         }
 
         private Ray CalculateRay()
@@ -298,7 +302,7 @@ namespace App
                     // Tmp effect to highlight object under mouse
                     if (active) {
                         effect.AmbientLightColor = new Vector3(0, 0, 255);
-                    } else if (hover) {
+                    } else if (Hover) {
                         effect.AmbientLightColor = new Vector3(0, 255, 0);
                     }
 
@@ -318,11 +322,6 @@ namespace App
             }
         }
 
-        public void setHover(bool hover)
-        {
-            this.hover = hover;
-        }
-
         public void setActive(bool active)
         {
             this.active = active;
@@ -331,6 +330,16 @@ namespace App
         public void setTexture(Texture2D texture)
         {
             this.texture = texture;
+        }
+
+        protected void OnMouseLeftButtonClick(Action action)
+        {
+            game.InputState.Mouse.OnMouseLeftButtonClick(action);
+        }
+
+        protected void OnMouseLeftButtonPressed(Action action)
+        {
+            game.InputState.Mouse.OnMouseLeftButtonPressed(action);
         }
     }
 }

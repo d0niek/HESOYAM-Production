@@ -7,51 +7,49 @@ namespace App
 
     public class Wall : GameObject
     {
-        Model transparentModel;
-        Texture2D textureNormal;
-        Texture2D textureCut;
+        protected Model modelCut;
+
+        public Texture2D TextureNormal {
+            private get;
+            set;
+        }
+
+        public Texture2D TextureCut {
+            private get;
+            set;
+        }
 
         public Wall(
             Engine game,
             string name,
             Model model,
-            Model transparentModel,
+            Model modelCut,
             Vector3 position = default(Vector3), 
             Vector3 rotation = default(Vector3), 
             Vector3? scale = null
         ) : base(game, name, model, position, rotation, scale)
         {
-            this.transparentModel = transparentModel;
+            this.modelCut = modelCut;
         }
 
         public override void Draw(GameTime gameTime)
         {
-            if (this.isWallCoversCameraLookAt()) {
-                this.setTexture(this.textureCut);
-                this.DrawModel(this.transparentModel);
+            if (isWallCoversCameraLookAt()) {
+                setTexture(TextureCut);
+                DrawModel(modelCut);
             } else {
-                this.setTexture(this.textureNormal);
-                this.DrawModel(this.model);
+                setTexture(TextureNormal);
+                DrawModel(model);
             }
-        }
-
-        public void setTextureNormal(Texture2D textureNormal)
-        {
-            this.textureNormal = textureNormal;
-        }
-
-        public void setTextureCut(Texture2D textureCut)
-        {
-            this.textureCut = textureCut;
         }
 
         private bool isWallCoversCameraLookAt()
         {
             const int distance = 400;
-            Vector3 cameraLookAtPosition = this.game.Camera.CameraLookAt;
+            Vector3 cameraLookAtPosition = game.Camera.CameraLookAt;
 
-            bool onLeft = this.position.X <= cameraLookAtPosition.X + 100 && this.position.X > cameraLookAtPosition.X - distance;
-            bool frontOf = this.position.Z >= cameraLookAtPosition.Z - 50 && this.position.Z < cameraLookAtPosition.Z + distance;
+            bool onLeft = position.X <= cameraLookAtPosition.X + 100 && position.X > cameraLookAtPosition.X - distance;
+            bool frontOf = position.Z >= cameraLookAtPosition.Z - 50 && position.Z < cameraLookAtPosition.Z + distance;
 
             return onLeft && frontOf;
         }
