@@ -10,11 +10,11 @@ namespace App
 
     public class GameObject : DrawableGameComponent, IGameElement, IGameObject
     {
-        bool hover;
         bool active;
         protected Engine game;
         protected Model model;
         protected Texture2D texture;
+        protected Vector3 emisiveColor = Vector3.Zero;
 
         public string name { get; set; }
 
@@ -30,6 +30,11 @@ namespace App
 
         public Dictionary<String, Collider> colliders { get; set; }
 
+        public bool Hover {
+            private get;
+            set;
+        }
+
         public GameObject(
             Engine game,
             string name,
@@ -39,7 +44,7 @@ namespace App
             Vector3? scale = null
         ) : base(game)
         {
-            this.hover = false;
+            this.Hover = false;
             this.game = game;
             this.name = name;
             this.model = model;
@@ -278,7 +283,13 @@ namespace App
                 // This is where the mesh orientation is set, as well
                 // as our camera and projection.
                 foreach (BasicEffect effect in mesh.Effects) {
-                    effect.EnableDefaultLighting();
+                    effect.LightingEnabled = true; // turn on the lighting subsystem.
+                    effect.DirectionalLight0.DiffuseColor = new Vector3(0.8f, 0.8f,0.7f); // a red light
+                    effect.DirectionalLight0.Direction = new Vector3(1, -0.5f, -1);  // coming along the x-axis
+                    effect.DirectionalLight0.SpecularColor = new Vector3(0.5f, 0.5f, 0.5f); // with green highlights
+                    effect.AmbientLightColor = new Vector3(0f, 0,0);
+                    effect.EmissiveColor = this.emisiveColor;
+
                     effect.World = transforms[mesh.ParentBone.Index]
                     * Matrix.CreateRotationY(this.rotation.Y)
                     * Matrix.CreateRotationX(this.rotation.X)
@@ -291,7 +302,7 @@ namespace App
                     // Tmp effect to highlight object under mouse
                     if (active) {
                         effect.AmbientLightColor = new Vector3(0, 0, 255);
-                    } else if (hover) {
+                    } else if (Hover) {
                         effect.AmbientLightColor = new Vector3(0, 255, 0);
                     }
 
@@ -311,11 +322,6 @@ namespace App
             }
         }
 
-        public void setHover(bool hover)
-        {
-            this.hover = hover;
-        }
-
         public void setActive(bool active)
         {
             this.active = active;
@@ -324,6 +330,16 @@ namespace App
         public void setTexture(Texture2D texture)
         {
             this.texture = texture;
+        }
+
+        protected void OnMouseLeftButtonClick(Action action)
+        {
+            game.InputState.Mouse.OnMouseLeftButtonClick(action);
+        }
+
+        protected void OnMouseLeftButtonPressed(Action action)
+        {
+            game.InputState.Mouse.OnMouseLeftButtonPressed(action);
         }
     }
 }

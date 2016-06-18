@@ -73,6 +73,11 @@
     <Compile Include="App\Models\Door.cs" />
     <Compile Include="App\Models\Opponent.cs" />
     <Compile Include="App\Models\InteractiveObject.cs" />
+    <Compile Include="App\Models\Cupboard.cs" />
+    <Compile Include="App\ICharacter.cs" />
+    <Compile Include="App\Character.cs" />
+    <Compile Include="App\Models\Teammate.cs" />
+    <Compile Include="App\Models\Lamp.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Icon.png" />
@@ -152,13 +157,7 @@
     <None Include="Content\Animation\bohater\bohater_testowy_5.fbx" />
     <None Include="Content\Animation\bohater\bohater_testowy_4.fbx" />
     <None Include="Content\Animation\bohater\bohater_testowy_3.fbx" />
-    <None Include="Content\Fonts\Open Sans.spritefont" />
-    <None Include="Content\Animation\bohater_1.fbx" />
-    <None Include="Content\Animation\bohater_1\bohater_1_bieg_przod.fbx" />
-    <None Include="Content\Animation\bohater_1\bohater_1_postawa.fbx" />
-    <None Include="Content\Animation\moze_zadziala\moze_zadziala_bieg_przod.x" />
-    <None Include="Content\Animation\moze_zadziala\moze_zadziala_postawa.x" />
-    <None Include="Content\Animation\moze_zadziala.x" />
+    <None Include="Content\Fonts\OpenSans.spritefont" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Icon.ico" />
