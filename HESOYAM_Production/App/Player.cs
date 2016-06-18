@@ -98,7 +98,7 @@ namespace App
                 this.OnDead();
             } else {
                 if (vector != Vector3.Zero) {
-                    OnMove();
+                    OnMove(vector);
                 } else {
                     OnIdle();
                 }
@@ -136,10 +136,26 @@ namespace App
             return vector;
         }
 
-        protected void OnMove()
+        protected void OnMove(Vector3 moveVector)
         {
             AnimatedObject playerModel = (AnimatedObject) children["playerModel"];
-            playerModel.PlayClip("bieg_przod").Looping = true;
+            float rotationY = (float) Math.Atan2(moveVector.X, moveVector.Z);
+            rotationY = (float) ((GetAngleFromMouse() - rotationY) % (Math.PI * 2)+(Math.PI/4));
+
+            if (rotationY < 0) {
+                rotationY += (float) (Math.PI * 2);
+            }
+
+
+            if (rotationY >= (1.75 * Math.PI) || rotationY < Math.PI / 4) {
+                playerModel.PlayClip("bieg_przod").Looping = true;
+            } else if (rotationY <= (1.75 * Math.PI) && rotationY >= (1.25*Math.PI)) {
+                playerModel.PlayClip("bieg_lewo").Looping = true;
+            } else if (rotationY <= (0.75*Math.PI) && rotationY > Math.PI/4) {
+                playerModel.PlayClip("bieg_prawo").Looping = true;
+            } else {
+                playerModel.PlayClip("chod_tyl").Looping = true;
+            }
         }
 
         protected void OnIdle()
