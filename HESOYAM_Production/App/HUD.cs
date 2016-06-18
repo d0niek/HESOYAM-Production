@@ -14,7 +14,7 @@ namespace App
         readonly Dictionary<String, IGameObject> teammates;
         List<Avatar> avatars;
         GameObject hoverTeammate;
-        GameObject selectedTeammate;
+        public GameObject selectedTeammate;
         GameObject objectToInteract;
         String message;
         TimeSpan messageStart;
