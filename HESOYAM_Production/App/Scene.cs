@@ -74,7 +74,7 @@ namespace App
             } else if (color.R == 100 && color.G == 100) {
                 buildOther(game.Models["lozko"], pos, (int) color.B);
             } else if (color.R == 100 && color.G == 50) {
-                buildOther(game.Models["lampa"], pos, (int) color.B);
+                buildLamp(game.Models["lampa"], pos, (int) color.B);
             } else if (color.R == 185 && color.G == 61) {
                 buildCupboard(pos, (int) color.B, "key");
             } else if (color.R == 185 && color.G == 99) {
