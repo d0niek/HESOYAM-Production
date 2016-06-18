@@ -116,7 +116,6 @@
     <None Include="Content\Models\lekarz.FBX" />
     <None Include="Content\Models\miesniak.FBX" />
     <None Include="Content\Models\policjant.FBX" />
-    <None Include="Content\Models\stary.FBX" />
     <None Include="Content\Models\zolnierz.FBX" />
     <None Include="Content\Textures\bohater.png" />
     <None Include="Content\Textures\chudzielec.png" />

@@ -86,11 +86,11 @@ namespace App
             } else if (color.R == 250 && color.G == 250) {
                 insertPlayerCharacter(pos, (int) color.B);
             } else if (color.R == 250 && color.G == 200) {
-                insertTeammateCharacter(game.Models["manekin"], pos, (int) color.B, "chudzielec");
+                insertTeammateCharacter(game.Models["stary"], pos, (int) color.B, "stary");//chudzielec
             } else if (color.R == 200 && color.G == 250) {
-                insertTeammateCharacter(game.Models["manekin"], pos, (int) color.B, "grubas");
+                insertTeammateCharacter(game.Models["stary"], pos, (int) color.B, "stary");//grubas
             } else if (color.R == 200 && color.G == 200) {
-                insertTeammateCharacter(game.Models["manekin"], pos, (int) color.B, "miesniak");
+                insertTeammateCharacter(game.Models["stary"], pos, (int) color.B, "stary");//stary
             } else if (color.R == 75 && color.G == 25) {
                 insertOpponentCharacter(game.Models["lekarz"], pos, (int) color.B, "lekarz");//zolnierz
             } else if (color.R == 25 && color.G == 57) {
@@ -229,7 +229,7 @@ namespace App
                                       new Vector3(0f, (float) (rotationY * Math.PI / 2), 0f)
                                   );
             teammate.setTexture(game.Textures[texture]);
-            loadAnimationsToCharacter((AnimatedObject)teammate,"manekin");
+            loadAnimationsToCharacter((AnimatedObject)teammate,texture);
             addColider(teammate);
 
             children["Teammates"].AddChild(teammate);
