@@ -150,7 +150,6 @@
     <None Include="Content\Animation\bohater\bohater_postawa.fbx" />
     <None Include="Content\Animation\bohater\bohater_smierc.fbx" />
     <None Include="Content\Animation\bohater\bohater_strzal.fbx" />
-    <None Include="Content\Animation\bohater.fbx" />
     <None Include="Content\Animation\bohater\bohater_testowy_7.fbx" />
     <None Include="Content\Animation\bohater\bohater_testowy_6.fbx" />
     <None Include="Content\Animation\bohater\bohater_testowy_5.fbx" />
