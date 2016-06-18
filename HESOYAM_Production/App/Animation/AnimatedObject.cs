@@ -213,9 +213,28 @@ namespace App.Animation
                         seffect.PreferPerPixelLighting = true;
                         seffect.SetBoneTransforms(skeleton);
                     }
+
+
+                    this.DrawTexture(effect);
                 }
 
                 modelMesh.Draw();
+            }
+        }
+
+        protected void DrawTexture(Effect effect)
+        {
+            if (this.texture != null) {
+                if (effect is BasicEffect) {
+                    BasicEffect beffect = effect as BasicEffect;
+                    beffect.TextureEnabled = true;
+                    beffect.Texture = this.texture;
+                }
+                if (effect is SkinnedEffect) {
+                    SkinnedEffect seffect = effect as SkinnedEffect;
+                    seffect.Texture = this.texture;
+                    //seffect.EmissiveColor = new Vector3(0.8f,0.8f,0.8f);
+                }
             }
         }
 

@@ -40,6 +40,7 @@
     </Reference>
     <Reference Include="OpenTK">
       <HintPath>$(MonoGameInstallDirectory)\MonoGame\v3.0\Assemblies\DesktopGL\OpenTK.dll</HintPath>
+      <Package>opentk</Package>
     </Reference>
     <Reference Include="NVorbis">
       <HintPath>$(MonoGameInstallDirectory)\MonoGame\v3.0\Assemblies\DesktopGL\NVorbis.dll</HintPath>
@@ -107,7 +108,6 @@
     <None Include="Content\Models\podnozek.FBX" />
     <None Include="Content\Map\scene_1.bmp" />
     <None Include="Content\Models\chudzielec.FBX" />
-    <None Include="Content\Models\grubas.FBX" />
     <None Include="Content\Models\lekarz.FBX" />
     <None Include="Content\Models\miesniak.FBX" />
     <None Include="Content\Models\policjant.FBX" />
@@ -153,6 +153,12 @@
     <None Include="Content\Animation\bohater\bohater_testowy_4.fbx" />
     <None Include="Content\Animation\bohater\bohater_testowy_3.fbx" />
     <None Include="Content\Fonts\Open Sans.spritefont" />
+    <None Include="Content\Animation\bohater_1.fbx" />
+    <None Include="Content\Animation\bohater_1\bohater_1_bieg_przod.fbx" />
+    <None Include="Content\Animation\bohater_1\bohater_1_postawa.fbx" />
+    <None Include="Content\Animation\moze_zadziala\moze_zadziala_bieg_przod.x" />
+    <None Include="Content\Animation\moze_zadziala\moze_zadziala_postawa.x" />
+    <None Include="Content\Animation\moze_zadziala.x" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Icon.ico" />

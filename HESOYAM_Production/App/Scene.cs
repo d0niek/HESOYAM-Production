@@ -84,7 +84,7 @@ namespace App
             } else if (color.R == 250 && color.G == 200) {
                 insertTeammateCharacter(game.Models["chudzielec"], pos, (int) color.B, "chudzielec");
             } else if (color.R == 200 && color.G == 250) {
-                insertTeammateCharacter(game.Models["grubas"], pos, (int) color.B, "grubas");
+                //insertTeammateCharacter(game.Models["grubas"], pos, (int) color.B, "grubas");
             } else if (color.R == 200 && color.G == 200) {
                 insertTeammateCharacter(game.Models["miesniak"], pos, (int) color.B, "miesniak");
             } else if (color.R == 75 && color.G == 25) {
@@ -198,8 +198,8 @@ namespace App
 
         private void insertPlayerCharacter(Vector2 pos, int rotationY)
         {
-            player = buildAnimatedObject(game.Models["bohater"], pos, "Player_", rotationY);
-            loadAnimationsToCharacter(player, "bohater");
+            player = buildAnimatedObject(game.Models["bohater_3"], pos, "Player_", rotationY);
+            loadAnimationsToCharacter(player, "bohater_3");
             player.setTexture(game.Textures["bohater"]);
             
             children["Player"].AddChild(player);
