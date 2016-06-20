@@ -51,7 +51,7 @@ namespace App.Models
         private void Setup()
         {
             speed = 5.0f;
-            detectionDistance = 500.0f;
+            detectionDistance = 1000.0f;
             nextTarget = position;
             isChasing = false;
             lastAttack = TimeSpan.Zero;
@@ -112,20 +112,26 @@ namespace App.Models
             playerDelta.Normalize();
             bool playerVisible = isVisible(playerDelta, playerDistance);
 
-            if(playerVisible)
+            Vector3 playerToNextTargetDelta = Vector3.Subtract(game.Player.position, nextTarget);
+
+            if(playerToNextTargetDelta.Length() > 300f)
             {
-                nextTarget = game.Player.position;
-                if(Math.Abs(nextTarget.X - position.X) < 120f && Math.Abs(nextTarget.Z - position.Z) < 120f)
-                {
-                    if(lastAttack + attackDelay < gameTime.TotalGameTime)
-                    {
-                        game.Player.ReduceLife(2f);
-                        lastAttack = gameTime.TotalGameTime;
-                    }
-                    nextTarget = position;
-                    OnIdle();
-                }
+                nextTarget = position;
+            }
+
+            if(playerVisible && playerDistance < detectionDistance)
+            {
                 isChasing = true;
+            }
+            if(this.colliders["main"].CollidesWith(game.Scene.Player.colliders["main"]))
+            {
+                if(lastAttack + attackDelay < gameTime.TotalGameTime)
+                {
+                    game.Player.ReduceLife(2f);
+                    lastAttack = gameTime.TotalGameTime;
+                }
+                nextTarget = position;
+                OnIdle();
             }
             else if(isChasing)
             {
@@ -136,7 +142,7 @@ namespace App.Models
                                                               game.Player.position);
                     if(newPath != null && newPath.Count > 0)
                     {
-                        LinkedListNode<Tuple<int, int>> candidateNode = newPath.First;
+                        LinkedListNode<Tuple<int, int>> candidateNode = newPath.Last;
                         do
                         {
                             Vector3 candidatePosition = game.Scene.movement.coordsToPosition(candidateNode.Value);
@@ -146,10 +152,20 @@ namespace App.Models
                             if(isVisible(candidateDelta, candidateDistance))
                             {
                                 nextTarget = candidatePosition;
+                                break;
                             }
-                            else break;
-                            candidateNode = candidateNode.Next;
-                        } while(candidateNode != null);
+                            candidateNode = candidateNode.Previous;
+                            if(candidateNode == null)
+                            {
+                                nextTarget = position;
+                                break;
+                            }
+                        } while(true);
+                    }
+                    else
+                    {
+                        isChasing = false;
+                        OnIdle();
                     }
                 }
             }
@@ -174,22 +190,35 @@ namespace App.Models
                 }
             }
 
+            foreach(IGameObject other in game.Scene.children["Others"].children.Values)
+            {
+                foreach(Collider collider in other.colliders.Values)
+                {
+                    targetDelta = checkSensors(collider, targetDelta);
+                }
+            }
+
             foreach(IGameObject opponent in game.Scene.children["Opponents"].children.Values)
             {
-                if(opponent != this)
+                if(opponent != this && opponent.colliders.ContainsKey("main"))
                     targetDelta = checkSensors(opponent.colliders["main"], targetDelta);
             }
 
             targetDelta = checkSensors(game.Scene.Player.colliders["main"], targetDelta);
-            //float targetLenght = (float)Math.Sqrt(targetDelta.X * targetDelta.X + targetDelta.Z * targetDelta.Z);
+            float targetDistance = targetDelta.Length();
             targetDelta.Normalize();
 
             rotateInDirection(targetDelta);
 
-            if(targetDelta.Length() > 0f)
+            if(targetDelta.Length() > 0f && targetDistance > 10f)
             {
                 moveInDirection(targetDelta);
                 OnMove();
+            }
+            else
+            {
+                OnIdle();
+                nextTarget = position;
             }
         }
 
@@ -208,23 +237,6 @@ namespace App.Models
             {
                 this.rotation = new Vector3(0, rotationY, 0);
             }
-        }
-
-        private bool isVisible(Vector3 direction, float distance)
-        {
-            Ray otherRay = new Ray(position, direction);
-            foreach(IGameObject wall in game.Scene.children["Walls"].children.Values)
-            {
-                foreach(Collider collider in wall.colliders.Values)
-                {
-                    float? rayDistance = otherRay.Intersects(collider.box);
-                    if(rayDistance != null && rayDistance < distance)
-                    {
-                        return false;
-                    }
-                }
-            }
-            return true;
         }
     }
 }

@@ -72,7 +72,7 @@ namespace App
             } else if (color.R == 164 && color.G == 255) {
                 buildExit(pos, (int) color.B);
             } else if (color.R == 100 && color.G == 100) {
-                buildOther(game.Models["lozko"], pos, (int) color.B);
+                buildBed(pos, (int) color.B);
             } else if (color.R == 100 && color.G == 50) {
                 buildLamp(game.Models["lampa"], pos, (int) color.B);
             } else if (color.R == 185 && color.G == 61) {
@@ -156,15 +156,17 @@ namespace App
 
         void buildLamp(Model model, Vector2 pos, int rotationY)
         {
-            Lamp door = new Lamp(
+            Lamp lamp = new Lamp(
                             game,
-                            "Door_" + pos.X + "x" + pos.Y,
+                            "Lamp_" + pos.X + "x" + pos.Y,
                             this.game.Models["lampa"],
                             new Vector3(pos.X * wallShift, 0f, pos.Y * wallShift),
                             new Vector3(0f, (float) (rotationY * Math.PI / 2), 0f)
                         );
 
-            this.children["Others"].AddChild(door);
+            addColider(lamp, 50f, 175f, 50f);
+            this.children["Others"].AddChild(lamp);
+            movement.addObstacle((int)pos.X, (int)pos.Y);
         }
 
         private void buildExit(Vector2 pos, int rotationY)
@@ -195,7 +197,7 @@ namespace App
                                     new Vector3(0f, (float) (rotationY * Math.PI / 2), 0f)
                                 );
 
-            addColider(cupboard);
+            addColider(cupboard, 75f, 75f, 75f);
 
             String childrensList = item != "" ? "Interactive" : "Others";
 
@@ -208,6 +210,32 @@ namespace App
             GameObject other = buildObject(model, pos, "Other_", rotationY);
 
             children["Others"].AddChild(other);
+        }
+
+        private void buildBed(Vector2 pos, int rotationY)
+        {
+            GameObject gameObject = new GameObject(
+                                        game,
+                                        "Bed_" + pos.X + "x" + pos.Y,
+                                        game.Models["lozko"],
+                                        new Vector3(pos.X * wallShift, 0f, pos.Y * wallShift),
+                                        new Vector3(0f, (float)(rotationY * Math.PI / 2), 0f)
+                                    );
+
+            movement.addObstacle((int)pos.X, (int)pos.Y);
+            if(rotationY%2 == 0)
+            {
+                movement.addObstacle((int)pos.X, (int)pos.Y + 1);
+                movement.addObstacle((int)pos.X, (int)pos.Y - 1);
+                addColider(gameObject, 100f, 90f, 200f);
+            }
+            else
+            {
+                movement.addObstacle((int)pos.X + 1, (int)pos.Y);
+                movement.addObstacle((int)pos.X - 1, (int)pos.Y);
+                addColider(gameObject, 200f, 90f, 100f);
+            }
+            children["Others"].AddChild(gameObject);
         }
 
         private void insertPlayerCharacter(Vector2 pos, int rotationY)
@@ -323,16 +351,20 @@ namespace App
 
         private void addColider(GameObject gameObject)
         {
-            const float height = 250;
+            addColider(gameObject, 100f, 250f, 100f);
+        }
 
-            Vector3 shift = new Vector3(0f, height / 2, 0f);
+        private void addColider(GameObject gameObject, float x, float y, float z)
+        {
+
+            Vector3 shift = new Vector3(0f, y / 2, 0f);
 
             gameObject.AddCollider(
                 "main",
                 new Collider(
                     game,
                     Vector3.Add(gameObject.position, shift),
-                    new Vector3(100f, height, 100f),
+                    new Vector3(x, y, z),
                     Vector3.Zero
                 )
             );

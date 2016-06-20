@@ -38,24 +38,34 @@ namespace App
             LinkedList<Tuple<int, int>> path = new LinkedList<Tuple<int, int>>();
             bool aStarize = false;
 
-            if (recentPaths.ContainsKey(targetCoords)) {
-                if (recentPaths[targetCoords] == null)
-                    return null;
-                LinkedListNode<Tuple<int, int>> sourceNode = recentPaths[targetCoords].Find(sourceCoords);
-                if (sourceNode != null) {
-                    path.AddLast(sourceNode.Value);
-                    while (sourceNode.Next != null) {
-                        sourceNode = sourceNode.Next;
+            if(recentPaths.ContainsKey(targetCoords))
+            {
+                if(recentPaths[targetCoords] != null)
+                {
+                    LinkedListNode<Tuple<int, int>> sourceNode = recentPaths[targetCoords].Find(sourceCoords);
+                    if(sourceNode != null)
+                    {
                         path.AddLast(sourceNode.Value);
+                        while(sourceNode.Next != null)
+                        {
+                            sourceNode = sourceNode.Next;
+                            path.AddLast(sourceNode.Value);
+                        }
                     }
-                } else
+                    else
+                        aStarize = true;
+                }
+                else
                     aStarize = true;
-            } else
+            }
+            else
                 aStarize = true;
 
-            if (aStarize) {
-                path = aStar(sourceCoords, targetCoords);
-                if (recentPaths.ContainsKey(targetCoords)) {
+            if(aStarize)
+            {
+                path = aStar(sourceCoords, targetCoords, maxIterations);
+                if(recentPaths.ContainsKey(targetCoords))
+                {
                     recentPaths.Remove(targetCoords);
                 }
                 recentPaths.Add(targetCoords, path);
@@ -67,8 +77,8 @@ namespace App
         public Tuple<int, int> positionToCoords(Vector3 position)
         {
             Tuple<int, int> result = new Tuple<int, int>(
-                                         (int) ((position.X + (wallShift / 2.0)) / wallShift),
-                                         (int) ((position.Z + (wallShift / 2.0)) / wallShift));
+                                         (int)((position.X + (wallShift / 2.0)) / wallShift),
+                                         (int)((position.Z + (wallShift / 2.0)) / wallShift));
             return result;
         }
 
@@ -82,7 +92,7 @@ namespace App
         {
             int x = coords.Item1;
             int y = coords.Item2;
-            if (x < 0 || x > obstacleMap.GetUpperBound(0) || y < 0 || y > obstacleMap.GetUpperBound(1))
+            if(x < 0 || x > obstacleMap.GetUpperBound(0) || y < 0 || y > obstacleMap.GetUpperBound(1))
                 return true;
             else
                 return obstacleMap[x, y];
@@ -90,22 +100,22 @@ namespace App
 
         private Tuple<int, int> step(Tuple<int, int> source, int direction)
         {
-            if (direction == 0)
+            if(direction == 0)
                 return new Tuple<int, int>(source.Item1 - 1, source.Item2);
-            if (direction == 1)
+            if(direction == 1)
                 return new Tuple<int, int>(source.Item1 + 1, source.Item2);
-            if (direction == 2)
+            if(direction == 2)
                 return new Tuple<int, int>(source.Item1, source.Item2 - 1);
-            if (direction == 3)
+            if(direction == 3)
                 return new Tuple<int, int>(source.Item1, source.Item2 + 1);
             return null;
         }
 
-        private LinkedList<Tuple<int, int>> aStar(Tuple<int, int> sourceCoords, Tuple<int, int> targetCoords)
+        private LinkedList<Tuple<int, int>> aStar(Tuple<int, int> sourceCoords, Tuple<int, int> targetCoords, int maxIterations)
         {
-            if (sourceCoords.Equals(targetCoords))
+            if(sourceCoords.Equals(targetCoords))
                 return null;
-            if (isObstacleAt(targetCoords))
+            if(isObstacleAt(targetCoords))
                 return null;
             bool[,] visited = new bool[obstacleMap.GetLength(0), obstacleMap.GetLength(1)];
             SortedDictionary<int, LinkedList<LinkedList<Tuple<int, int>>>> bestFound = new SortedDictionary<int, LinkedList<LinkedList<Tuple<int, int>>>>();
@@ -113,35 +123,40 @@ namespace App
             LinkedList<Tuple<int, int>> currentPath = new LinkedList<Tuple<int, int>>();
             currentPath.AddLast(sourceCoords);
             int currentDistance = distance(sourceCoords, targetCoords);
-            if (!bestFound.ContainsKey(currentDistance)) {
+            if(!bestFound.ContainsKey(currentDistance))
+            {
                 bestFound[currentDistance] = new LinkedList<LinkedList<Tuple<int, int>>>();
             }
             bestFound[currentDistance].AddLast(currentPath);
             int iterations = 0;
-            while (bestFound.Count > 0 && iterations < maxIterations) {
+            while(bestFound.Count > 0 && iterations < maxIterations)
+            {
                 iterations++;
                 currentPath = bestFound.First().Value.First();
                 bestFound.First().Value.RemoveFirst();
-                if (bestFound.First().Value.Count < 1) {
+                if(bestFound.First().Value.Count < 1)
+                {
                     bestFound.Remove(bestFound.First().Key);
                 }
 
                 Tuple<int, int> currentCoords = currentPath.Last.Value;
                 visited[currentCoords.Item1, currentCoords.Item2] = true;
-                if (currentCoords.Equals(targetCoords)) {
+                if(currentCoords.Equals(targetCoords))
+                {
                     return currentPath;
                 }
-                //System.Console.Write(currentCoords.Item1);
-                //System.Console.Write(' ');
-                //System.Console.WriteLine(currentCoords.Item2);
-                for (int i = 0; i < 4; i++) {
+                for(int i = 0; i < 4; i++)
+                {
                     Tuple<int, int> currentStep = step(currentCoords, i);
-                    if (!isObstacleAt(currentStep)) {
-                        if (!visited[currentStep.Item1, currentStep.Item2]) {
+                    if(!isObstacleAt(currentStep))
+                    {
+                        if(!visited[currentStep.Item1, currentStep.Item2])
+                        {
                             LinkedList<Tuple<int, int>> newPath = new LinkedList<Tuple<int, int>>(currentPath);
-                            currentDistance = distance(currentStep, targetCoords);
                             newPath.AddLast(currentStep);
-                            if (!bestFound.ContainsKey(currentDistance)) {
+                            currentDistance = distance(currentStep, targetCoords);
+                            if(!bestFound.ContainsKey(currentDistance))
+                            {
                                 bestFound[currentDistance] = new LinkedList<LinkedList<Tuple<int, int>>>();
                             }
                             bestFound[currentDistance].AddLast(newPath);

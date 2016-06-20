@@ -55,6 +55,12 @@ namespace App
         {
             base.Update(gameTime);
 
+            if(IsDead())
+            {
+                OnDead();
+                return;
+            }
+
             if (!game.PlayMode) {
                 return;
             }
@@ -118,19 +124,19 @@ namespace App
             Vector3 vector = Vector3.Zero;
 
             if (game.InputState.IsKeyPressed(Keys.W, PlayerIndex.One, out playerIndex)) {
-                vector.Z = -10;
+                vector.Z -= 10;
             }
 
             if (game.InputState.IsKeyPressed(Keys.S, PlayerIndex.One, out playerIndex)) {
-                vector.Z = 10;
+                vector.Z += 10;
             }
 
             if (game.InputState.IsKeyPressed(Keys.A, PlayerIndex.One, out playerIndex)) {
-                vector.X = -10;
+                vector.X -= 10;
             }
 
             if (game.InputState.IsKeyPressed(Keys.D, PlayerIndex.One, out playerIndex)) {
-                vector.X = 10;
+                vector.X += 10;
             }
 
             return vector;
@@ -158,13 +164,13 @@ namespace App
             }
         }
 
-        protected void OnIdle()
+        new protected void OnIdle()
         {
             AnimatedObject playerModel = (AnimatedObject) children["playerModel"];
             playerModel.PlayClip("postawa").Looping = true;
         }
 
-        protected void OnDead()
+        new protected void OnDead()
         {
             AnimatedObject playerModel = (AnimatedObject) children["playerModel"];
             playerModel.PlayClip("smierc").Looping = false;
@@ -227,7 +233,8 @@ namespace App
         {
             //List<String> opponentsToRemove = new List<String>();
             foreach (Opponent opponent in game.Scene.children["Opponents"].children.Values) {
-                vector = CheckSensors(opponent.colliders["main"], vector);
+                if(opponent.colliders.ContainsKey("main"))
+                    vector = CheckSensors(opponent.colliders["main"], vector);
 
                 if (IsCollisionWithOpponent(opponent) && opponent.IsMouseOverObject()) {
                     OnMouseLeftButtonPressed(() => AttackOpponent(opponent, gameTime));
@@ -266,7 +273,11 @@ namespace App
 
         private bool IsCollisionWithOpponent(Opponent opponent)
         {
-            return game.Scene.Player.colliders["main"].CollidesWith(opponent.colliders["main"]);
+            if(opponent.colliders.ContainsKey("main") && game.Scene.Player.colliders.ContainsKey("main"))
+            {
+                return game.Scene.Player.colliders["main"].CollidesWith(opponent.colliders["main"]);
+            }
+            else return false;
         }
 
         private void AttackOpponent(Opponent opponent, GameTime gameTime)

@@ -74,6 +74,7 @@ namespace App
         private void moveCamera()
         {
             Vector3 vector = Vector3.Zero;
+            PlayerIndex playerIndex;
 
             if (game.InputState.Mouse.isCloseToTopLeftCorner()) {
                 vector.Z = -20;
@@ -95,6 +96,27 @@ namespace App
             } else if (game.InputState.Mouse.isCloseToBottomBorder()) {
                 vector.Z = 20;
                 vector.X = -20;
+            }
+
+            if(game.InputState.IsKeyPressed(Keys.A, PlayerIndex.One, out playerIndex))
+            {
+                vector.Z -= 20;
+                vector.X -= 20;
+            }
+            if(game.InputState.IsKeyPressed(Keys.D, PlayerIndex.One, out playerIndex))
+            {
+                vector.Z += 20;
+                vector.X += 20;
+            }
+            if(game.InputState.IsKeyPressed(Keys.W, PlayerIndex.One, out playerIndex))
+            {
+                vector.Z -= 20;
+                vector.X += 20;
+            }
+            if(game.InputState.IsKeyPressed(Keys.S, PlayerIndex.One, out playerIndex))
+            {
+                vector.Z += 20;
+                vector.X -= 20;
             }
 
             this.Move(vector.X, 0, vector.Z);

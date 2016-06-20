@@ -23,7 +23,6 @@ namespace App.Collisions
         };
 
         static BasicEffect effect;
-        static VertexDeclaration vertDecl;
 
         public static void Render(
             BoundingBox box,

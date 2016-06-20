@@ -98,23 +98,6 @@ namespace App.Models
             }
         }
 
-        private bool isVisible(Vector3 direction, float distance)
-        {
-            Ray otherRay = new Ray(position, direction);
-            foreach(IGameObject wall in game.Scene.children["Walls"].children.Values)
-            {
-                foreach(Collider collider in wall.colliders.Values)
-                {
-                    float? rayDistance = otherRay.Intersects(collider.box);
-                    if(rayDistance != null && rayDistance < distance)
-                    {
-                        return false;
-                    }
-                }
-            }
-            return true;
-        }
-
         private void onMoveToCommand()
         {
             String[] sceneInteractiveObjectsToLoop = { "Doors", "Interactive", "Opponents" };
@@ -170,7 +153,7 @@ namespace App.Models
                                                           targetedInteractivePosition);
                 if(newPath != null && newPath.Count > 0)
                 {
-                    LinkedListNode<Tuple<int, int>> candidateNode = newPath.First;
+                    LinkedListNode<Tuple<int, int>> candidateNode = newPath.Last;
                     do
                     {
                         Vector3 candidatePosition = game.Scene.movement.coordsToPosition(candidateNode.Value);
@@ -180,10 +163,15 @@ namespace App.Models
                         if(isVisible(candidateDelta, candidateDistance))
                         {
                             nextTarget = candidatePosition;
+                            break;
                         }
-                        else break;
-                        candidateNode = candidateNode.Next;
+                        candidateNode = candidateNode.Previous;
                     } while(candidateNode != null);
+                }
+                else
+                {
+                    nextTarget = position;
+                    OnIdle();
                 }
             }
 
@@ -209,7 +197,7 @@ namespace App.Models
 
             foreach(IGameObject opponent in game.Scene.children["Opponents"].children.Values)
             {
-                if(opponent != this)
+                if(opponent != this && opponent.colliders.ContainsKey("main"))
                     targetDelta = checkSensors(opponent.colliders["main"], targetDelta);
             }
 

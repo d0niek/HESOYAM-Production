@@ -78,6 +78,7 @@ namespace App
         protected void OnDead()
         {
             this.PlayClip("smierc").Looping = false;
+            this.colliders.Clear();
         }
 
         protected void OnMove()
