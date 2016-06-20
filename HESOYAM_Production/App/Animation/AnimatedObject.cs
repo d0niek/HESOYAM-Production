@@ -149,7 +149,7 @@ namespace App.Animation
         /// <param name="gameTime"></param>
         public override void Update(GameTime gameTime)
         {
-            if (player != null) {
+            if (player != null && this.game.PlayMode) {
                 player.Update(gameTime);
             }
         }
