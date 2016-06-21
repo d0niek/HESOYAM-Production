@@ -25,6 +25,7 @@ namespace HESOYAM_Production
         Camera camera;
         Player player;
         Scene scene;
+        Effect effect;
 
         public SpriteBatch spriteBatch;
 
@@ -109,6 +110,7 @@ namespace HESOYAM_Production
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
             inputState = new InputState(GraphicsDevice);
+            effect = Content.Load<Effect>("Shaders/Test");
 
             LoadFonts();
             LoadModels("Models", models);
@@ -147,6 +149,10 @@ namespace HESOYAM_Production
 
                 LoadFont(name);
             }
+        }
+
+        public Effect getEffect(){
+            return effect;
         }
 
         private void LoadFont(String name)

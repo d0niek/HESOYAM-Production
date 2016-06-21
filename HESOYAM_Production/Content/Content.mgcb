@@ -11,6 +11,7 @@
 #-------------------------------- References --------------------------------#
 
 /reference:../../AnimationPipeline/bin/Debug/AnimationPipeline.dll
+/reference:../../InfinitespaceStudios.Pipeline/bin/Debug/InfinitespaceStudios.Pipeline.dll
 
 #---------------------------------- Content ---------------------------------#
 
@@ -2469,4 +2470,13 @@
 /processorParam:SwapWindingOrder=False
 /processorParam:TextureFormat=DxtCompressed
 /build:Animation/lekarz.X
+
+#begin Shaders/Test.fx
+/importer:EffectImporter
+/processor:RemoteEffectProcessor
+/processorParam:RemoteAddress=pipeline.infinitespace-studios.co.uk
+/processorParam:RemotePort=443
+/processorParam:Protocol=https
+/processorParam:DebugMode=Auto
+/build:Shaders/Test.fx
 
