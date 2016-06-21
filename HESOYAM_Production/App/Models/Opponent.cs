@@ -127,7 +127,8 @@ namespace App.Models
             {
                 if(lastAttack + attackDelay < gameTime.TotalGameTime)
                 {
-                    game.Player.ReduceLife(2f);
+                    game.Player.ReduceLife(19f);
+                    //System.Console.WriteLine("-19");
                     lastAttack = gameTime.TotalGameTime;
                 }
                 nextTarget = position;

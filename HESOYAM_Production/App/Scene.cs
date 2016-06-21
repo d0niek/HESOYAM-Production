@@ -64,19 +64,21 @@ namespace App
             if (color.R == 0 && color.G == 0) {
                 buildWall(pos);
             } else if (color.R == 255 && color.G == 0) {
-                buildWindow(pos, (int) color.B);
+                buildWindow(pos, (int)color.B);
             } else if (color.R == 0 && color.G == 255) {
-                buildDoor(pos, (int) color.B, false);
+                buildDoor(pos, (int)color.B, false);
             } else if (color.R == 1 && color.G == 255) {
-                buildDoor(pos, (int) color.B, true);
+                buildDoor(pos, (int)color.B, true);
             } else if (color.R == 164 && color.G == 255) {
-                buildExit(pos, (int) color.B);
+                buildExit(pos, (int)color.B);
             } else if (color.R == 100 && color.G == 100) {
-                buildBed(pos, (int) color.B);
+                buildBed(pos, (int)color.B);
             } else if (color.R == 100 && color.G == 50) {
-                buildLamp(game.Models["lampa"], pos, (int) color.B);
+                buildLamp(game.Models["lampa"], pos, (int)color.B);
             } else if (color.R == 185 && color.G == 61) {
-                buildCupboard(pos, (int) color.B, "key");
+                buildCupboard(pos, (int)color.B, "key");
+            } else if (color.R == 185 && color.G == 62) {
+                buildCupboard(pos, (int)color.B, "first aid kit");
             } else if (color.R == 185 && color.G == 99) {
                 buildCupboard(pos, (int) color.B, "");
             } else if (color.R == 185 && color.G == 163) {

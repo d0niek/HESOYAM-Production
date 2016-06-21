@@ -100,7 +100,7 @@ namespace App.Models
 
         private void onMoveToCommand()
         {
-            String[] sceneInteractiveObjectsToLoop = { "Doors", "Interactive", "Opponents" };
+            String[] sceneInteractiveObjectsToLoop = { "Interactive", "Doors", "Opponents" };
 
             foreach(String interactiveObjectsToLoop in sceneInteractiveObjectsToLoop)
             {

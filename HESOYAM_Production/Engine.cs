@@ -117,8 +117,8 @@ namespace HESOYAM_Production
 
             scene = new Scene(
                 this,
-                "Scene_1",
-                rootDir + "/Content/Map/scene_1"
+                "Scene_2",
+                rootDir + "/Content/Map/scene_2"
             );
             hud = new HUD(this);
 

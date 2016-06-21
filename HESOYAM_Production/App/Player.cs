@@ -48,7 +48,7 @@ namespace App
             AddCollidersToGame();
 
             lastAttack = TimeSpan.Zero;
-            attackDelay = new TimeSpan(0, 0, 1);
+            attackDelay = new TimeSpan(0, 0, 0, 0, 200);
         }
 
         public override void Update(GameTime gameTime)
@@ -176,6 +176,12 @@ namespace App
             playerModel.PlayClip("smierc").Looping = false;
         }
 
+        new protected void OnAttack()
+        {
+            AnimatedObject playerModel = (AnimatedObject) children["playerModel"];
+            playerModel.PlayClip("cios_piesc").Looping = false;
+        }
+
         private void FixSpeedOfMovingDiagonally(Vector3 vector)
         {
             if (vector.X == 0f) {
@@ -283,7 +289,9 @@ namespace App
         private void AttackOpponent(Opponent opponent, GameTime gameTime)
         {
             if (lastAttack + attackDelay < gameTime.TotalGameTime) {
-                opponent.ReduceLife(100f);
+                opponent.ReduceLife(20f);
+                //OnAttack();
+                //System.Console.WriteLine("-20");
                 lastAttack = gameTime.TotalGameTime;
             }
         }
@@ -328,6 +336,15 @@ namespace App
         public bool hasItemInBag(String item)
         {
             return bag.Contains(item);
+        }
+
+        public void checkIfFirstAidKit()
+        {
+            if (hasItemInBag("first aid kit"))
+            {
+                IncreaseLife(40f);
+                bag.Remove("first aid kit");
+            }
         }
     }
 }
