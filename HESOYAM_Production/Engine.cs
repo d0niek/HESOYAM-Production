@@ -110,7 +110,7 @@ namespace HESOYAM_Production
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
             inputState = new InputState(GraphicsDevice);
-            effect = Content.Load<Effect>("Shaders/Test");
+            effect = Content.Load<Effect>("Shaders/TestDiffuse");
 
             LoadFonts();
             LoadModels("Models", models);

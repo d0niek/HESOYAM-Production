@@ -9,8 +9,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InfinitespaceStudios.Pipeline", "InfinitespaceStudios.Pipeline\InfinitespaceStudios.Pipeline.csproj", "{33C83BF8-CB58-4031-B029-2F8B9686EE81}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test", "Test\Test.csproj", "{F88D9599-EF9C-4547-ABDC-CADA55CCDCC9}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x86 = Debug|x86
@@ -29,10 +27,6 @@ Global
 		{DE1263FE-0738-4562-810A-4360C696A171}.Debug|x86.Build.0 = Debug|x86
 		{DE1263FE-0738-4562-810A-4360C696A171}.Release|x86.ActiveCfg = Release|x86
 		{DE1263FE-0738-4562-810A-4360C696A171}.Release|x86.Build.0 = Release|x86
-		{F88D9599-EF9C-4547-ABDC-CADA55CCDCC9}.Debug|x86.ActiveCfg = Debug|x86
-		{F88D9599-EF9C-4547-ABDC-CADA55CCDCC9}.Debug|x86.Build.0 = Debug|x86
-		{F88D9599-EF9C-4547-ABDC-CADA55CCDCC9}.Release|x86.ActiveCfg = Release|x86
-		{F88D9599-EF9C-4547-ABDC-CADA55CCDCC9}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 	EndGlobalSection

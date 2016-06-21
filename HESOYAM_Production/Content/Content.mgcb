@@ -2480,3 +2480,12 @@
 /processorParam:DebugMode=Auto
 /build:Shaders/Test.fx
 
+#begin Shaders/TestDiffuse.fx
+/importer:EffectImporter
+/processor:RemoteEffectProcessor
+/processorParam:RemoteAddress=pipeline.infinitespace-studios.co.uk
+/processorParam:RemotePort=443
+/processorParam:Protocol=https
+/processorParam:DebugMode=Auto
+/build:Shaders/TestDiffuse.fx
+
