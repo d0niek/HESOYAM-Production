@@ -17,6 +17,8 @@ namespace App.Models
         private bool isChasing;
         private TimeSpan lastAttack;
         private TimeSpan attackDelay;
+        private TimeSpan lastShoot;
+        private TimeSpan shootDelay;
 
         public Opponent(
             Engine game,
@@ -56,6 +58,8 @@ namespace App.Models
             isChasing = false;
             lastAttack = TimeSpan.Zero;
             attackDelay = new TimeSpan(0, 0, 0, 0, 867);
+            lastShoot = TimeSpan.Zero;
+            shootDelay = new TimeSpan(0, 0, 1);
         }
 
         private Vector3 checkSensors(Collider collider, Vector3 vector)
@@ -136,6 +140,7 @@ namespace App.Models
 
             if(playerVisible && playerDistance < detectionDistance)
             {
+                shoot(playerDelta, gameTime.TotalGameTime);
                 isChasing = true;
             }
             if(this.colliders["main"].CollidesWith(game.Scene.Player.colliders["main"]))
@@ -146,6 +151,7 @@ namespace App.Models
                     OnAttack();
                     //game.Player.ReduceLife(12f);
                     lastAttack = gameTime.TotalGameTime;
+                    shoot(playerDelta, gameTime.TotalGameTime);
                 }
                 nextTarget = position;
                 if(!IsAttacking) OnIdle();
@@ -243,7 +249,6 @@ namespace App.Models
         {
             direction = Vector3.Multiply(direction, speed);
             Move(direction.X, direction.Y, direction.Z);
-
         }
 
         void rotateInDirection(Vector3 direction)
@@ -253,6 +258,15 @@ namespace App.Models
             if(Math.Abs(this.rotation.Y - rotationY) > 0.01f)
             {
                 this.rotation = new Vector3(0, rotationY, 0);
+            }
+        }
+
+        private void shoot(Vector3 direction, TimeSpan time)
+        {
+            if(lastShoot + shootDelay < time)
+            {
+                lastShoot = time;
+                new Projectile(game, new Vector3(position.X, position.Y + 120f, position.Z), direction, 15f); 
             }
         }
     }

@@ -212,6 +212,7 @@ namespace App
             GameObject other = buildObject(model, pos, "Other_", rotationY);
 
             children["Others"].AddChild(other);
+            movement.addObstacle((int)pos.X, (int)pos.Y);
         }
 
         private void buildBed(Vector2 pos, int rotationY)

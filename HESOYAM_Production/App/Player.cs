@@ -29,8 +29,15 @@ namespace App
             this.cameraAngle = cameraAngle;
             isAttacking = false;
             bag = new List<string>();
+
             Vector3 newPosition = position;
-            Vector3 newSize = new Vector3(5.0f, 10.0f, 40.0f);
+            Vector3 newSize = new Vector3(35f, 180f, 35f);
+            newPosition.Y += 100f;
+
+            AddCollider("hitbox", new Collider(game, newPosition, newSize, Vector3.Zero));
+
+            newPosition = position;
+            newSize = new Vector3(5.0f, 10.0f, 40.0f);
 
             newPosition.X += 45;
             AddCollider("front", new Collider(game, newPosition, newSize, Vector3.Zero));
@@ -212,7 +219,7 @@ namespace App
 
         private Vector3 CheckCollisionsWithSceneObjects(Vector3 vector)
         {
-            String[] objectsListInTheScene = { "Walls", "Interactive", "Windows", "Others" };
+            String[] objectsListInTheScene = { "Walls", "Interactive", "Windows", "Others", "Teammates" };
 
             foreach (String objectsList in objectsListInTheScene) {
                 vector = CheckCollisionsWithObjects(objectsList, vector);
