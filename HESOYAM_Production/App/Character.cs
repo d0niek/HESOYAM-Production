@@ -91,6 +91,11 @@ namespace App
             this.PlayClip("postawa").Looping = true;
         }
 
+        protected void OnAttack()
+        {
+            this.PlayClip("cios_piesc").Looping = false;
+        }
+
         #endregion
     }
 }

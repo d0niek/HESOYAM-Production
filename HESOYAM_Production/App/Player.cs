@@ -64,7 +64,7 @@ namespace App
             if (!game.PlayMode) {
                 return;
             }
-
+           
             float angle = GetAngleFromMouse();
             Rotate(0, angle, 0);
 
@@ -243,7 +243,7 @@ namespace App
                     vector = CheckSensors(opponent.colliders["main"], vector);
 
                 if (IsCollisionWithOpponent(opponent) && opponent.IsMouseOverObject()) {
-                    OnMouseLeftButtonPressed(() => AttackOpponent(opponent, gameTime));
+                    OnMouseLeftButtonClick(() => AttackOpponent(opponent, gameTime));
                 }
             }
 
@@ -290,7 +290,7 @@ namespace App
         {
             if (lastAttack + attackDelay < gameTime.TotalGameTime) {
                 opponent.ReduceLife(20f);
-                //OnAttack();
+                OnAttack();
                 //System.Console.WriteLine("-20");
                 lastAttack = gameTime.TotalGameTime;
             }
