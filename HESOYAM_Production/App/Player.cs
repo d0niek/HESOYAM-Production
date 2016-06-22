@@ -50,7 +50,7 @@ namespace App
             AddCollidersToGame();
 
             lastAttack = TimeSpan.Zero;
-            attackDelay = new TimeSpan(0, 0, 0, 0, 200);
+            attackDelay = new TimeSpan(0, 0, 0, 0, 870);
         }
 
         public override void Update(GameTime gameTime)
@@ -255,7 +255,7 @@ namespace App
                     vector = CheckSensors(opponent.colliders["main"], vector);
 
                 if (IsCollisionWithOpponent(opponent) && opponent.IsMouseOverObject()) {
-                    OnMouseLeftButtonPressed(() => AttackOpponent(opponent, gameTime));
+                    OnMouseLeftButtonClick(() => AttackOpponent(opponent, gameTime));
  
                 }
             }
@@ -302,8 +302,8 @@ namespace App
         private void AttackOpponent(Opponent opponent, GameTime gameTime)
         {
             if (lastAttack + attackDelay < gameTime.TotalGameTime) {
-                opponent.ReduceLife(25f);
                 OnAttack();
+                opponent.ReduceLife(25f);
                 lastAttack = gameTime.TotalGameTime;
             }
         }
@@ -353,8 +353,8 @@ namespace App
         public void checkIfFirstAidKit()
         {
             if (hasItemInBag("first aid kit"))
-            {
-                IncreaseLife(40f);
+            {   
+                IncreaseLife(50f);
                 bag.Remove("first aid kit");
             }
         }

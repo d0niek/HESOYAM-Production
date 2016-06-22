@@ -55,7 +55,7 @@ namespace App.Models
             nextTarget = position;
             isChasing = false;
             lastAttack = TimeSpan.Zero;
-            attackDelay = new TimeSpan(0, 0, 0, 1, 0);
+            attackDelay = new TimeSpan(0, 0, 0, 1, 300);
         }
 
         private Vector3 checkSensors(Collider collider, Vector3 vector)
@@ -95,10 +95,13 @@ namespace App.Models
             {
                 return;
             }
-            if(IsAttacking)
+
+            Vector3 playerDelta = Vector3.Subtract(game.Player.position, position);
+            if (IsAttacking)
             {
+                this.rotateInDirection(playerDelta);
                 OnAttack();
-                if ((gameTime.TotalGameTime - lastAttack) >= attackDelay) IsAttacking = false;
+                if ((gameTime.TotalGameTime - lastAttack) > attackDelay || game.Player.IsDead()) IsAttacking = false;
                 return;
             }
 
@@ -113,7 +116,7 @@ namespace App.Models
                 collider.drawColor = Color.GreenYellow;
             }
 
-            Vector3 playerDelta = Vector3.Subtract(game.Player.position, position);
+            //Vector3 playerDelta = Vector3.Subtract(game.Player.position, position);
             float playerDistance = playerDelta.Length();
             playerDelta.Normalize();
             bool playerVisible = isVisible(playerDelta, playerDistance);
@@ -131,11 +134,11 @@ namespace App.Models
             }
             if(this.colliders["main"].CollidesWith(game.Scene.Player.colliders["main"]))
             {
-                if(lastAttack + attackDelay < gameTime.TotalGameTime)
+                if(lastAttack + attackDelay < gameTime.TotalGameTime && !game.Player.IsDead())
                 {
-                    game.Player.ReduceLife(15f);
                     if (!IsAttacking) IsAttacking = true;
                     OnAttack();
+                    game.Player.ReduceLife(12f);
                     lastAttack = gameTime.TotalGameTime;
                 }
                 nextTarget = position;
@@ -218,7 +221,7 @@ namespace App.Models
 
             rotateInDirection(targetDelta);
 
-            if(targetDelta.Length() > 0f && targetDistance > 3f)
+            if(targetDelta.Length() > 0f && targetDistance > 10f)
             {
                 moveInDirection(targetDelta);
                 OnMove();
