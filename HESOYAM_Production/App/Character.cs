@@ -11,6 +11,7 @@ namespace App
     {
         float life;
         float maxLife;
+        bool isAttacking;
 
         public float Life {
             get { return life; }
@@ -20,6 +21,11 @@ namespace App
         public float MaxLife {
             get { return maxLife; }
             private set { }
+        }
+
+        public bool IsAttacking {
+            get { return isAttacking; }
+            set { isAttacking = value; }
         }
 
         public Character(
@@ -33,6 +39,7 @@ namespace App
         {
             maxLife = 100f;
             life = maxLife;
+            isAttacking = false;
         }
 
         public Character(
@@ -93,6 +100,7 @@ namespace App
 
         protected void OnAttack()
         {
+
             this.PlayClip("cios_piesc").Looping = false;
         }
 

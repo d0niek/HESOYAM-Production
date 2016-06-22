@@ -13,6 +13,7 @@ namespace App
     public class Player : Character
     {
         float cameraAngle;
+        bool isAttacking;
         List<string> bag;
         private TimeSpan lastAttack;
         private TimeSpan attackDelay;
@@ -26,6 +27,7 @@ namespace App
         ) : base(game, name, position, rotation)
         {
             this.cameraAngle = cameraAngle;
+            isAttacking = false;
             bag = new List<string>();
             Vector3 newPosition = position;
             Vector3 newSize = new Vector3(5.0f, 10.0f, 40.0f);
@@ -54,13 +56,19 @@ namespace App
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
+            
 
-            if(IsDead())
+            if (IsDead())
             {
                 OnDead();
                 return;
             }
-
+            if (isAttacking)
+            {
+                OnAttack();
+                return;
+            }
+            
             if (!game.PlayMode) {
                 return;
             }
@@ -178,8 +186,12 @@ namespace App
 
         new protected void OnAttack()
         {
+            if(!isAttacking) isAttacking = true;
             AnimatedObject playerModel = (AnimatedObject) children["playerModel"];
-            playerModel.PlayClip("cios_piesc").Looping = false;
+            AnimationPlayer player = playerModel.PlayClip("cios_piesc");
+            player.Looping = false;
+            System.Console.WriteLine("czas animacji " + player.Duration);
+            if (player.Position >= player.Duration) isAttacking = false;
         }
 
         private void FixSpeedOfMovingDiagonally(Vector3 vector)
@@ -243,7 +255,8 @@ namespace App
                     vector = CheckSensors(opponent.colliders["main"], vector);
 
                 if (IsCollisionWithOpponent(opponent) && opponent.IsMouseOverObject()) {
-                    OnMouseLeftButtonClick(() => AttackOpponent(opponent, gameTime));
+                    OnMouseLeftButtonPressed(() => AttackOpponent(opponent, gameTime));
+ 
                 }
             }
 
@@ -289,9 +302,8 @@ namespace App
         private void AttackOpponent(Opponent opponent, GameTime gameTime)
         {
             if (lastAttack + attackDelay < gameTime.TotalGameTime) {
-                opponent.ReduceLife(20f);
+                opponent.ReduceLife(25f);
                 OnAttack();
-                //System.Console.WriteLine("-20");
                 lastAttack = gameTime.TotalGameTime;
             }
         }

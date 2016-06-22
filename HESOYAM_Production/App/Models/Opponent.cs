@@ -55,7 +55,7 @@ namespace App.Models
             nextTarget = position;
             isChasing = false;
             lastAttack = TimeSpan.Zero;
-            attackDelay = new TimeSpan(0, 0, 1);
+            attackDelay = new TimeSpan(0, 0, 0, 1, 0);
         }
 
         private Vector3 checkSensors(Collider collider, Vector3 vector)
@@ -95,6 +95,12 @@ namespace App.Models
             {
                 return;
             }
+            if(IsAttacking)
+            {
+                OnAttack();
+                if ((gameTime.TotalGameTime - lastAttack) >= attackDelay) IsAttacking = false;
+                return;
+            }
 
             if(this.IsDead())
             {
@@ -127,8 +133,9 @@ namespace App.Models
             {
                 if(lastAttack + attackDelay < gameTime.TotalGameTime)
                 {
-                    game.Player.ReduceLife(19f);
-                    //System.Console.WriteLine("-19");
+                    game.Player.ReduceLife(15f);
+                    if (!IsAttacking) IsAttacking = true;
+                    OnAttack();
                     lastAttack = gameTime.TotalGameTime;
                 }
                 nextTarget = position;
@@ -211,7 +218,7 @@ namespace App.Models
 
             rotateInDirection(targetDelta);
 
-            if(targetDelta.Length() > 0f && targetDistance > 10f)
+            if(targetDelta.Length() > 0f && targetDistance > 3f)
             {
                 moveInDirection(targetDelta);
                 OnMove();
