@@ -101,7 +101,7 @@ namespace App
         protected void OnAttack()
         {
 
-            this.PlayClip("cios_piesc").Looping = false;
+            this.PlayClip("cios_piesc").Looping = true;
         }
 
         #endregion

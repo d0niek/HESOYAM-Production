@@ -255,7 +255,7 @@ namespace App
                     vector = CheckSensors(opponent.colliders["main"], vector);
 
                 if (IsCollisionWithOpponent(opponent) && opponent.IsMouseOverObject()) {
-                    OnMouseLeftButtonClick(() => AttackOpponent(opponent, gameTime));
+                    OnMouseLeftButtonPressed(() => AttackOpponent(opponent, gameTime));
  
                 }
             }
