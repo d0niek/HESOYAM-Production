@@ -23,7 +23,6 @@ namespace App.Collisions
             6, 7,
             7, 4,
         };
-        BasicEffect effect;
 
         public IGameObject parent { get; set; }
 

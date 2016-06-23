@@ -58,7 +58,8 @@ namespace App
                     this.moveCamera();
                 }
             } else {
-                this.CameraLookAt = this.LookAtParent != null ? this.LookAtParent.position : Vector3.Zero;
+                //TODO obrót wokół głowy porządniej?
+                this.CameraLookAt = this.LookAtParent != null ? new Vector3(this.LookAtParent.position.X, this.LookAtParent.position.Y + 160f, this.LookAtParent.position.Z) : Vector3.Zero;
                 this.playModePosition = this.position;
             }
 
@@ -74,6 +75,7 @@ namespace App
         private void moveCamera()
         {
             Vector3 vector = Vector3.Zero;
+            PlayerIndex playerIndex;
 
             if (game.InputState.Mouse.isCloseToTopLeftCorner()) {
                 vector.Z = -20;
@@ -97,6 +99,27 @@ namespace App
                 vector.X = -20;
             }
 
+            if(game.InputState.IsKeyPressed(Keys.A, PlayerIndex.One, out playerIndex))
+            {
+                vector.Z -= 20;
+                vector.X -= 20;
+            }
+            if(game.InputState.IsKeyPressed(Keys.D, PlayerIndex.One, out playerIndex))
+            {
+                vector.Z += 20;
+                vector.X += 20;
+            }
+            if(game.InputState.IsKeyPressed(Keys.W, PlayerIndex.One, out playerIndex))
+            {
+                vector.Z -= 20;
+                vector.X += 20;
+            }
+            if(game.InputState.IsKeyPressed(Keys.S, PlayerIndex.One, out playerIndex))
+            {
+                vector.Z += 20;
+                vector.X -= 20;
+            }
+
             this.Move(vector.X, 0, vector.Z);
         }
 
@@ -104,10 +127,10 @@ namespace App
         {
             MouseState mouseState = new MouseState();
 
-            if (game.InputState.IsNewMouseScrollUp(out mouseState)) {
-                this.Move(10, -10, -10);
-            } else if (game.InputState.IsNewMouseScrollDown(out mouseState)) {
-                this.Move(-10, 10, 10);
+            if (game.InputState.IsNewMouseScrollUp(out mouseState) && this.position.Y > 190f) {
+                this.Move(20, -20, -20);
+            } else if (game.InputState.IsNewMouseScrollDown(out mouseState) && this.position.Y < 1300f) {
+                this.Move(-20, 20, 20);
             }
         }
 

@@ -11,6 +11,7 @@ namespace App
     {
         float life;
         float maxLife;
+        bool isAttacking;
 
         public float Life {
             get { return life; }
@@ -20,6 +21,11 @@ namespace App
         public float MaxLife {
             get { return maxLife; }
             private set { }
+        }
+
+        public bool IsAttacking {
+            get { return isAttacking; }
+            set { isAttacking = value; }
         }
 
         public Character(
@@ -33,6 +39,7 @@ namespace App
         {
             maxLife = 100f;
             life = maxLife;
+            isAttacking = false;
         }
 
         public Character(
@@ -78,6 +85,7 @@ namespace App
         protected void OnDead()
         {
             this.PlayClip("smierc").Looping = false;
+            this.colliders.Clear();
         }
 
         protected void OnMove()
@@ -88,6 +96,11 @@ namespace App
         protected void OnIdle()
         {
             this.PlayClip("postawa").Looping = true;
+        }
+
+        protected void OnAttack()
+        {
+            this.PlayClip("cios_piesc").Looping = true;
         }
 
         #endregion

@@ -49,6 +49,7 @@ namespace App.Models
         private void PickupItem()
         {
             game.Player.addItemToBag(item);
+            game.Player.checkIfFirstAidKit();
             MoveCupboardFromInteractiveObjectToOther();
             item = "";
         }
