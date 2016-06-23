@@ -88,13 +88,13 @@ namespace App
             } else if (color.R == 250 && color.G == 250) {
                 insertPlayerCharacter(pos, (int) color.B);
             } else if (color.R == 250 && color.G == 200) {
-                insertTeammateCharacter(game.Models["stary"], pos, (int) color.B, "stary");//chudzielec
+                insertTeammateCharacter(game.Models["chudzielec"], pos, (int) color.B, "chudzielec");//chudzielec
             } else if (color.R == 200 && color.G == 250) {
-                insertTeammateCharacter(game.Models["stary"], pos, (int) color.B, "stary");//grubas
+                insertTeammateCharacter(game.Models["grubas"], pos, (int) color.B, "grubas");//grubas
             } else if (color.R == 200 && color.G == 200) {
                 insertTeammateCharacter(game.Models["stary"], pos, (int) color.B, "stary");//stary
             } else if (color.R == 75 && color.G == 25) {
-                insertOpponentCharacter(game.Models["lekarz"], pos, (int) color.B, "lekarz");//zolnierz
+                insertOpponentCharacter(game.Models["zolnierz"], pos, (int) color.B, "zolnierz");//zolnierz
             } else if (color.R == 25 && color.G == 57) {
                 insertOpponentCharacter(game.Models["lekarz"], pos, (int) color.B, "lekarz");
             }
