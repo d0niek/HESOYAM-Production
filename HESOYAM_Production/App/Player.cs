@@ -13,6 +13,7 @@ namespace App
     public class Player : Character
     {
         float cameraAngle;
+        bool isAttacking;
         List<string> bag;
         private TimeSpan lastAttack;
         private TimeSpan attackDelay;
@@ -26,9 +27,17 @@ namespace App
         ) : base(game, name, position, rotation)
         {
             this.cameraAngle = cameraAngle;
+            isAttacking = false;
             bag = new List<string>();
+
             Vector3 newPosition = position;
-            Vector3 newSize = new Vector3(5.0f, 10.0f, 40.0f);
+            Vector3 newSize = new Vector3(35f, 180f, 35f);
+            newPosition.Y += 100f;
+
+            AddCollider("hitbox", new Collider(game, newPosition, newSize, Vector3.Zero));
+
+            newPosition = position;
+            newSize = new Vector3(5.0f, 10.0f, 40.0f);
 
             newPosition.X += 45;
             AddCollider("front", new Collider(game, newPosition, newSize, Vector3.Zero));
@@ -48,17 +57,29 @@ namespace App
             AddCollidersToGame();
 
             lastAttack = TimeSpan.Zero;
-            attackDelay = new TimeSpan(0, 0, 1);
+            attackDelay = new TimeSpan(0, 0, 0, 0, 870);
         }
 
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
+            
 
+            if (IsDead())
+            {
+                OnDead();
+                return;
+            }
+            if (isAttacking)
+            {
+                OnAttack();
+                return;
+            }
+            
             if (!game.PlayMode) {
                 return;
             }
-
+           
             float angle = GetAngleFromMouse();
             Rotate(0, angle, 0);
 
@@ -118,19 +139,19 @@ namespace App
             Vector3 vector = Vector3.Zero;
 
             if (game.InputState.IsKeyPressed(Keys.W, PlayerIndex.One, out playerIndex)) {
-                vector.Z = -10;
+                vector.Z -= 10;
             }
 
             if (game.InputState.IsKeyPressed(Keys.S, PlayerIndex.One, out playerIndex)) {
-                vector.Z = 10;
+                vector.Z += 10;
             }
 
             if (game.InputState.IsKeyPressed(Keys.A, PlayerIndex.One, out playerIndex)) {
-                vector.X = -10;
+                vector.X -= 10;
             }
 
             if (game.InputState.IsKeyPressed(Keys.D, PlayerIndex.One, out playerIndex)) {
-                vector.X = 10;
+                vector.X += 10;
             }
 
             return vector;
@@ -158,16 +179,26 @@ namespace App
             }
         }
 
-        protected void OnIdle()
+        new protected void OnIdle()
         {
             AnimatedObject playerModel = (AnimatedObject) children["playerModel"];
             playerModel.PlayClip("postawa").Looping = true;
         }
 
-        protected void OnDead()
+        new protected void OnDead()
         {
             AnimatedObject playerModel = (AnimatedObject) children["playerModel"];
             playerModel.PlayClip("smierc").Looping = false;
+        }
+
+        new protected void OnAttack()
+        {
+            if(!isAttacking) isAttacking = true;
+            AnimatedObject playerModel = (AnimatedObject) children["playerModel"];
+            AnimationPlayer player = playerModel.PlayClip("cios_piesc");
+            player.Looping = false;
+            System.Console.WriteLine("czas animacji " + player.Duration);
+            if (player.Position >= player.Duration) isAttacking = false;
         }
 
         private void FixSpeedOfMovingDiagonally(Vector3 vector)
@@ -188,7 +219,7 @@ namespace App
 
         private Vector3 CheckCollisionsWithSceneObjects(Vector3 vector)
         {
-            String[] objectsListInTheScene = { "Walls", "Interactive", "Windows", "Others" };
+            String[] objectsListInTheScene = { "Walls", "Interactive", "Windows", "Others", "Teammates" };
 
             foreach (String objectsList in objectsListInTheScene) {
                 vector = CheckCollisionsWithObjects(objectsList, vector);
@@ -227,10 +258,12 @@ namespace App
         {
             //List<String> opponentsToRemove = new List<String>();
             foreach (Opponent opponent in game.Scene.children["Opponents"].children.Values) {
-                vector = CheckSensors(opponent.colliders["main"], vector);
+                if(opponent.colliders.ContainsKey("main"))
+                    vector = CheckSensors(opponent.colliders["main"], vector);
 
                 if (IsCollisionWithOpponent(opponent) && opponent.IsMouseOverObject()) {
                     OnMouseLeftButtonPressed(() => AttackOpponent(opponent, gameTime));
+ 
                 }
             }
 
@@ -266,13 +299,18 @@ namespace App
 
         private bool IsCollisionWithOpponent(Opponent opponent)
         {
-            return game.Scene.Player.colliders["main"].CollidesWith(opponent.colliders["main"]);
+            if(opponent.colliders.ContainsKey("main") && game.Scene.Player.colliders.ContainsKey("main"))
+            {
+                return game.Scene.Player.colliders["main"].CollidesWith(opponent.colliders["main"]);
+            }
+            else return false;
         }
 
         private void AttackOpponent(Opponent opponent, GameTime gameTime)
         {
             if (lastAttack + attackDelay < gameTime.TotalGameTime) {
-                opponent.ReduceLife(100f);
+                OnAttack();
+                opponent.ReduceLife(25f);
                 lastAttack = gameTime.TotalGameTime;
             }
         }
@@ -317,6 +355,15 @@ namespace App
         public bool hasItemInBag(String item)
         {
             return bag.Contains(item);
+        }
+
+        public void checkIfFirstAidKit()
+        {
+            if (hasItemInBag("first aid kit"))
+            {   
+                IncreaseLife(50f);
+                bag.Remove("first aid kit");
+            }
         }
     }
 }

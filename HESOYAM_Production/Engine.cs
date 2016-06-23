@@ -119,8 +119,8 @@ namespace HESOYAM_Production
 
             scene = new Scene(
                 this,
-                "Scene_1",
-                rootDir + "/Content/Map/scene_1"
+                "Scene_2",
+                rootDir + "/Content/Map/scene_2"
             );
             hud = new HUD(this);
 
@@ -161,7 +161,8 @@ namespace HESOYAM_Production
                 SpriteFont font = Content.Load<SpriteFont>("Fonts/" + name);
 
                 fonts.Add(name, font);
-            } catch (ContentLoadException e) {
+            }
+            catch(ContentLoadException) {
                 Console.WriteLine("Font '" + name + "' does not exists in Content.mgcb");
             }
         }
@@ -187,7 +188,7 @@ namespace HESOYAM_Production
                 Model model = Content.Load<Model>(dirName + "/" + name);
 
                 return model;
-            } catch (ContentLoadException e) {
+            } catch (ContentLoadException) {
                 Console.WriteLine("Model '" + name + "' does not exists in Content.mgcb");
 
                 return null;
@@ -212,7 +213,7 @@ namespace HESOYAM_Production
                 Texture2D texture = Content.Load<Texture2D>("Textures/" + name);
 
                 textures.Add(name, texture);
-            } catch (ContentLoadException e) {
+            } catch (ContentLoadException) {
                 Console.WriteLine("Texture '" + name + "' does not exists in Content.mgcb");
             }
         }

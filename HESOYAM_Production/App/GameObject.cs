@@ -370,5 +370,33 @@ namespace App
         {
             game.InputState.Mouse.OnMouseLeftButtonPressed(action);
         }
+
+        protected bool isVisible(Vector3 direction, float distance)
+        {
+            Ray otherRay = new Ray(position, direction);
+            foreach(IGameObject wall in game.Scene.children["Walls"].children.Values)
+            {
+                foreach(Collider collider in wall.colliders.Values)
+                {
+                    float? rayDistance = otherRay.Intersects(collider.box);
+                    if(rayDistance != null && rayDistance < distance)
+                    {
+                        return false;
+                    }
+                }
+            }
+            foreach(IGameObject other in game.Scene.children["Others"].children.Values)
+            {
+                foreach(Collider collider in other.colliders.Values)
+                {
+                    float? rayDistance = otherRay.Intersects(collider.box);
+                    if(rayDistance != null && rayDistance < distance)
+                    {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
     }
 }
