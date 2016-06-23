@@ -292,8 +292,7 @@ namespace App
                                    * Matrix.CreateRotationZ(this.rotation.Z)
                                    * Matrix.CreateScale(this.scale)
                                    * Matrix.CreateTranslation(this.position);
-
-
+                                   
                     part.Effect = effect;
                     effect.Parameters["World"].SetValue(world);
                     effect.Parameters["View"].SetValue(this.game.Camera.ViewMatrix);
@@ -303,14 +302,14 @@ namespace App
                     effect.Parameters["DiffuseLightDirection"].SetValue(new Vector3(-0.7f, 0.7f, 1));
                     effect.Parameters["AmbientIntensity"].SetValue(1f);
                     effect.Parameters["DiffuseIntensity"].SetValue(0.3f);
-//                    effect.Parameters["Shininess"].SetValue(200f);
-//                    effect.Parameters["SpecularColor"].SetValue(new Vector4(1, 1, 1, 1));
-//                    effect.Parameters["SpecularIntensity"].SetValue(1f);
-//                    effect.Parameters["ViewVector"].SetValue(new Vector3(1, 0, 0));
+                    effect.Parameters["Shininess"].SetValue(200f);
+                    effect.Parameters["SpecularColor"].SetValue(new Vector4(0.5f, 0.5f, 0.5f, 1));
+                    effect.Parameters["SpecularIntensity"].SetValue(1f);
+                    effect.Parameters["ViewVector"].SetValue(new Vector3(1, 0, 0));
 
                     Matrix worldInverseTransposeMatrix = Matrix.Transpose(Matrix.Invert(world));
                     effect.Parameters["Wit"].SetValue(worldInverseTransposeMatrix);
-                    //effect.Parameters["ModelTexture"].SetValue(texture);
+                    effect.Parameters["ModelTexture"].SetValue(texture);
                 }
 //                foreach (BasicEffect effect in mesh.Effects) {
 //                    effect.LightingEnabled = true; // turn on the lighting subsystem.
