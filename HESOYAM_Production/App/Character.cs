@@ -100,7 +100,6 @@ namespace App
 
         protected void OnAttack()
         {
-
             this.PlayClip("cios_piesc").Looping = true;
         }
 

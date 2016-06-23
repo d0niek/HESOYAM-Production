@@ -59,7 +59,7 @@ namespace App.Models
             lastAttack = TimeSpan.Zero;
             attackDelay = new TimeSpan(0, 0, 0, 0, 867);
             lastShoot = TimeSpan.Zero;
-            shootDelay = new TimeSpan(0, 0, 1);
+            shootDelay = new TimeSpan(0, 0, 3);
         }
 
         private Vector3 checkSensors(Collider collider, Vector3 vector)
@@ -140,9 +140,9 @@ namespace App.Models
 
             if(playerVisible && playerDistance < detectionDistance)
             {
-                shoot(playerDelta, gameTime.TotalGameTime);
                 isChasing = true;
             }
+
             if(this.colliders["main"].CollidesWith(game.Scene.Player.colliders["main"]))
             {
                 if(lastAttack + attackDelay < gameTime.TotalGameTime && !game.Player.IsDead())
@@ -151,13 +151,13 @@ namespace App.Models
                     OnAttack();
                     //game.Player.ReduceLife(12f);
                     lastAttack = gameTime.TotalGameTime;
-                    shoot(playerDelta, gameTime.TotalGameTime);
                 }
                 nextTarget = position;
                 if(!IsAttacking) OnIdle();
             }
             else if(isChasing)
             {
+                shoot(playerDelta, gameTime.TotalGameTime);
                 if(Math.Abs(nextTarget.X - position.X) < 20f && Math.Abs(nextTarget.Z - position.Z) < 20f)
                 {
                     LinkedList<Tuple<int, int>> newPath = game.Scene.movement.getPathToTarget(
