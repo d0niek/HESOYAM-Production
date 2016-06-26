@@ -9,7 +9,7 @@ namespace App.Models
     class Door : Wall
     {
         bool isLock;
-        bool isOpen;
+        protected bool isOpen;
 
         public bool IsOpen {
             get { return isOpen; }
@@ -60,7 +60,7 @@ namespace App.Models
         {
             String message = "Need key to open the door";
             if (game.Player.hasItemInBag("key")) {
-                OpenOrCloseDoor();
+                this.OpenOrCloseDoor();
                 message = "The door is unlocked";
                 isLock = false;
             }
@@ -68,7 +68,7 @@ namespace App.Models
             game.Hud.Message = message;
         }
 
-        private void OpenOrCloseDoor()
+        protected virtual void OpenOrCloseDoor()
         {
             isOpen = !isOpen;
             String modelDoor = isOpen ? "drzwi_otwarte" : "drzwi";

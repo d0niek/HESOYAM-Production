@@ -65,13 +65,11 @@ namespace App
             base.Update(gameTime);
             
 
-            if (IsDead())
-            {
+            if (IsDead()) {
                 OnDead();
                 return;
             }
-            if (isAttacking)
-            {
+            if (isAttacking) {
                 OnAttack();
                 return;
             }
@@ -161,7 +159,7 @@ namespace App
         {
             AnimatedObject playerModel = (AnimatedObject) children["playerModel"];
             float rotationY = (float) Math.Atan2(moveVector.X, moveVector.Z);
-            rotationY = (float) ((GetAngleFromMouse() - rotationY) % (Math.PI * 2)+(Math.PI/4));
+            rotationY = (float) ((GetAngleFromMouse() - rotationY) % (Math.PI * 2) + (Math.PI / 4));
 
             if (rotationY < 0) {
                 rotationY += (float) (Math.PI * 2);
@@ -170,9 +168,9 @@ namespace App
 
             if (rotationY >= (1.75 * Math.PI) || rotationY < Math.PI / 4) {
                 playerModel.PlayClip("bieg_przod").Looping = true;
-            } else if (rotationY <= (1.75 * Math.PI) && rotationY >= (1.25*Math.PI)) {
+            } else if (rotationY <= (1.75 * Math.PI) && rotationY >= (1.25 * Math.PI)) {
                 playerModel.PlayClip("bieg_lewo").Looping = true;
-            } else if (rotationY <= (0.75*Math.PI) && rotationY > Math.PI/4) {
+            } else if (rotationY <= (0.75 * Math.PI) && rotationY > Math.PI / 4) {
                 playerModel.PlayClip("bieg_prawo").Looping = true;
             } else {
                 playerModel.PlayClip("bieg_tyl").Looping = true;
@@ -193,12 +191,14 @@ namespace App
 
         new protected void OnAttack()
         {
-            if(!isAttacking) isAttacking = true;
+            if (!isAttacking)
+                isAttacking = true;
             AnimatedObject playerModel = (AnimatedObject) children["playerModel"];
             AnimationPlayer player = playerModel.PlayClip("cios_piesc");
             player.Looping = false;
             System.Console.WriteLine("czas animacji " + player.Duration);
-            if (player.Position >= player.Duration) isAttacking = false;
+            if (player.Position >= player.Duration)
+                isAttacking = false;
         }
 
         private void FixSpeedOfMovingDiagonally(Vector3 vector)
@@ -243,10 +243,14 @@ namespace App
 
         private Vector3 CheckCollisionWithDoors(Vector3 vector)
         {
-            foreach (Door door in game.Scene.children["Doors"].children.Values) {
-                if (!door.IsOpen) {
-                    foreach (Collider collider in door.colliders.Values) {
-                        vector = CheckSensors(collider, vector);
+            String[] doors = { "Doors", "ExitDoors" };
+
+            foreach (String door in doors) {
+                foreach (Door d in game.Scene.children[door].children.Values) {
+                    if (!d.IsOpen) {
+                        foreach (Collider collider in d.colliders.Values) {
+                            vector = CheckSensors(collider, vector);
+                        }
                     }
                 }
             }
@@ -258,7 +262,7 @@ namespace App
         {
             //List<String> opponentsToRemove = new List<String>();
             foreach (Opponent opponent in game.Scene.children["Opponents"].children.Values) {
-                if(opponent.colliders.ContainsKey("main"))
+                if (opponent.colliders.ContainsKey("main"))
                     vector = CheckSensors(opponent.colliders["main"], vector);
 
                 if (IsCollisionWithOpponent(opponent) && opponent.IsMouseOverObject()) {
@@ -299,11 +303,10 @@ namespace App
 
         private bool IsCollisionWithOpponent(Opponent opponent)
         {
-            if(opponent.colliders.ContainsKey("main") && game.Scene.Player.colliders.ContainsKey("main"))
-            {
+            if (opponent.colliders.ContainsKey("main") && game.Scene.Player.colliders.ContainsKey("main")) {
                 return game.Scene.Player.colliders["main"].CollidesWith(opponent.colliders["main"]);
-            }
-            else return false;
+            } else
+                return false;
         }
 
         private void AttackOpponent(Opponent opponent, GameTime gameTime)
@@ -359,8 +362,7 @@ namespace App
 
         public void checkIfFirstAidKit()
         {
-            if (hasItemInBag("first aid kit"))
-            {   
+            if (hasItemInBag("first aid kit")) {   
                 IncreaseLife(50f);
                 bag.Remove("first aid kit");
             }

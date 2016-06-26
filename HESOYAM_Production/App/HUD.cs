@@ -92,7 +92,7 @@ namespace App
 
         private void DrawAvatarBorder(Avatar avatar, String avatarBorder)
         {
-            Rectangle rec = new Rectangle(avatar.X - 3, avatar.Y - 3, 56, 56);
+            Rectangle rec = new Rectangle(0, avatar.Y - 3, 80, 56);
             game.spriteBatch.Draw(game.Textures["avatar_" + avatarBorder], rec, Color.White);
         }
 
@@ -203,7 +203,7 @@ namespace App
 
         private void SelectInteractiveObject()
         {
-            String[] sceneInteractiveObjectsToLoop = { "Doors", "Interactive", "Opponents" };
+            String[] sceneInteractiveObjectsToLoop = { "Doors", "Interactive", "Opponents", "ExitDoors" };
 
             foreach (String interactiveObjectsToLoop in sceneInteractiveObjectsToLoop) {
                 GameObject highlightObject = LoopObjectsAndHighlightObjectUnderMouse(
