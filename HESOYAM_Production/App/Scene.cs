@@ -382,11 +382,12 @@ namespace App
             GameObject floor = new GameObject(
                                    game,
                                    "Floor",
-                                   game.Models["sciana"],
+                                   game.Models["podloga"],
                                    new Vector3(positionX, 0f, positionZ),
                                    Vector3.Zero,
-                                   new Vector3((float) Width, 0f, (float) Height)
+                                   new Vector3((float) Width, 1f, (float) Height)
                                );
+            floor.setTexture(game.Textures["podloga"]);
 
             AddChild(floor);
         }
