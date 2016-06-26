@@ -203,7 +203,7 @@ namespace App
 
         private void SelectInteractiveObject()
         {
-            String[] sceneInteractiveObjectsToLoop = { "Doors", "Interactive", "Opponents" };
+            String[] sceneInteractiveObjectsToLoop = { "Doors", "Interactive", "Opponents", "ExitDoors" };
 
             foreach (String interactiveObjectsToLoop in sceneInteractiveObjectsToLoop) {
                 GameObject highlightObject = LoopObjectsAndHighlightObjectUnderMouse(

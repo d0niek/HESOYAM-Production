@@ -64,21 +64,21 @@ namespace App
             if (color.R == 0 && color.G == 0) {
                 buildWall(pos);
             } else if (color.R == 255 && color.G == 0) {
-                buildWindow(pos, (int)color.B);
+                buildWindow(pos, (int) color.B);
             } else if (color.R == 0 && color.G == 255) {
-                buildDoor(pos, (int)color.B, false);
+                buildDoor(pos, (int) color.B, false);
             } else if (color.R == 1 && color.G == 255) {
-                buildDoor(pos, (int)color.B, true);
+                buildDoor(pos, (int) color.B, true);
             } else if (color.R == 164 && color.G == 255) {
-                buildExit(pos, (int)color.B);
+                buildExit(pos, (int) color.B);
             } else if (color.R == 100 && color.G == 100) {
-                buildBed(pos, (int)color.B);
+                buildBed(pos, (int) color.B);
             } else if (color.R == 100 && color.G == 50) {
-                buildLamp(game.Models["lampa"], pos, (int)color.B);
+                buildLamp(game.Models["lampa"], pos, (int) color.B);
             } else if (color.R == 185 && color.G == 61) {
-                buildCupboard(pos, (int)color.B, "key");
+                buildCupboard(pos, (int) color.B, "key");
             } else if (color.R == 185 && color.G == 62) {
-                buildCupboard(pos, (int)color.B, "first aid kit");
+                buildCupboard(pos, (int) color.B, "first aid kit");
             } else if (color.R == 185 && color.G == 99) {
                 buildCupboard(pos, (int) color.B, "");
             } else if (color.R == 185 && color.G == 163) {
@@ -110,7 +110,7 @@ namespace App
                             new Vector3(pos.X * wallShift, 0f, pos.Y * wallShift)
                         );
             wall.TextureNormal = game.Textures["sciana_tekstura"];
-            wall.TextureCut = game.Textures["modul_przyciete_tekstura"];
+            wall.TextureCut = game.Textures["modul_tekstura"];
 
             addColider(wall);
 
@@ -129,7 +129,7 @@ namespace App
                               new Vector3(0f, (float) (rotationY * Math.PI / 2), 0f)
                           );
             window.TextureNormal = game.Textures["okno_tekstura"];
-            window.TextureCut = game.Textures["modul_przyciete_tekstura"];
+            window.TextureCut = game.Textures["modul_tekstura"];
 
             addColider(window);
 
@@ -149,7 +149,7 @@ namespace App
                             new Vector3(0f, (float) (rotationY * Math.PI / 2), 0f)
                         );
             door.TextureNormal = game.Textures["drzwi_tekstura"];
-            door.TextureCut = game.Textures["modul_przyciete_tekstura"];
+            door.TextureCut = game.Textures["modul_tekstura"];
 
             addColider(door);
 
@@ -168,24 +168,26 @@ namespace App
 
             addColider(lamp, 50f, 175f, 50f);
             this.children["Others"].AddChild(lamp);
-            movement.addObstacle((int)pos.X, (int)pos.Y);
+            movement.addObstacle((int) pos.X, (int) pos.Y);
         }
 
         private void buildExit(Vector2 pos, int rotationY)
         {
-            Wall exit = new Wall(
-                            game,
-                            "ExitDoor_" + pos.X + "x" + pos.Y,
-                            game.Models["drzwi_duze"],
-                            game.Models["drzwi_duze_przyciete"],
-                            new Vector3(pos.X * wallShift, 0f, pos.Y * wallShift),
-                            new Vector3(0f, (float) (rotationY * Math.PI / 2), 0f)
-                        );
+            ExitDoor exit = new ExitDoor(
+                                game,
+                                "ExitDoor_" + pos.X + "x" + pos.Y,
+                                game.Models["drzwi_duze"],
+                                game.Models["drzwi_duze_przyciete"],
+                                false,
+                                new Vector3(pos.X * wallShift, 0f, pos.Y * wallShift),
+                                new Vector3(0f, (float) (rotationY * Math.PI / 2), 0f)
+                            );
             exit.TextureNormal = game.Textures["drzwi_duze_tekstura"];
             exit.TextureCut = game.Textures["drzwi_duze_tekstura"];
 
-            children["ExitDoors"].AddChild(exit);
+            addColider(exit);
 
+            children["ExitDoors"].AddChild(exit);
         }
 
         private void buildCupboard(Vector2 pos, int rotationY, String item)
@@ -212,7 +214,7 @@ namespace App
             GameObject other = buildObject(model, pos, "Other_", rotationY);
 
             children["Others"].AddChild(other);
-            movement.addObstacle((int)pos.X, (int)pos.Y);
+            movement.addObstacle((int) pos.X, (int) pos.Y);
         }
 
         private void buildBed(Vector2 pos, int rotationY)
@@ -222,20 +224,17 @@ namespace App
                                         "Bed_" + pos.X + "x" + pos.Y,
                                         game.Models["lozko"],
                                         new Vector3(pos.X * wallShift, 0f, pos.Y * wallShift),
-                                        new Vector3(0f, (float)(rotationY * Math.PI / 2), 0f)
+                                        new Vector3(0f, (float) (rotationY * Math.PI / 2), 0f)
                                     );
 
-            movement.addObstacle((int)pos.X, (int)pos.Y);
-            if(rotationY%2 == 0)
-            {
-                movement.addObstacle((int)pos.X, (int)pos.Y + 1);
-                movement.addObstacle((int)pos.X, (int)pos.Y - 1);
+            movement.addObstacle((int) pos.X, (int) pos.Y);
+            if (rotationY % 2 == 0) {
+                movement.addObstacle((int) pos.X, (int) pos.Y + 1);
+                movement.addObstacle((int) pos.X, (int) pos.Y - 1);
                 addColider(gameObject, 100f, 90f, 200f);
-            }
-            else
-            {
-                movement.addObstacle((int)pos.X + 1, (int)pos.Y);
-                movement.addObstacle((int)pos.X - 1, (int)pos.Y);
+            } else {
+                movement.addObstacle((int) pos.X + 1, (int) pos.Y);
+                movement.addObstacle((int) pos.X - 1, (int) pos.Y);
                 addColider(gameObject, 200f, 90f, 100f);
             }
             children["Others"].AddChild(gameObject);
@@ -260,7 +259,7 @@ namespace App
                                       new Vector3(0f, (float) (rotationY * Math.PI / 2), 0f)
                                   );
             teammate.setTexture(game.Textures[texture]);
-            loadAnimationsToCharacter((AnimatedObject)teammate,texture);
+            loadAnimationsToCharacter((AnimatedObject) teammate, texture);
             addColider(teammate);
 
             children["Teammates"].AddChild(teammate);
@@ -276,7 +275,7 @@ namespace App
                                     new Vector3(0f, (float) (rotationY * Math.PI / 2), 0f)
                                 );
             opponent.setTexture(game.Textures[texture]);
-            loadAnimationsToCharacter(opponent,texture);
+            loadAnimationsToCharacter(opponent, texture);
             addColider(opponent);
 
             children["Opponents"].AddChild(opponent);
