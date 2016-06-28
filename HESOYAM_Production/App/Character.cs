@@ -93,9 +93,19 @@ namespace App
             this.PlayClip("bieg_przod").Looping = true;
         }
 
+        protected void OnMove2()
+        {
+            this.PlayClip("bron_bieg_przod").Looping = true;
+        }
+
         protected void OnIdle()
         {
             this.PlayClip("postawa").Looping = true;
+        }
+
+        protected void OnIdle2()
+        {
+            this.PlayClip("celowanie").Looping = true;
         }
 
         protected void OnAttack()

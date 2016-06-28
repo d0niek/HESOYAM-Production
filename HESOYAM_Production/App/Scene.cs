@@ -41,6 +41,7 @@ namespace App
             AddChild(new GameObject(game, "Player"));
             AddChild(new GameObject(game, "Teammates"));
             AddChild(new GameObject(game, "Opponents"));
+            //AddChild(new GameObject(game, "RangedOpponents"));
             AddChild(new GameObject(game, "Walls"));
             AddChild(new GameObject(game, "Windows"));
             AddChild(new GameObject(game, "Doors"));
@@ -94,9 +95,9 @@ namespace App
             } else if (color.R == 200 && color.G == 200) {
                 insertTeammateCharacter(game.Models["stary"], pos, (int) color.B, "stary");//stary
             } else if (color.R == 75 && color.G == 25) {
-                insertOpponentCharacter(game.Models["lekarz"], pos, (int) color.B, "lekarz");//zolnierz
+                insertRangedOpponentCharacter(game.Models["lekarz"], pos, (int) color.B, "lekarz");//Ranged zolnierz
             } else if (color.R == 25 && color.G == 57) {
-                insertOpponentCharacter(game.Models["lekarz"], pos, (int) color.B, "lekarz");
+                insertMeleeOpponentCharacter(game.Models["lekarz"], pos, (int) color.B, "lekarz");
             }
         }
 
@@ -265,20 +266,36 @@ namespace App
             children["Teammates"].AddChild(teammate);
         }
 
-        private void insertOpponentCharacter(Model model, Vector2 pos, int rotationY, string texture)
+        private void insertMeleeOpponentCharacter(Model model, Vector2 pos, int rotationY, string texture)
         {
-            Opponent opponent = new Opponent(
+            MeleeOpponent meleeOpponent = new MeleeOpponent(
                                     game,
                                     "Opponent_" + pos.X + "x" + pos.Y,
                                     model,
                                     new Vector3(pos.X * wallShift, 0f, pos.Y * wallShift),
                                     new Vector3(0f, (float) (rotationY * Math.PI / 2), 0f)
                                 );
-            opponent.setTexture(game.Textures[texture]);
-            loadAnimationsToCharacter(opponent, texture);
-            addColider(opponent, 100f, 180f, 100f);
+            meleeOpponent.setTexture(game.Textures[texture]);
+            loadAnimationsToCharacter(meleeOpponent, texture);
+            addColider(meleeOpponent, 100f, 180f, 100f);
 
-            children["Opponents"].AddChild(opponent);
+            children["Opponents"].AddChild(meleeOpponent);
+        }
+
+        private void insertRangedOpponentCharacter(Model model, Vector2 pos, int rotationY, string texture)
+        {
+            RangedOpponent rangedOpponent = new RangedOpponent(
+                                    game,
+                                    "RangedOpponent_" + pos.X + "x" + pos.Y,
+                                    model,
+                                    new Vector3(pos.X * wallShift, 0f, pos.Y * wallShift),
+                                    new Vector3(0f, (float)(rotationY * Math.PI / 2), 0f)
+                                );
+            rangedOpponent.setTexture(game.Textures[texture]);
+            loadAnimationsToCharacter(rangedOpponent, texture);
+            addColider(rangedOpponent);
+
+            children["Opponents"].AddChild(rangedOpponent);
         }
 
         private void loadAnimationsToCharacter(AnimatedObject character, String name)

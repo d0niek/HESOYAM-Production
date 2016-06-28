@@ -318,7 +318,7 @@ namespace App
             rotateInDirection(Vector3.Subtract(opponent.position, this.position));
             if (lastAttack + attackDelay < gameTime.TotalGameTime) {
                 OnAttack();
-                opponent.ReduceLife(25f);
+                opponent.ReduceLife(34f);
                 lastAttack = gameTime.TotalGameTime;
             }
         }
