@@ -51,6 +51,10 @@ namespace App
 
         public override void Update(GameTime gameTime)
         {
+            if (game.TimeToInteract) {
+                return;
+            }
+
             this.Zoom();
 
             if (!this.game.PlayMode) {
@@ -59,7 +63,12 @@ namespace App
                 }
             } else {
                 //TODO obrót wokół głowy porządniej?
-                this.CameraLookAt = this.LookAtParent != null ? new Vector3(this.LookAtParent.position.X, this.LookAtParent.position.Y + 160f, this.LookAtParent.position.Z) : Vector3.Zero;
+                this.CameraLookAt = this.LookAtParent != null ? 
+                    new Vector3(
+                    this.LookAtParent.position.X,
+                    this.LookAtParent.position.Y + 160f,
+                    this.LookAtParent.position.Z
+                ) : Vector3.Zero;
                 this.playModePosition = this.position;
             }
 
@@ -99,23 +108,19 @@ namespace App
                 vector.X = -20;
             }
 
-            if(game.InputState.IsKeyPressed(Keys.A, PlayerIndex.One, out playerIndex))
-            {
+            if (game.InputState.IsKeyPressed(Keys.A, PlayerIndex.One, out playerIndex)) {
                 vector.Z -= 20;
                 vector.X -= 20;
             }
-            if(game.InputState.IsKeyPressed(Keys.D, PlayerIndex.One, out playerIndex))
-            {
+            if (game.InputState.IsKeyPressed(Keys.D, PlayerIndex.One, out playerIndex)) {
                 vector.Z += 20;
                 vector.X += 20;
             }
-            if(game.InputState.IsKeyPressed(Keys.W, PlayerIndex.One, out playerIndex))
-            {
+            if (game.InputState.IsKeyPressed(Keys.W, PlayerIndex.One, out playerIndex)) {
                 vector.Z -= 20;
                 vector.X += 20;
             }
-            if(game.InputState.IsKeyPressed(Keys.S, PlayerIndex.One, out playerIndex))
-            {
+            if (game.InputState.IsKeyPressed(Keys.S, PlayerIndex.One, out playerIndex)) {
                 vector.Z += 20;
                 vector.X -= 20;
             }
