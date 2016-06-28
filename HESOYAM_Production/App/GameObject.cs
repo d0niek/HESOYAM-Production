@@ -30,7 +30,8 @@ namespace App
 
         public Dictionary<String, Collider> colliders { get; set; }
 
-        public bool Hover {
+        public bool Hover
+        {
             private get;
             set;
         }
@@ -39,8 +40,8 @@ namespace App
             Engine game,
             string name,
             Model model,
-            Vector3 position = default(Vector3), 
-            Vector3 rotation = default(Vector3), 
+            Vector3 position = default(Vector3),
+            Vector3 rotation = default(Vector3),
             Vector3? scale = null
         ) : base(game)
         {
@@ -59,8 +60,8 @@ namespace App
         public GameObject(
             Engine game,
             string name,
-            Vector3 position = default(Vector3), 
-            Vector3 rotation = default(Vector3), 
+            Vector3 position = default(Vector3),
+            Vector3 rotation = default(Vector3),
             Vector3? scale = null
         ) : base(game)
         {
@@ -79,11 +80,13 @@ namespace App
             Vector3 delta = new Vector3(x, y, z);
             position = Vector3.Add(delta, position);
 
-            foreach (IGameElement child in children.Values) {
+            foreach(IGameElement child in children.Values)
+            {
                 child.Move(x, y, z);
             }
 
-            foreach (Collider collider in colliders.Values) {
+            foreach(Collider collider in colliders.Values)
+            {
                 collider.Move(x, y, z);
             }
         }
@@ -93,11 +96,13 @@ namespace App
             Vector3 delta = new Vector3(x, y, z);
             rotation = Vector3.Add(delta, rotation);
 
-            foreach (IGameElement child in children.Values) {
+            foreach(IGameElement child in children.Values)
+            {
                 child.RotateAroundParent(x, y, z);
             }
 
-            foreach (Collider collider in colliders.Values) {
+            foreach(Collider collider in colliders.Values)
+            {
                 collider.RotateAroundParent(x, y, z);
             }
         }
@@ -105,8 +110,8 @@ namespace App
         public void RotateAroundParent(float x, float y, float z)
         {
             IGameElement par = this.parent as IGameElement;
-            float s = (float) Math.Sin(-y);
-            float c = (float) Math.Cos(y);
+            float s = (float)Math.Sin(-y);
+            float c = (float)Math.Cos(y);
 
             // translate point back to origin:
             this.position = this.position - par.position;
@@ -116,15 +121,15 @@ namespace App
             float znew = this.position.X * s + this.position.Z * c;
             float ynew = this.position.Y;
 
-            s = (float) Math.Sin(-x);
-            c = (float) Math.Cos(x);
+            s = (float)Math.Sin(-x);
+            c = (float)Math.Cos(x);
 
             // rotate point
             znew = znew * c - this.position.Y * s;
             ynew = znew * s + this.position.Y * c;
 
-            s = (float) Math.Sin(-z);
-            c = (float) Math.Cos(z);
+            s = (float)Math.Sin(-z);
+            c = (float)Math.Cos(z);
 
             // rotate point
             ynew = ynew * c - xnew * s;
@@ -138,7 +143,8 @@ namespace App
 
         public void SetRotation(float x, float y, float z)
         {
-            foreach (IGameElement child in children.Values) {
+            foreach(IGameElement child in children.Values)
+            {
                 child.RotateAroundParent(-this.rotation.X, -this.rotation.Y, -this.rotation.Z);
                 child.RotateAroundParent(x, y, z);
             }
@@ -150,7 +156,8 @@ namespace App
         {
             this.scale = new Vector3(x, y, z);
 
-            foreach (IGameElement child in children.Values) {
+            foreach(IGameElement child in children.Values)
+            {
                 child.Scale(x, y, z);
             }
         }
@@ -169,15 +176,19 @@ namespace App
 
         public void AddChildrenToGame(bool recursively, bool withColliders)
         {
-            if (withColliders) {
-                foreach (Collider collider in this.colliders.Values) {
+            if(withColliders)
+            {
+                foreach(Collider collider in this.colliders.Values)
+                {
                     game.AddComponent(collider);
                 }
             }
-            foreach (IGameComponent child in this.children.Values) {
+            foreach(IGameComponent child in this.children.Values)
+            {
                 this.game.AddComponent(child);
 
-                if (recursively) {
+                if(recursively)
+                {
                     IGameObject ch = child as IGameObject;
                     ch.AddChildrenToGame(true, withColliders);
                 }
@@ -186,7 +197,8 @@ namespace App
 
         public void AddCollidersToGame()
         {
-            foreach (Collider collider in this.colliders.Values) {
+            foreach(Collider collider in this.colliders.Values)
+            {
                 game.AddComponent(collider);
             }
         }
@@ -217,15 +229,15 @@ namespace App
 
         public bool IsMouseOverObject()
         {
-            for (int index = 0; index < model.Meshes.Count; index++) {
-                BoundingBox box;
-                if (colliders.ContainsKey("main")) {
-                    box = colliders["main"].box;
+            BoundingBox box;
+            if(colliders.ContainsKey("main"))
+            {
+                box = colliders["main"].box;
 
-                    float? distance = IntersectDistance((BoundingBox) box);
-                    if (distance != null) {
-                        return true;
-                    }
+                float? distance = IntersectDistance((BoundingBox)box);
+                if(distance != null)
+                {
+                    return true;
                 }
             }
 
@@ -267,7 +279,8 @@ namespace App
 
         public override void Draw(GameTime gameTime)
         {
-            if (this.model != null) {
+            if(this.model != null)
+            {
                 this.DrawModel(this.model);
             }
         }
@@ -279,15 +292,17 @@ namespace App
             model.CopyAbsoluteBoneTransformsTo(transforms);
 
             // Draw the model. A model can have multiple meshes, so loop.
-            foreach (ModelMesh mesh in model.Meshes) {
+            foreach(ModelMesh mesh in model.Meshes)
+            {
                 // This is where the mesh orientation is set, as well
                 // as our camera and projection.
-                foreach (BasicEffect effect in mesh.Effects) {
+                foreach(BasicEffect effect in mesh.Effects)
+                {
                     effect.LightingEnabled = true; // turn on the lighting subsystem.
-                    effect.DirectionalLight0.DiffuseColor = new Vector3(0.8f, 0.8f,0.7f); // a red light
+                    effect.DirectionalLight0.DiffuseColor = new Vector3(0.8f, 0.8f, 0.7f); // a red light
                     effect.DirectionalLight0.Direction = new Vector3(1, -0.5f, -1);  // coming along the x-axis
                     effect.DirectionalLight0.SpecularColor = new Vector3(0.5f, 0.5f, 0.5f); // with green highlights
-                    effect.AmbientLightColor = new Vector3(0f, 0,0);
+                    effect.AmbientLightColor = new Vector3(0f, 0, 0);
                     effect.EmissiveColor = this.emisiveColor;
 
                     effect.World = transforms[mesh.ParentBone.Index]
@@ -300,9 +315,12 @@ namespace App
                     effect.Projection = this.game.Camera.ProjectionMatrix;
 
                     // Tmp effect to highlight object under mouse
-                    if (active) {
+                    if(active)
+                    {
                         effect.AmbientLightColor = new Vector3(0, 0, 255);
-                    } else if (Hover) {
+                    }
+                    else if(Hover)
+                    {
                         effect.AmbientLightColor = new Vector3(0, 255, 0);
                     }
 
@@ -316,7 +334,8 @@ namespace App
 
         protected void DrawTexture(BasicEffect effect)
         {
-            if (this.texture != null) {
+            if(this.texture != null)
+            {
                 effect.TextureEnabled = true;
                 effect.Texture = this.texture;
             }

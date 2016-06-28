@@ -13,7 +13,9 @@ namespace App.Models
     {
         private float speed;
         private Vector3 nextTarget;
-        private Vector3 targetedInteractivePosition;
+        private GameObject targetedObject;
+        private TimeSpan lastAttack;
+        private TimeSpan attackDelay;
 
         public Teammate(
             Engine game,
@@ -49,7 +51,9 @@ namespace App.Models
         {
             speed = 5.0f;
             nextTarget = position;
-            targetedInteractivePosition = position;
+            targetedObject = this;
+            lastAttack = TimeSpan.Zero;
+            attackDelay = new TimeSpan(0, 0, 0, 0, 870);
         }
 
         private Vector3 checkSensors(Collider collider, Vector3 vector)
@@ -100,7 +104,7 @@ namespace App.Models
 
         private void onMoveToCommand()
         {
-            String[] sceneInteractiveObjectsToLoop = { "Interactive", "Doors", "Opponents" };
+            String[] sceneInteractiveObjectsToLoop = { "Interactive", "Doors", "Opponents"};
 
             foreach(String interactiveObjectsToLoop in sceneInteractiveObjectsToLoop)
             {
@@ -109,7 +113,7 @@ namespace App.Models
                     if(interactive.IsMouseOverObject())
                     {
                         nextTarget = position;
-                        targetedInteractivePosition = interactive.position;
+                        targetedObject = interactive;
                     }
                 }
             }
@@ -122,7 +126,7 @@ namespace App.Models
             {
                 if(active)
                 {
-                    if(game.InputState.Mouse.CurrentMouseState.RightButton.Equals(ButtonState.Pressed));
+                    if(game.InputState.Mouse.CurrentMouseState.RightButton.Equals(ButtonState.Pressed))
                     {
                         onMoveToCommand();
                     }
@@ -141,16 +145,23 @@ namespace App.Models
                 collider.drawColor = Color.GreenYellow;
             }
 
-            if(Math.Abs(targetedInteractivePosition.X - position.X) < 100f && Math.Abs(targetedInteractivePosition.Z - position.Z) < 100f)
+            Vector3 targetToNextTargetDelta = Vector3.Subtract(targetedObject.position, nextTarget);
+
+            if(targetToNextTargetDelta.Length() > 300f)
             {
                 nextTarget = position;
-                OnIdle();
+            }
+
+            if((targetedObject.colliders.ContainsKey("main") && colliders["main"].CollidesWith(targetedObject.colliders["main"]))
+                || Math.Abs(targetedObject.position.X - position.X) < 20f && Math.Abs(targetedObject.position.Z - position.Z) < 20f)
+            {
+                nextTarget = position;
             }
             else if(Math.Abs(nextTarget.X - position.X) < 20f && Math.Abs(nextTarget.Z - position.Z) < 20f)
             {
                 LinkedList<Tuple<int, int>> newPath = game.Scene.movement.getPathToTarget(
                                                           position,
-                                                          targetedInteractivePosition);
+                                                          targetedObject.position);
                 if(newPath != null && newPath.Count > 0)
                 {
                     LinkedListNode<Tuple<int, int>> candidateNode = newPath.Last;
@@ -176,8 +187,25 @@ namespace App.Models
             }
 
             Vector3 targetDelta = Vector3.Subtract(nextTarget, position);
+
+            foreach(Opponent opponent in game.Scene.children["Opponents"].children.Values)
+            {
+                if(opponent.colliders.ContainsKey("main"))
+                {
+                    if(targetedObject == opponent && colliders["main"].CollidesWith(opponent.colliders["main"]))
+                    {
+                        AttackOpponent(opponent, gameTime);
+                        return;
+                    }
+                    targetDelta = checkSensors(opponent.colliders["main"], targetDelta);
+                }
+            }
+
             if(targetDelta.Length() < 2f)
+            {
+                OnIdle();
                 return;
+            }
 
             foreach(IGameObject wall in game.Scene.children["Walls"].children.Values)
             {
@@ -195,12 +223,6 @@ namespace App.Models
                 }
             }
 
-            foreach(IGameObject opponent in game.Scene.children["Opponents"].children.Values)
-            {
-                if(opponent != this && opponent.colliders.ContainsKey("main"))
-                    targetDelta = checkSensors(opponent.colliders["main"], targetDelta);
-            }
-
             targetDelta = checkSensors(game.Scene.Player.colliders["main"], targetDelta);
             targetDelta.Normalize();
 
@@ -211,6 +233,20 @@ namespace App.Models
                 moveInDirection(targetDelta);
                 OnMove();
             }
+        }
+
+        private void AttackOpponent(Opponent opponent, GameTime gameTime)
+        {
+            opponent.trigger(this);
+            rotateInDirection(Vector3.Subtract(opponent.position, this.position));
+            if(lastAttack + attackDelay < gameTime.TotalGameTime)
+            {
+                OnAttack();
+                opponent.ReduceLife(25f);
+                lastAttack = gameTime.TotalGameTime;
+            }
+            if(opponent.IsDead())
+                targetedObject = this;
         }
     }
 }

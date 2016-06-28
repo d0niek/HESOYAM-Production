@@ -115,8 +115,8 @@ namespace App
         {
             if(sourceCoords.Equals(targetCoords))
                 return null;
-            if(isObstacleAt(targetCoords))
-                return null;
+            //if(isObstacleAt(targetCoords))
+                //return null;
             bool[,] visited = new bool[obstacleMap.GetLength(0), obstacleMap.GetLength(1)];
             SortedDictionary<int, LinkedList<LinkedList<Tuple<int, int>>>> bestFound = new SortedDictionary<int, LinkedList<LinkedList<Tuple<int, int>>>>();
 
@@ -148,7 +148,7 @@ namespace App
                 for(int i = 0; i < 4; i++)
                 {
                     Tuple<int, int> currentStep = step(currentCoords, i);
-                    if(!isObstacleAt(currentStep))
+                    if(!isObstacleAt(currentStep) || currentStep.Equals(targetCoords))
                     {
                         if(!visited[currentStep.Item1, currentStep.Item2])
                         {

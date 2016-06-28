@@ -260,7 +260,7 @@ namespace App
                                   );
             teammate.setTexture(game.Textures[texture]);
             loadAnimationsToCharacter((AnimatedObject) teammate, texture);
-            addColider(teammate);
+            addColider(teammate, 100f, 180f, 100f);
 
             children["Teammates"].AddChild(teammate);
         }
@@ -276,7 +276,7 @@ namespace App
                                 );
             opponent.setTexture(game.Textures[texture]);
             loadAnimationsToCharacter(opponent, texture);
-            addColider(opponent);
+            addColider(opponent, 100f, 180f, 100f);
 
             children["Opponents"].AddChild(opponent);
         }

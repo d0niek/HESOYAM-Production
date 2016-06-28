@@ -31,10 +31,14 @@ namespace App
             bag = new List<string>();
 
             Vector3 newPosition = position;
-            Vector3 newSize = new Vector3(35f, 180f, 35f);
-            newPosition.Y += 100f;
+            Vector3 newSize = new Vector3(35f, 190f, 35f);
+            newPosition.Y += 95f;
 
             AddCollider("hitbox", new Collider(game, newPosition, newSize, Vector3.Zero));
+
+            newPosition.Y += 30;
+            newSize = new Vector3(100f, 250f, 100f);
+            AddCollider("main", new Collider(game, newPosition, newSize, Vector3.Zero));
 
             newPosition = position;
             newSize = new Vector3(5.0f, 10.0f, 40.0f);
@@ -311,6 +315,7 @@ namespace App
 
         private void AttackOpponent(Opponent opponent, GameTime gameTime)
         {
+            rotateInDirection(Vector3.Subtract(opponent.position, this.position));
             if (lastAttack + attackDelay < gameTime.TotalGameTime) {
                 OnAttack();
                 opponent.ReduceLife(25f);
@@ -346,6 +351,16 @@ namespace App
                 if (!(child is Camera)) {
                     child.SetRotation(x, y, z);
                 }
+            }
+        }
+
+        void rotateInDirection(Vector3 direction)
+        {
+            float rotationY = (float)Math.Atan2(direction.X, direction.Z);
+
+            if(Math.Abs(this.rotation.Y - rotationY) > 0.01f)
+            {
+                this.Rotate(0, rotationY, 0);
             }
         }
 

@@ -19,6 +19,7 @@ namespace App.Models
         private TimeSpan attackDelay;
         private TimeSpan lastShoot;
         private TimeSpan shootDelay;
+        private Character attackedCharacter;
 
         public Opponent(
             Engine game,
@@ -101,16 +102,18 @@ namespace App.Models
             }
 
             Vector3 playerDelta = Vector3.Subtract(game.Player.position, position);
+            Vector3 attackedCharacterDelta = Vector3.Zero;
+            if(attackedCharacter != null) attackedCharacterDelta = Vector3.Subtract(attackedCharacter.position, position);
             if (IsAttacking)
             {
-                this.rotateInDirection(playerDelta);
+                this.rotateInDirection(attackedCharacterDelta);
                 OnAttack();
 
-                if (!this.colliders["main"].CollidesWith(game.Scene.Player.colliders["main"])) IsAttacking = false;
-                if ((gameTime.TotalGameTime - lastAttack) > attackDelay || game.Player.IsDead())
+                if (!this.colliders["main"].CollidesWith(attackedCharacter.colliders["main"])) IsAttacking = false;
+                if ((gameTime.TotalGameTime - lastAttack) > attackDelay || attackedCharacter.IsDead())
                 {
                     IsAttacking = false;
-                    game.Player.ReduceLife(12f);
+                    attackedCharacter.ReduceLife(12f);
                 }
                 return;
             }
@@ -126,7 +129,6 @@ namespace App.Models
                 collider.drawColor = Color.GreenYellow;
             }
 
-            //Vector3 playerDelta = Vector3.Subtract(game.Player.position, position);
             float playerDistance = playerDelta.Length();
             playerDelta.Normalize();
             bool playerVisible = isVisible(playerDelta, playerDistance);
@@ -145,15 +147,7 @@ namespace App.Models
 
             if(this.colliders["main"].CollidesWith(game.Scene.Player.colliders["main"]))
             {
-                if(lastAttack + attackDelay < gameTime.TotalGameTime && !game.Player.IsDead())
-                {
-                    if (!IsAttacking) IsAttacking = true;
-                    OnAttack();
-                    //game.Player.ReduceLife(12f);
-                    lastAttack = gameTime.TotalGameTime;
-                }
-                nextTarget = position;
-                if(!IsAttacking) OnIdle();
+                attackedCharacter = game.Player;
             }
             else if(isChasing)
             {
@@ -193,6 +187,18 @@ namespace App.Models
                 }
             }
 
+            if(attackedCharacter != null && attackedCharacter.colliders.ContainsKey("main") ? this.colliders["main"].CollidesWith(attackedCharacter.colliders["main"]) : false)
+            {
+                if(lastAttack + attackDelay < gameTime.TotalGameTime && !game.Player.IsDead())
+                {
+                    if(!IsAttacking) IsAttacking = true;
+                    OnAttack();
+                    lastAttack = gameTime.TotalGameTime;
+                }
+                nextTarget = position;
+                if(!IsAttacking) OnIdle();
+            }
+
             Vector3 targetDelta = Vector3.Subtract(nextTarget, position);
             if(targetDelta.Length() < 2f)
                 return;
@@ -225,6 +231,12 @@ namespace App.Models
             {
                 if(opponent != this && opponent.colliders.ContainsKey("main"))
                     targetDelta = checkSensors(opponent.colliders["main"], targetDelta);
+            }
+
+            foreach(IGameObject teammate in game.Scene.children["Teammates"].children.Values)
+            {
+                if(teammate.colliders.ContainsKey("main"))
+                    targetDelta = checkSensors(teammate.colliders["main"], targetDelta);
             }
 
             targetDelta = checkSensors(game.Scene.Player.colliders["main"], targetDelta);
@@ -268,6 +280,11 @@ namespace App.Models
                 lastShoot = time;
                 new Projectile(game, new Vector3(position.X, position.Y + 120f, position.Z), direction, 15f); 
             }
+        }
+
+        public void trigger(Teammate teammate)
+        {
+            attackedCharacter = teammate;
         }
     }
 }
