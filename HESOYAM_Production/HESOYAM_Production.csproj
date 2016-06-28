@@ -52,9 +52,12 @@
   <ItemGroup>
     <Compile Include="App\Collisions\BoundingBoxRenderer.cs" />
     <Compile Include="App\Collisions\Collider.cs" />
+    <Compile Include="App\Emitter.cs" />
     <Compile Include="App\Models\MeleeOpponent.cs" />
     <Compile Include="App\Models\RangedOpponent.cs" />
     <Compile Include="App\Movement.cs" />
+    <Compile Include="App\Particle.cs" />
+    <Compile Include="App\Particles.cs" />
     <Compile Include="App\Projectile.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -42,7 +42,6 @@ namespace App
 
         public void Draw(GameTime gameTime)
         {
-            game.spriteBatch.Begin();
             DrawAvatars();
             DrawFotterBar();
             DrawPlayPauseButton();
@@ -55,8 +54,6 @@ namespace App
             DrawMenuToInteractWithObject();
 
             DrawMessage(gameTime);
-
-            game.spriteBatch.End();
         }
 
         public void ResetObjectToInteract()

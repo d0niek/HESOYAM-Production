@@ -315,7 +315,7 @@ namespace App
 
         private void AttackOpponent(Opponent opponent, GameTime gameTime)
         {
-            rotateInDirection(Vector3.Subtract(opponent.position, this.position));
+            rotateInDirection(Vector3.Subtract(opponent.position, this.position), false);
             if (lastAttack + attackDelay < gameTime.TotalGameTime) {
                 OnAttack();
                 opponent.ReduceLife(34f);
@@ -354,9 +354,13 @@ namespace App
             }
         }
 
-        void rotateInDirection(Vector3 direction)
+        protected new void rotateInDirection(Vector3 direction, bool lerp)
         {
-            float rotationY = (float)Math.Atan2(direction.X, direction.Z);
+            float rotationY;
+            if(lerp)
+                rotationY = MathHelper.Lerp(this.rotation.Y, (float)Math.Atan2(direction.X, direction.Z), 0.1f);
+            else
+                rotationY = (float)Math.Atan2(direction.X, direction.Z);
 
             if(Math.Abs(this.rotation.Y - rotationY) > 0.01f)
             {

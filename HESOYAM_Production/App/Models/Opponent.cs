@@ -60,7 +60,7 @@ namespace App.Models
             lastAttack = TimeSpan.Zero;
             attackDelay = new TimeSpan(0, 0, 0, 0, 867);
             lastShoot = TimeSpan.Zero;
-            shootDelay = new TimeSpan(0, 0, 3);
+            shootDelay = new TimeSpan(0, 0, 1);
         }
 
         protected Vector3 checkSensors(Collider collider, Vector3 vector)
@@ -88,20 +88,10 @@ namespace App.Models
             return vector;
         }
 
-        
         protected void moveInDirection(Vector3 direction)
         {
             direction = Vector3.Multiply(direction, speed);
             Move(direction.X, direction.Y, direction.Z);
-        }
-
-        protected void rotateInDirection(Vector3 direction)
-        {
-            float rotationY = (float) Math.Atan2(direction.X, direction.Z);
-
-            if (Math.Abs(this.rotation.Y - rotationY) > 0.01f) {
-                this.rotation = new Vector3(0, rotationY, 0);
-            }
         }
 
         public void trigger(Teammate teammate)

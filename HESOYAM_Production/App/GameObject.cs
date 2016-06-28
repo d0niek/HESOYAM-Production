@@ -141,6 +141,20 @@ namespace App
             this.Rotate(x, y, z);
         }
 
+        protected void rotateInDirection(Vector3 direction, bool lerp)
+        {
+            float rotationY;
+            if(lerp)
+                rotationY = MathHelper.Lerp(this.rotation.Y, (float)Math.Atan2(direction.X, direction.Z), 0.1f);
+            else
+                rotationY = (float)Math.Atan2(direction.X, direction.Z);
+
+            if(Math.Abs(this.rotation.Y - rotationY) > 0.01f)
+            {
+                this.rotation = new Vector3(0, rotationY, 0);
+            }
+        }
+
         public void SetRotation(float x, float y, float z)
         {
             foreach(IGameElement child in children.Values)

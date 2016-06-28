@@ -11,7 +11,7 @@ namespace App
         private bool[,] obstacleMap;
         private float wallShift;
         private Dictionary<Tuple<int, int>, LinkedList<Tuple<int, int>>> recentPaths;
-        private const int maxIterations = 2000;
+        private const int maxIterations = 1000;
 
         public Movement(int x, int y, float wallShift)
         {
