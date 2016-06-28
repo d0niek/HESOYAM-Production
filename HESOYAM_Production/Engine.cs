@@ -73,6 +73,11 @@ namespace HESOYAM_Production
             set;
         }
 
+        public bool TimeToInteract {
+            get;
+            set;
+        }
+
         public Engine()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -155,8 +160,7 @@ namespace HESOYAM_Production
                 SpriteFont font = Content.Load<SpriteFont>("Fonts/" + name);
 
                 fonts.Add(name, font);
-            }
-            catch(ContentLoadException) {
+            } catch (ContentLoadException) {
                 Console.WriteLine("Font '" + name + "' does not exists in Content.mgcb");
             }
         }
@@ -167,7 +171,11 @@ namespace HESOYAM_Production
             String[] files = Directory.GetFiles(modelsDir);
 
             foreach (String file in files) {
-                String name = file.Remove(0, modelsDir.Length + 1).Replace(".FBX", "").Replace(".fbx", "").Replace(".x", "").Replace(".X", "");
+                String name = file.Remove(0, modelsDir.Length + 1)
+                    .Replace(".FBX", "")
+                    .Replace(".fbx", "")
+                    .Replace(".x", "")
+                    .Replace(".X", "");
                 Model model = LoadModel(dirName, name);
                 
                 if (model != null) {
@@ -260,6 +268,8 @@ namespace HESOYAM_Production
 
                 hud.ResetSelectedTeammate();
                 hud.ResetObjectToInteract();
+
+                TimeToInteract = false;
             }
         }
 

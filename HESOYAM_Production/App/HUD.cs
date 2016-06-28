@@ -16,6 +16,7 @@ namespace App
         GameObject hoverTeammate;
         public GameObject selectedTeammate;
         GameObject objectToInteract;
+        Rectangle menuFramePos;
         String message;
         TimeSpan messageStart;
         TimeSpan messageDelay;
@@ -242,22 +243,35 @@ namespace App
         private void DrawMenuToInteractWithObject()
         {
             if (objectToInteract != null) {
-                Rectangle rec = new Rectangle(
-                                    game.GraphicsDevice.Viewport.Width / 2,
-                                    game.GraphicsDevice.Viewport.Height / 2,
-                                    game.Textures["frame"].Width,
-                                    game.Textures["frame"].Height
-                                );
-                game.spriteBatch.Draw(game.Textures["frame"], rec, Color.White);
+                Rectangle menuPosition = GetMenuPosition();
+                game.spriteBatch.Draw(game.Textures["frame"], menuPosition, Color.White);
 
-                Vector2 pos = new Vector2(rec.X + 18, rec.Y + 13);
+                Vector2 pos = new Vector2(menuPosition.X + 18, menuPosition.Y + 13);
                 game.spriteBatch.DrawString(
                     game.Fonts["Open Sans"],
                     "Interact with " + objectToInteract.name,
                     pos,
                     Color.DarkOrange
                 );
+
+                game.TimeToInteract = true;
+            } else {
+                menuFramePos = Rectangle.Empty;
             }
+        }
+
+        private Rectangle GetMenuPosition()
+        {
+            if (menuFramePos == Rectangle.Empty) {
+                menuFramePos = new Rectangle(
+                    game.InputState.Mouse.GetMouseLocation().X + 20,
+                    game.InputState.Mouse.GetMouseLocation().Y + 20,
+                    game.Textures["frame"].Width,
+                    game.Textures["frame"].Height
+                );
+            }
+
+            return menuFramePos;
         }
 
         private void DrawMessage(GameTime gameTime)
