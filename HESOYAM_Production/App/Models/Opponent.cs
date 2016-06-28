@@ -19,6 +19,7 @@ namespace App.Models
         protected TimeSpan attackDelay;
         protected TimeSpan lastShoot;
         protected TimeSpan shootDelay;
+        protected Character attackedCharacter;
 
         public Opponent(
             Engine game,
@@ -108,5 +109,9 @@ namespace App.Models
             }
         }
 
+        public void trigger(Teammate teammate)
+        {
+            attackedCharacter = teammate;
+        }
     }
 }

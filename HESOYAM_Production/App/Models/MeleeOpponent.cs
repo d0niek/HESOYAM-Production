@@ -25,87 +25,71 @@ namespace App.Models
             }
         }
 
-        private void shoot(Vector3 direction, TimeSpan time)
-        {
-            if (lastShoot + shootDelay < time)
-            {
-                lastShoot = time;
-                new Projectile(game, new Vector3(position.X, position.Y + 120f, position.Z), direction, 15f);
-            }
-        }
-
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
-            if (!game.PlayMode)
+
+            if(!game.PlayMode)
             {
                 return;
             }
 
             Vector3 playerDelta = Vector3.Subtract(game.Player.position, position);
-            if (IsAttacking)
+            Vector3 attackedCharacterDelta = Vector3.Zero;
+            if(attackedCharacter != null) attackedCharacterDelta = Vector3.Subtract(attackedCharacter.position, position);
+            if(IsAttacking)
             {
-                this.rotateInDirection(playerDelta);
+                this.rotateInDirection(attackedCharacterDelta);
                 OnAttack();
-            
-                if (!this.colliders["main"].CollidesWith(game.Scene.Player.colliders["main"])) IsAttacking = false;
-                if ((gameTime.TotalGameTime - lastAttack) > attackDelay || game.Player.IsDead())
+
+                if(!this.colliders["main"].CollidesWith(attackedCharacter.colliders["main"])) IsAttacking = false;
+                if((gameTime.TotalGameTime - lastAttack) > attackDelay || attackedCharacter.IsDead())
                 {
                     IsAttacking = false;
-                    game.Player.ReduceLife(12f);
+                    attackedCharacter.ReduceLife(12f);
                 }
                 return;
             }
 
-            if (this.IsDead())
+            if(this.IsDead())
             {
                 OnDead();
                 return;
             }
 
-            foreach (Collider collider in colliders.Values)
+            foreach(Collider collider in colliders.Values)
             {
                 collider.drawColor = Color.GreenYellow;
             }
 
-            //Vector3 playerDelta = Vector3.Subtract(game.Player.position, position);
             float playerDistance = playerDelta.Length();
             playerDelta.Normalize();
             bool playerVisible = isVisible(playerDelta, playerDistance);
 
             Vector3 playerToNextTargetDelta = Vector3.Subtract(game.Player.position, nextTarget);
 
-            if (playerToNextTargetDelta.Length() > 300f)
+            if(playerToNextTargetDelta.Length() > 300f)
             {
                 nextTarget = position;
             }
 
-            if (playerVisible && playerDistance < detectionDistance)
+            if(playerVisible && playerDistance < detectionDistance)
             {
                 isChasing = true;
             }
-           
-            if (this.colliders["main"].CollidesWith(game.Scene.Player.colliders["main"]))
-            {
-                if (lastAttack + attackDelay < gameTime.TotalGameTime && !game.Player.IsDead())
-                {
-                    if (!IsAttacking) IsAttacking = true;
-                    OnAttack();
-                    //game.Player.ReduceLife(12f);
-                    lastAttack = gameTime.TotalGameTime;
-                }
-                nextTarget = position;
-                if (!IsAttacking) OnIdle();
-            } else
-            if (isChasing)
-            {
 
-                if (Math.Abs(nextTarget.X - position.X) < 20f && Math.Abs(nextTarget.Z - position.Z) < 20f)
+            if(this.colliders["main"].CollidesWith(game.Scene.Player.colliders["main"]))
+            {
+                attackedCharacter = game.Player;
+            }
+            else if(isChasing)
+            {
+                if(Math.Abs(nextTarget.X - position.X) < 20f && Math.Abs(nextTarget.Z - position.Z) < 20f)
                 {
                     LinkedList<Tuple<int, int>> newPath = game.Scene.movement.getPathToTarget(
                                                               position,
                                                               game.Player.position);
-                    if (newPath != null && newPath.Count > 0)
+                    if(newPath != null && newPath.Count > 0)
                     {
                         LinkedListNode<Tuple<int, int>> candidateNode = newPath.Last;
                         do
@@ -114,18 +98,18 @@ namespace App.Models
                             Vector3 candidateDelta = Vector3.Subtract(candidatePosition, position);
                             float candidateDistance = candidateDelta.Length();
                             candidateDelta.Normalize();
-                            if (isVisible(candidateDelta, candidateDistance))
+                            if(isVisible(candidateDelta, candidateDistance))
                             {
                                 nextTarget = candidatePosition;
                                 break;
                             }
                             candidateNode = candidateNode.Previous;
-                            if (candidateNode == null)
+                            if(candidateNode == null)
                             {
                                 nextTarget = position;
                                 break;
                             }
-                        } while (true);
+                        } while(true);
                     }
                     else
                     {
@@ -135,38 +119,56 @@ namespace App.Models
                 }
             }
 
+            if(attackedCharacter != null && attackedCharacter.colliders.ContainsKey("main") ? this.colliders["main"].CollidesWith(attackedCharacter.colliders["main"]) : false)
+            {
+                if(lastAttack + attackDelay < gameTime.TotalGameTime && !game.Player.IsDead())
+                {
+                    if(!IsAttacking) IsAttacking = true;
+                    OnAttack();
+                    lastAttack = gameTime.TotalGameTime;
+                }
+                nextTarget = position;
+                if(!IsAttacking) OnIdle();
+            }
+
             Vector3 targetDelta = Vector3.Subtract(nextTarget, position);
-            if (targetDelta.Length() < 2f)
+            if(targetDelta.Length() < 2f)
                 return;
 
-            foreach (IGameObject wall in game.Scene.children["Walls"].children.Values)
+            foreach(IGameObject wall in game.Scene.children["Walls"].children.Values)
             {
-                foreach (Collider collider in wall.colliders.Values)
+                foreach(Collider collider in wall.colliders.Values)
                 {
                     targetDelta = checkSensors(collider, targetDelta);
                 }
             }
 
-            foreach (IGameObject interactiveObject in game.Scene.children["Interactive"].children.Values)
+            foreach(IGameObject interactiveObject in game.Scene.children["Interactive"].children.Values)
             {
-                foreach (Collider collider in interactiveObject.colliders.Values)
+                foreach(Collider collider in interactiveObject.colliders.Values)
                 {
                     targetDelta = checkSensors(collider, targetDelta);
                 }
             }
 
-            foreach (IGameObject other in game.Scene.children["Others"].children.Values)
+            foreach(IGameObject other in game.Scene.children["Others"].children.Values)
             {
-                foreach (Collider collider in other.colliders.Values)
+                foreach(Collider collider in other.colliders.Values)
                 {
                     targetDelta = checkSensors(collider, targetDelta);
                 }
             }
 
-            foreach (IGameObject opponent in game.Scene.children["Opponents"].children.Values)
+            foreach(IGameObject opponent in game.Scene.children["Opponents"].children.Values)
             {
-                if (opponent != this && opponent.colliders.ContainsKey("main"))
+                if(opponent != this && opponent.colliders.ContainsKey("main"))
                     targetDelta = checkSensors(opponent.colliders["main"], targetDelta);
+            }
+
+            foreach(IGameObject teammate in game.Scene.children["Teammates"].children.Values)
+            {
+                if(teammate.colliders.ContainsKey("main"))
+                    targetDelta = checkSensors(teammate.colliders["main"], targetDelta);
             }
 
             targetDelta = checkSensors(game.Scene.Player.colliders["main"], targetDelta);
@@ -175,7 +177,7 @@ namespace App.Models
 
             rotateInDirection(targetDelta);
 
-            if (targetDelta.Length() > 0f && targetDistance > 10f)
+            if(targetDelta.Length() > 0f && targetDistance > 10f)
             {
                 moveInDirection(targetDelta);
                 OnMove();
