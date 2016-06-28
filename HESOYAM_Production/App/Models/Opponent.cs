@@ -9,17 +9,16 @@ using System.Collections.Generic;
 namespace App.Models
 {
 
-    class Opponent : Character
+    abstract class Opponent : Character
     {
         public float speed;
         public float detectionDistance;
-        private Vector3 nextTarget;
-        private bool isChasing;
-        private TimeSpan lastAttack;
-        private TimeSpan attackDelay;
-        private TimeSpan lastShoot;
-        private TimeSpan shootDelay;
-        private Character attackedCharacter;
+        protected Vector3 nextTarget;
+        protected bool isChasing;
+        protected TimeSpan lastAttack;
+        protected TimeSpan attackDelay;
+        protected TimeSpan lastShoot;
+        protected TimeSpan shootDelay;
 
         public Opponent(
             Engine game,
@@ -63,7 +62,7 @@ namespace App.Models
             shootDelay = new TimeSpan(0, 0, 3);
         }
 
-        private Vector3 checkSensors(Collider collider, Vector3 vector)
+        protected Vector3 checkSensors(Collider collider, Vector3 vector)
         {
             if(this.colliders["right"].CollidesWith(collider))
             {
@@ -92,178 +91,14 @@ namespace App.Models
             return vector;
         }
 
-        public override void Update(GameTime gameTime)
-        {
-            base.Update(gameTime);
-
-            if(!game.PlayMode)
-            {
-                return;
-            }
-
-            Vector3 playerDelta = Vector3.Subtract(game.Player.position, position);
-            Vector3 attackedCharacterDelta = Vector3.Zero;
-            if(attackedCharacter != null) attackedCharacterDelta = Vector3.Subtract(attackedCharacter.position, position);
-            if (IsAttacking)
-            {
-                this.rotateInDirection(attackedCharacterDelta);
-                OnAttack();
-
-                if (!this.colliders["main"].CollidesWith(attackedCharacter.colliders["main"])) IsAttacking = false;
-                if ((gameTime.TotalGameTime - lastAttack) > attackDelay || attackedCharacter.IsDead())
-                {
-                    IsAttacking = false;
-                    attackedCharacter.ReduceLife(12f);
-                }
-                return;
-            }
-
-            if(this.IsDead())
-            {
-                OnDead();
-                return;
-            }
-
-            foreach(Collider collider in colliders.Values)
-            {
-                collider.drawColor = Color.GreenYellow;
-            }
-
-            float playerDistance = playerDelta.Length();
-            playerDelta.Normalize();
-            bool playerVisible = isVisible(playerDelta, playerDistance);
-
-            Vector3 playerToNextTargetDelta = Vector3.Subtract(game.Player.position, nextTarget);
-
-            if(playerToNextTargetDelta.Length() > 300f)
-            {
-                nextTarget = position;
-            }
-
-            if(playerVisible && playerDistance < detectionDistance)
-            {
-                isChasing = true;
-            }
-
-            if(this.colliders["main"].CollidesWith(game.Scene.Player.colliders["main"]))
-            {
-                attackedCharacter = game.Player;
-            }
-            else if(isChasing)
-            {
-                shoot(playerDelta, gameTime.TotalGameTime);
-                if(Math.Abs(nextTarget.X - position.X) < 20f && Math.Abs(nextTarget.Z - position.Z) < 20f)
-                {
-                    LinkedList<Tuple<int, int>> newPath = game.Scene.movement.getPathToTarget(
-                                                              position,
-                                                              game.Player.position);
-                    if(newPath != null && newPath.Count > 0)
-                    {
-                        LinkedListNode<Tuple<int, int>> candidateNode = newPath.Last;
-                        do
-                        {
-                            Vector3 candidatePosition = game.Scene.movement.coordsToPosition(candidateNode.Value);
-                            Vector3 candidateDelta = Vector3.Subtract(candidatePosition, position);
-                            float candidateDistance = candidateDelta.Length();
-                            candidateDelta.Normalize();
-                            if(isVisible(candidateDelta, candidateDistance))
-                            {
-                                nextTarget = candidatePosition;
-                                break;
-                            }
-                            candidateNode = candidateNode.Previous;
-                            if(candidateNode == null)
-                            {
-                                nextTarget = position;
-                                break;
-                            }
-                        } while(true);
-                    }
-                    else
-                    {
-                        isChasing = false;
-                        OnIdle();
-                    }
-                }
-            }
-
-            if(attackedCharacter != null && attackedCharacter.colliders.ContainsKey("main") ? this.colliders["main"].CollidesWith(attackedCharacter.colliders["main"]) : false)
-            {
-                if(lastAttack + attackDelay < gameTime.TotalGameTime && !game.Player.IsDead())
-                {
-                    if(!IsAttacking) IsAttacking = true;
-                    OnAttack();
-                    lastAttack = gameTime.TotalGameTime;
-                }
-                nextTarget = position;
-                if(!IsAttacking) OnIdle();
-            }
-
-            Vector3 targetDelta = Vector3.Subtract(nextTarget, position);
-            if(targetDelta.Length() < 2f)
-                return;
-
-            foreach(IGameObject wall in game.Scene.children["Walls"].children.Values)
-            {
-                foreach(Collider collider in wall.colliders.Values)
-                {
-                    targetDelta = checkSensors(collider, targetDelta);
-                }
-            }
-
-            foreach(IGameObject interactiveObject in game.Scene.children["Interactive"].children.Values)
-            {
-                foreach(Collider collider in interactiveObject.colliders.Values)
-                {
-                    targetDelta = checkSensors(collider, targetDelta);
-                }
-            }
-
-            foreach(IGameObject other in game.Scene.children["Others"].children.Values)
-            {
-                foreach(Collider collider in other.colliders.Values)
-                {
-                    targetDelta = checkSensors(collider, targetDelta);
-                }
-            }
-
-            foreach(IGameObject opponent in game.Scene.children["Opponents"].children.Values)
-            {
-                if(opponent != this && opponent.colliders.ContainsKey("main"))
-                    targetDelta = checkSensors(opponent.colliders["main"], targetDelta);
-            }
-
-            foreach(IGameObject teammate in game.Scene.children["Teammates"].children.Values)
-            {
-                if(teammate.colliders.ContainsKey("main"))
-                    targetDelta = checkSensors(teammate.colliders["main"], targetDelta);
-            }
-
-            targetDelta = checkSensors(game.Scene.Player.colliders["main"], targetDelta);
-            float targetDistance = targetDelta.Length();
-            targetDelta.Normalize();
-
-            rotateInDirection(targetDelta);
-
-            if(targetDelta.Length() > 0f && targetDistance > 10f)
-            {
-                moveInDirection(targetDelta);
-                OnMove();
-            }
-            else
-            {
-                OnIdle();
-                nextTarget = position;
-            }
-        }
-
-        private void moveInDirection(Vector3 direction)
+        
+        protected void moveInDirection(Vector3 direction)
         {
             direction = Vector3.Multiply(direction, speed);
             Move(direction.X, direction.Y, direction.Z);
         }
 
-        void rotateInDirection(Vector3 direction)
+        protected void rotateInDirection(Vector3 direction)
         {
             float rotationY = (float)Math.Atan2(direction.X, direction.Z);
 
@@ -273,18 +108,5 @@ namespace App.Models
             }
         }
 
-        private void shoot(Vector3 direction, TimeSpan time)
-        {
-            if(lastShoot + shootDelay < time)
-            {
-                lastShoot = time;
-                new Projectile(game, new Vector3(position.X, position.Y + 120f, position.Z), direction, 15f); 
-            }
-        }
-
-        public void trigger(Teammate teammate)
-        {
-            attackedCharacter = teammate;
-        }
     }
 }
