@@ -16,6 +16,7 @@ namespace App
         GameObject hoverTeammate;
         public GameObject selectedTeammate;
         GameObject objectToInteract;
+        GameObject menuForObject;
         Rectangle menuFramePos;
         String message;
         TimeSpan messageStart;
@@ -262,13 +263,15 @@ namespace App
 
         private Rectangle GetMenuPosition()
         {
-            if (menuFramePos == Rectangle.Empty) {
+            if (menuFramePos == Rectangle.Empty || objectToInteract != menuForObject) {
                 menuFramePos = new Rectangle(
                     game.InputState.Mouse.GetMouseLocation().X + 20,
                     game.InputState.Mouse.GetMouseLocation().Y + 20,
                     game.Textures["frame"].Width,
                     game.Textures["frame"].Height
                 );
+
+                menuForObject = objectToInteract;
             }
 
             return menuFramePos;
