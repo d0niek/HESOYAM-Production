@@ -244,13 +244,13 @@ namespace HESOYAM_Production
             // Exit() is obsolete on iOS
             #if !__IOS__ &&  !__TVOS__
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
-                Exit();
+                OnEscButton();
             #endif
 
             // TODO: Add your update logic here
             // Allows the game to exit
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed) {
-                Exit();
+                OnEscButton();
             }
 
             base.Update(gameTime);
@@ -266,10 +266,7 @@ namespace HESOYAM_Production
             if (PlayMode) {
                 camera.position = camera.PlayModePosition;
 
-                hud.ResetSelectedTeammate();
-                hud.ResetObjectToInteract();
-
-                TimeToInteract = false;
+                ResetHUDInPauseMode();
             }
         }
 
@@ -279,6 +276,23 @@ namespace HESOYAM_Production
             if (inputState.IsNewKeyPress(Keys.F5, null, out outPlayerIndex)) {
                 Program.debugMode = !Program.debugMode;
             }
+        }
+
+        private void OnEscButton()
+        {
+            if (PlayMode) {
+                Exit();
+            } else {
+                ResetHUDInPauseMode();
+            }
+        }
+
+        private void ResetHUDInPauseMode()
+        {
+            hud.ResetSelectedTeammate();
+            hud.ResetObjectToInteract();
+
+            TimeToInteract = false;
         }
 
         /// <summary>
