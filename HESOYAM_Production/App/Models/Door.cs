@@ -6,7 +6,7 @@ using System;
 namespace App.Models
 {
 
-    class Door : Wall
+    class Door : Wall, IInteractiveObject
     {
         bool isLock;
         protected bool isOpen;
@@ -76,5 +76,17 @@ namespace App.Models
             model = game.Models[modelDoor];
             modelCut = game.Models[modelDoor + "_przyciete"];
         }
+
+        #region IInteractiveOptions implementation
+
+        public String[] GetOptionsToInteract()
+        {
+            String[] options = { "", "asd" };
+            options[0] = isOpen ? "Close" : "Open";
+
+            return options;
+        }
+
+        #endregion
     }
 }

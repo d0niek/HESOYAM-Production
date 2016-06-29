@@ -9,7 +9,7 @@ using System.Collections.Generic;
 namespace App.Models
 {
 
-    abstract class Opponent : Character
+    abstract class Opponent : Character, IInteractiveObject
     {
         public float speed;
         public float detectionDistance;
@@ -65,26 +65,22 @@ namespace App.Models
 
         protected Vector3 checkSensors(Collider collider, Vector3 vector)
         {
-            if(this.colliders["right"].CollidesWith(collider))
-            {
+            if (this.colliders["right"].CollidesWith(collider)) {
                 this.colliders["right"].drawColor = Color.OrangeRed;
                 vector.Z = (vector.Z > 0 ? 0 : vector.Z);
             }
 
-            if(this.colliders["left"].CollidesWith(collider))
-            {
+            if (this.colliders["left"].CollidesWith(collider)) {
                 this.colliders["left"].drawColor = Color.OrangeRed;
                 vector.Z = (vector.Z < 0 ? 0 : vector.Z);
             }
 
-            if(this.colliders["front"].CollidesWith(collider))
-            {
+            if (this.colliders["front"].CollidesWith(collider)) {
                 this.colliders["front"].drawColor = Color.OrangeRed;
                 vector.X = (vector.X > 0 ? 0 : vector.X);
             }
 
-            if(this.colliders["back"].CollidesWith(collider))
-            {
+            if (this.colliders["back"].CollidesWith(collider)) {
                 this.colliders["back"].drawColor = Color.OrangeRed;
                 vector.X = (vector.X < 0 ? 0 : vector.X);
             }
@@ -101,10 +97,9 @@ namespace App.Models
 
         protected void rotateInDirection(Vector3 direction)
         {
-            float rotationY = (float)Math.Atan2(direction.X, direction.Z);
+            float rotationY = (float) Math.Atan2(direction.X, direction.Z);
 
-            if(Math.Abs(this.rotation.Y - rotationY) > 0.01f)
-            {
+            if (Math.Abs(this.rotation.Y - rotationY) > 0.01f) {
                 this.rotation = new Vector3(0, rotationY, 0);
             }
         }
@@ -113,5 +108,15 @@ namespace App.Models
         {
             attackedCharacter = teammate;
         }
+
+        #region IInteractiveOptions implementation
+
+        public String[] GetOptionsToInteract()
+        {
+            String[] options = { "Attack" };
+            return options;
+        }
+
+        #endregion
     }
 }

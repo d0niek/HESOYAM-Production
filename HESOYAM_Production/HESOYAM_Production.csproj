@@ -81,6 +81,7 @@
     <Compile Include="App\Models\Teammate.cs" />
     <Compile Include="App\Models\Lamp.cs" />
     <Compile Include="App\Models\ExitDoor.cs" />
+    <Compile Include="App\IInteractiveObject.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Icon.png" />
