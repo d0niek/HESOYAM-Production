@@ -6,7 +6,7 @@ using System;
 namespace App.Models
 {
 
-    public class Cupboard : GameObject
+    public class Cupboard : GameObject, IInteractiveObject
     {
         String item;
 
@@ -60,5 +60,15 @@ namespace App.Models
             game.Scene.children["Others"].AddChild(this);
             this.Hover = false;
         }
+
+        #region IInteractiveOptions implementation
+
+        public String[] GetOptionsToInteract()
+        {
+            String[] options = { "Take the contents of" };
+            return options;
+        }
+
+        #endregion
     }
 }

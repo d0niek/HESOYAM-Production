@@ -244,21 +244,23 @@ namespace App
         private void DrawMenuToInteractWithObject()
         {
             if (objectToInteract != null) {
-                Rectangle menuPosition = GetMenuPosition();
-                game.spriteBatch.Draw(game.Textures["frame"], menuPosition, Color.White);
-
-                Vector2 pos = new Vector2(menuPosition.X + 18, menuPosition.Y + 13);
-                game.spriteBatch.DrawString(
-                    game.Fonts["Open Sans"],
-                    "Interact with " + objectToInteract.name,
-                    pos,
-                    Color.DarkOrange
-                );
+                Rectangle framePosition = DrawMenuFrameWithTitle();
+                DrawOptionsInMenu(framePosition);
 
                 game.TimeToInteract = true;
             } else {
                 menuFramePos = Rectangle.Empty;
             }
+        }
+
+        private Rectangle DrawMenuFrameWithTitle()
+        {
+            Rectangle menuPosition = GetMenuPosition();
+            game.spriteBatch.Draw(game.Textures["frame"], menuPosition, Color.White);
+
+            DrawFrameTitle(menuPosition, "Interact with " + objectToInteract.name.Split('_')[0]);
+
+            return menuPosition;
         }
 
         private Rectangle GetMenuPosition()
@@ -275,6 +277,59 @@ namespace App
             }
 
             return menuFramePos;
+        }
+
+        private void DrawFrameTitle(Rectangle framePosition, String title)
+        {
+            Vector2 pos = new Vector2(framePosition.X + 18, framePosition.Y + 13);
+            game.spriteBatch.DrawString(
+                game.Fonts["Open Sans"],
+                title,
+                pos,
+                Color.DarkOrange
+            );
+        }
+
+        private void DrawOptionsInMenu(Rectangle menuFramePosition)
+        {
+            IInteractiveObject interactiveObject = (IInteractiveObject) objectToInteract;
+            String[] options = interactiveObject.GetOptionsToInteract();
+            const int shift = 25;
+            int loop = 1;
+
+            foreach (String option in options) {
+                Vector2 pos = new Vector2(menuFramePosition.X + 25, menuFramePosition.Y + 13 + (loop * shift));
+                DrawBackgroundUnderMenuOption(pos, option);
+                game.spriteBatch.DrawString(
+                    game.Fonts["Open Sans"],
+                    option,
+                    pos,
+                    Color.DarkOrange
+                );
+
+                loop++;
+            }
+        }
+
+        private void DrawBackgroundUnderMenuOption(Vector2 optionPosition, String option)
+        {
+            Rectangle rec = new  Rectangle(
+                                (int) optionPosition.X,
+                                (int) optionPosition.Y,
+                                200,
+                                20
+                            );
+
+            if (rec.Contains(game.InputState.Mouse.GetMouseLocation())) {
+                game.spriteBatch.Draw(game.Textures["option_background"], rec, Color.White);
+                OnMouseLeftButtonClick(() => ClickOnMenuOption(option));
+            }
+        }
+
+        private void ClickOnMenuOption(String option)
+        {
+            String objectName = objectToInteract.name.Split('_')[0];
+            Console.WriteLine("Tutaj chyba Wasza kolej\nna wywołanie opcji " + option + " dla obiektu " + objectName);
         }
 
         private void DrawMessage(GameTime gameTime)
