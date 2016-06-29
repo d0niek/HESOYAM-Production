@@ -299,7 +299,7 @@ namespace App
 
             foreach (String option in options) {
                 Vector2 pos = new Vector2(menuFramePosition.X + 25, menuFramePosition.Y + 13 + (loop * shift));
-                DrawBackgroundUnderMenuOption(pos);
+                DrawBackgroundUnderMenuOption(pos, option);
                 game.spriteBatch.DrawString(
                     game.Fonts["Open Sans"],
                     option,
@@ -311,7 +311,7 @@ namespace App
             }
         }
 
-        private void DrawBackgroundUnderMenuOption(Vector2 optionPosition)
+        private void DrawBackgroundUnderMenuOption(Vector2 optionPosition, String option)
         {
             Rectangle rec = new  Rectangle(
                                 (int) optionPosition.X,
@@ -322,7 +322,14 @@ namespace App
 
             if (rec.Contains(game.InputState.Mouse.GetMouseLocation())) {
                 game.spriteBatch.Draw(game.Textures["option_background"], rec, Color.White);
+                OnMouseLeftButtonClick(() => ClickOnMenuOption(option));
             }
+        }
+
+        private void ClickOnMenuOption(String option)
+        {
+            String objectName = objectToInteract.name.Split('_')[0];
+            Console.WriteLine("Tutaj chyba Wasza kolej\nna wywołanie opcji " + option + " dla obiektu " + objectName);
         }
 
         private void DrawMessage(GameTime gameTime)
