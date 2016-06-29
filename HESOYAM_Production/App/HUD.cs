@@ -299,6 +299,7 @@ namespace App
 
             foreach (String option in options) {
                 Vector2 pos = new Vector2(menuFramePosition.X + 25, menuFramePosition.Y + 13 + (loop * shift));
+                DrawBackgroundUnderMenuOption(pos);
                 game.spriteBatch.DrawString(
                     game.Fonts["Open Sans"],
                     option,
@@ -307,6 +308,20 @@ namespace App
                 );
 
                 loop++;
+            }
+        }
+
+        private void DrawBackgroundUnderMenuOption(Vector2 optionPosition)
+        {
+            Rectangle rec = new  Rectangle(
+                                (int) optionPosition.X,
+                                (int) optionPosition.Y,
+                                200,
+                                20
+                            );
+
+            if (rec.Contains(game.InputState.Mouse.GetMouseLocation())) {
+                game.spriteBatch.Draw(game.Textures["option_background"], rec, Color.White);
             }
         }
 
