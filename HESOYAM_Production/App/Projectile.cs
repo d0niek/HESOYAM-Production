@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 using System;
 using App.Collisions;
+using App.Models;
 using HESOYAM_Production.App;
 
 namespace App
@@ -12,6 +13,7 @@ namespace App
     {
         public Vector3 direction;
         public float speed;
+        public bool isPlayerShooting;
 
         public Projectile(
             Engine game,
@@ -36,6 +38,7 @@ namespace App
         {
             this.direction = direction;
             this.speed = speed;
+            isPlayerShooting = false;
             rotation = new Vector3(-(float)Math.Atan2(direction.X, direction.Z) + (float)Math.PI / 2, 0f, -(float)Math.PI / 2);
             game.AddComponent(this);
             AddCollider("back", new Collider(game, position, new Vector3(10f, 10f, 10f), Vector3.Zero));
@@ -57,7 +60,12 @@ namespace App
             {
                 moveInDirection();
                 CheckCollisionsWithObstacles();
-                CheckCollisionsWithPlayer();
+                if(!isPlayerShooting)
+                {
+                    CheckCollisionsWithPlayer();
+                } else CheckCollisionsWithOpponent();
+
+
             }
         }
 
@@ -110,5 +118,25 @@ namespace App
             }
             
         }
-}
+
+        private void CheckCollisionsWithOpponent()
+        {
+            foreach(IGameObject opponent in game.Scene.children["Opponents"].children.Values)
+            {
+                foreach (Collider thisCollider in colliders.Values)
+                {
+                    if(opponent.colliders.ContainsKey("hitbox"))
+                    {
+                        if (thisCollider.CollidesWith(opponent.colliders["hitbox"]))
+                        {
+                            ((Opponent)(opponent)).ReduceLife(19f);
+                            destroy();
+                        }
+                    }
+                    
+                }
+            }
+
+        }
+    }
 }

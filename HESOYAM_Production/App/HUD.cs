@@ -4,6 +4,7 @@ using System;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 using App.Models;
+using Microsoft.Xna.Framework.Input;
 
 namespace App
 {
@@ -229,6 +230,22 @@ namespace App
             }
 
             return null;
+        }
+
+        public Vector3 FindWhereClicked()
+        {
+            MouseState ms = this.game.InputState.Mouse.CurrentMouseState;
+            Vector3 nearScreenPoint = new Vector3(ms.X, ms.Y, 0);
+            Vector3 farScreenPoint = new Vector3(ms.X, ms.Y, 1);
+            Vector3 nearWorldPoint = game.GraphicsDevice.Viewport.Unproject(nearScreenPoint, game.Camera.ProjectionMatrix, game.Camera.ViewMatrix, Matrix.Identity);
+            Vector3 farWorldPoint = game.GraphicsDevice.Viewport.Unproject(farScreenPoint, game.Camera.ProjectionMatrix, game.Camera.ViewMatrix, Matrix.Identity);
+
+            Vector3 direction = farWorldPoint - nearWorldPoint;
+
+            float zFactor = -nearWorldPoint.Y / direction.Y;
+            Vector3 zeroWorldPoint = nearWorldPoint + direction * zFactor;
+
+            return zeroWorldPoint;
         }
 
         private void SetObjectToInteractForDrawMenu(GameObject gameObject)

@@ -7,6 +7,7 @@ using App.Animation;
 using System.Collections.Generic;
 using App.Models;
 
+
 namespace App
 {
 
@@ -15,9 +16,12 @@ namespace App
         float cameraAngle;
         bool isAttacking;
         List<string> bag;
+        bool isHavingGun;
         bool isPlayerInteracting;
         private TimeSpan lastAttack;
         private TimeSpan attackDelay;
+        protected TimeSpan lastShoot;
+        protected TimeSpan shootDelay;
         Door doorToOpen;
 
         public Player(
@@ -32,6 +36,7 @@ namespace App
             isAttacking = false;
             bag = new List<string>();
             isPlayerInteracting = false;
+            isHavingGun = true;
 
             Vector3 newPosition = position;
             Vector3 newSize = new Vector3(35f, 190f, 35f);
@@ -65,6 +70,8 @@ namespace App
 
             lastAttack = TimeSpan.Zero;
             attackDelay = new TimeSpan(0, 0, 0, 0, 870);
+            lastShoot = TimeSpan.Zero;
+            shootDelay = new TimeSpan(0, 0, 1);
         }
 
         public override void Update(GameTime gameTime)
@@ -190,16 +197,44 @@ namespace App
                 rotationY += (float) (Math.PI * 2);
             }
 
-
-            if (rotationY >= (1.75 * Math.PI) || rotationY < Math.PI / 4) {
-                playerModel.PlayClip("bieg_przod").Looping = true;
-            } else if (rotationY <= (1.75 * Math.PI) && rotationY >= (1.25 * Math.PI)) {
-                playerModel.PlayClip("bieg_lewo").Looping = true;
-            } else if (rotationY <= (0.75 * Math.PI) && rotationY > Math.PI / 4) {
-                playerModel.PlayClip("bieg_prawo").Looping = true;
-            } else {
-                playerModel.PlayClip("bieg_tyl").Looping = true;
+            if (!isHavingGun)
+            {
+                if (rotationY >= (1.75 * Math.PI) || rotationY < Math.PI / 4)
+                {
+                    playerModel.PlayClip("bieg_przod").Looping = true;
+                }
+                else if (rotationY <= (1.75 * Math.PI) && rotationY >= (1.25 * Math.PI))
+                {
+                    playerModel.PlayClip("bieg_lewo").Looping = true;
+                }
+                else if (rotationY <= (0.75 * Math.PI) && rotationY > Math.PI / 4)
+                {
+                    playerModel.PlayClip("bieg_prawo").Looping = true;
+                }
+                else
+                {
+                    playerModel.PlayClip("bieg_tyl").Looping = true;
+                }
+            } else
+            {
+                if (rotationY >= (1.75 * Math.PI) || rotationY < Math.PI / 4)
+                {
+                    playerModel.PlayClip("bron_chod_przod").Looping = true;
+                }
+                else if (rotationY <= (1.75 * Math.PI) && rotationY >= (1.25 * Math.PI))
+                {
+                    playerModel.PlayClip("bron_chod_lewo").Looping = true;
+                }
+                else if (rotationY <= (0.75 * Math.PI) && rotationY > Math.PI / 4)
+                {
+                    playerModel.PlayClip("bron_chod_prawo").Looping = true;
+                }
+                else
+                {
+                    playerModel.PlayClip("bron_chod_tyl").Looping = true;
+                }
             }
+            
         }
 
         new protected void OnIdle()
@@ -219,7 +254,15 @@ namespace App
             if (!isAttacking)
                 isAttacking = true;
             AnimatedObject playerModel = (AnimatedObject) children["playerModel"];
-            AnimationPlayer player = playerModel.PlayClip("cios_piesc");
+            if (!isHavingGun)
+            {
+                AnimationPlayer player = playerModel.PlayClip("cios_piesc");
+            }
+            else
+            {
+                AnimationPlayer player = playerModel.PlayClip("bron_piesc");
+            }
+            
             player.Looping = false;
             System.Console.WriteLine("czas animacji " + player.Duration);
             if (player.Position >= player.Duration)
@@ -231,7 +274,7 @@ namespace App
             AnimatedObject playerModel = (AnimatedObject)children["playerModel"];
             AnimationPlayer player= playerModel.PlayClip("interakcja");
             player.Looping = false;
-            if (player.Position >= player.Duration)
+            if (player.Position >= player.Duration / 3.0f)
             {
                 isPlayerInteracting = false;
                 doorToOpen.TryToOpenDoor();
@@ -302,10 +345,17 @@ namespace App
                 if (opponent.colliders.ContainsKey("main"))
                     vector = CheckSensors(opponent.colliders["main"], vector);
 
-                if (IsCollisionWithOpponent(opponent) && opponent.IsMouseOverObject()) {
-                    OnMouseLeftButtonPressed(() => AttackOpponent(opponent, gameTime));
- 
-                }
+                if(!isHavingGun)
+                {
+                    if (IsCollisionWithOpponent(opponent) && opponent.IsMouseOverObject())
+                    {
+                        OnMouseLeftButtonPressed(() => AttackOpponent(opponent, gameTime));
+
+                    }
+                } else OnMouseLeftButtonPressed(() => AttackOpponent(opponent, gameTime));
+                
+
+                
             }
 
             //RemoveOpponentsFromScene(opponentsToRemove);
@@ -357,14 +407,35 @@ namespace App
                 return false;
         }
 
+        private void shoot(Vector3 direction, TimeSpan time)
+        {
+            if (lastShoot + shootDelay < time)
+            {
+                lastShoot = time;
+                (new Projectile(game, new Vector3(position.X, position.Y + 120f, position.Z), direction, 15f).isPlayerShooting) = true;
+            }
+        }
+
         private void AttackOpponent(Opponent opponent, GameTime gameTime)
         {
-            rotateInDirection(Vector3.Subtract(opponent.position, this.position), false);
-            if (lastAttack + attackDelay < gameTime.TotalGameTime) {
-                OnAttack();
-                opponent.ReduceLife(34f);
-                lastAttack = gameTime.TotalGameTime;
+            if (!isHavingGun)
+            {
+                rotateInDirection(Vector3.Subtract(opponent.position, this.position), false);
+                if (lastAttack + attackDelay < gameTime.TotalGameTime)
+                {
+                    OnAttack();
+                    opponent.ReduceLife(34f);
+                    lastAttack = gameTime.TotalGameTime;
+                }
+            } else
+            {
+                Vector3 opponentDelta = Matrix.CreateFromYawPitchRoll(((IGameElement)children["playerModel"]).rotation.Y, 0, 0).Backward;
+                //opponentDelta.Normalize();
+                shoot(opponentDelta, gameTime.TotalGameTime);
+
             }
+
+            
         }
 
         private void OpenDoor(Door door)

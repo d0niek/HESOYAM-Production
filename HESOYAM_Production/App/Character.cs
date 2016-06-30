@@ -144,6 +144,11 @@ namespace App
 
         }
 
+        protected void OnTeammateIdle()
+        {
+            this.PlayClip("bujanie").Looping = true;
+        }
+
         #endregion
     }
 }

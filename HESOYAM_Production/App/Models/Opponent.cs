@@ -33,7 +33,14 @@ namespace App.Models
             Setup();
 
             Vector3 newPosition = position;
-            Vector3 newSize = new Vector3(5.0f, 10.0f, 40.0f);
+            Vector3 newSize = new Vector3(35f, 190f, 35f);
+            newPosition.Y += 95f;
+
+            AddCollider("hitbox", new Collider(game, newPosition, newSize, Vector3.Zero));
+
+            
+            newPosition = position;
+            newSize = new Vector3(5.0f, 10.0f, 40.0f);
 
             newPosition.X += 45;
             AddCollider("front", new Collider(game, newPosition, newSize, Vector3.Zero));
@@ -49,6 +56,7 @@ namespace App.Models
 
             newPosition.Z -= 90;
             AddCollider("left", new Collider(game, newPosition, newSize, Vector3.Zero));
+
         }
 
         private void Setup()

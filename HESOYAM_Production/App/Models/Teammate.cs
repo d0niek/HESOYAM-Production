@@ -203,7 +203,7 @@ namespace App.Models
                 else
                 {
                     nextTarget = position;
-                    OnIdle();
+                    OnTeammateIdle();
                 }
             }
 
@@ -224,7 +224,7 @@ namespace App.Models
 
             if(targetDelta.Length() < 2f)
             {
-                OnIdle();
+                OnTeammateIdle();
                 return;
             }
 
