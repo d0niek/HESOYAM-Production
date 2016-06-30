@@ -33,19 +33,25 @@ namespace App
             Engine game,
             Vector3 position,
             Vector3 direction,
-            float speed = 10.0f
+            float speed = 10.0f,
+            bool isPlayerShooting = false
         ) : base(game, "defaultProjectile", game.Models["strzykawka"], position, default(Vector3), new Vector3(3f, 3f, 3f))
         {
             this.direction = direction;
             this.speed = speed;
-            isPlayerShooting = false;
+            this.isPlayerShooting = isPlayerShooting;
             rotation = new Vector3(-(float)Math.Atan2(direction.X, direction.Z) + (float)Math.PI / 2, 0f, -(float)Math.PI / 2);
             game.AddComponent(this);
             AddCollider("back", new Collider(game, position, new Vector3(10f, 10f, 10f), Vector3.Zero));
             Vector3 front = new Vector3(position.X + (50f * direction.X), position.Y, position.Z + (50f * direction.Z));
             AddCollider("front", new Collider(game, front, new Vector3(10f, 10f, 10f), Vector3.Zero));
             AddCollidersToGame();
-            AddChild(new Emitter(game, front));
+            Emitter emitter = new Emitter(game, front);
+            if(isPlayerShooting)
+            {
+                emitter.customTexture = game.Textures["particle"];
+            }
+            AddChild(emitter);
         }
 
         public override void Draw(GameTime gameTime)

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace HESOYAM_Production.App
 {
@@ -14,6 +15,7 @@ namespace HESOYAM_Production.App
         public TimeSpan emitDelay;
         public int amountPerRelase;
         public Particle customParticle;
+        public Texture2D customTexture;
 
         public Emitter(Engine game, Vector3 position) : base(game, "", null)
         {
@@ -34,14 +36,17 @@ namespace HESOYAM_Production.App
                 {
                     for(int i = 0; i < amountPerRelase; i++)
                     {
+                        Particle newParticle;
                         if(customParticle == null)
                         {
-                            game.Particles.addParticle(position, gameTime.TotalGameTime);
+                            newParticle = game.Particles.addParticle(position, gameTime.TotalGameTime);
                         }
                         else
                         {
-                            game.Particles.addParticle(position, customParticle, gameTime.TotalGameTime);
+                            newParticle = game.Particles.addParticle(position, customParticle, gameTime.TotalGameTime);
                         }
+                        if(customTexture != null)
+                            newParticle.customTexture = customTexture;
                     }
                     lastEmitTime = gameTime.TotalGameTime; 
                 }

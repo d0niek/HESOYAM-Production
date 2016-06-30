@@ -20,9 +20,7 @@ namespace App.Models
             Vector3? scale = null
         ) : base(game, name, model, position, rotation, scale)
         {
-            {
-                
-            }
+            speed = 7.0f;
         }
 
         public override void Update(GameTime gameTime)

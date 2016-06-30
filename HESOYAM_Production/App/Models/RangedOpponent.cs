@@ -38,7 +38,7 @@ namespace App.Models
             if (lastShoot + shootDelay < time)
             {
                 lastShoot = time;
-                (new Projectile(game, new Vector3(position.X, position.Y + 120f, position.Z), direction, 15f).isPlayerShooting) = false;
+                new Projectile(game, new Vector3(position.X, position.Y + 120f, position.Z), direction, 15f);
                     
             }
         }

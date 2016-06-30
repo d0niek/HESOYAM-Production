@@ -29,7 +29,6 @@ namespace HESOYAM_Production.App
             effect.View = game.Camera.ViewMatrix;
             effect.Projection = game.Camera.ProjectionMatrix;
             effect.TextureEnabled = true;
-            effect.Texture = game.Textures["particle"];
 
             VertexPositionTexture[] verts = new VertexPositionTexture[4];
             verts[0].TextureCoordinate = new Vector2(0.0f, 1.0f);
@@ -41,6 +40,10 @@ namespace HESOYAM_Production.App
 
             foreach(Particle i in particleList)
             {
+                if(i.customTexture == null)
+                    effect.Texture = game.Textures["redParticle"];
+                else
+                    effect.Texture = i.customTexture;
                 effect.Alpha = i.alpha;
                 Vector3 direction = Vector3.Subtract(game.Camera.position, i.position);
                 i.distanceToCamera = direction.Length();
@@ -71,9 +74,11 @@ namespace HESOYAM_Production.App
             }
         }
 
-        public void addParticle(Vector3 position, Particle customParticle, TimeSpan creationTime)
+        public Particle addParticle(Vector3 position, Particle customParticle, TimeSpan creationTime)
         {
-            particleList.Add(new Particle(position, creationTime, customParticle));
+            Particle newParticle = new Particle(position, creationTime, customParticle);
+            particleList.Add(newParticle);
+            return newParticle;
         }
 
         public override void Update(GameTime gameTime)

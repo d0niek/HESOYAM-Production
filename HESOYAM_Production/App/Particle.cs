@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,6 +22,7 @@ namespace HESOYAM_Production.App
         public float distanceToCamera;
         public float halfSize;
         public bool decay;
+        public Texture2D customTexture;
 
         public Particle(Vector3 position, TimeSpan creationTime, Random random)
         {
