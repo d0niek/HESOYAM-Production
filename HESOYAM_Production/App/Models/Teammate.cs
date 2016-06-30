@@ -256,6 +256,18 @@ namespace App.Models
             }
         }
 
+        public override void Draw(GameTime gameTime)
+        {
+            base.Draw(gameTime);
+            Vector3 source = position;
+            if(colliders.ContainsKey("main"))
+                source.Y += colliders["main"].box.Max.Y;
+            Vector3 destination = targetedObject.position;
+            if(targetedObject.colliders.ContainsKey("main"))
+                destination.Y += targetedObject.colliders["main"].box.Max.Y;
+            renderPath(source, destination);
+        }
+
         private void AttackOpponent(Opponent opponent, GameTime gameTime)
         {
             opponent.trigger(this);
@@ -268,6 +280,43 @@ namespace App.Models
             }
             if(opponent.IsDead())
                 targetedObject = this;
+        }
+
+        private void renderPath(Vector3 source, Vector3 destination)
+        {
+            Vector3 delta = Vector3.Subtract(destination, source);
+
+            if(delta.Length() > 150f && newPath != null)
+            {
+                BasicEffect effect = new BasicEffect(GraphicsDevice);
+
+                effect.VertexColorEnabled = true;
+                effect.LightingEnabled = false;
+                effect.View = game.Camera.ViewMatrix;
+                effect.Projection = game.Camera.ProjectionMatrix;
+
+                VertexPositionColor[] verts = new VertexPositionColor[20];
+
+                for(int i = 0; i < 20; i++)
+                {
+                    float diff = (float)Math.Sin(MathHelper.Pi * ((float)i / 19f));
+                    Vector3 thisPosition = Vector3.Add(source, Vector3.Multiply(delta, ((float)i / 19f)));
+                    verts[i].Position = Vector3.Add(thisPosition, new Vector3(0f, diff * (delta.Length() * 0.25f > 500f ? 500f : delta.Length() * 0.25f), 0f));
+                    verts[i].Color = Color.OrangeRed;
+                }
+
+                foreach(EffectPass pass in effect.CurrentTechnique.Passes)
+                {
+                    pass.Apply();
+
+                    GraphicsDevice.DrawUserPrimitives(
+                        PrimitiveType.LineStrip,
+                        verts,
+                        0,
+                        19
+                    );
+                }
+            }
         }
     }
 }

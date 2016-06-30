@@ -293,7 +293,7 @@ namespace App
                                 );
             rangedOpponent.setTexture(game.Textures[texture]);
             loadAnimationsToCharacter(rangedOpponent, texture);
-            addColider(rangedOpponent);
+            addColider(rangedOpponent, 100f, 180f, 100f);
 
             children["Opponents"].AddChild(rangedOpponent);
         }
