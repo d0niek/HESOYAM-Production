@@ -16,9 +16,9 @@ namespace App
         bool isAttacking;
         List<string> bag;
         bool isPlayerInteracting;
-        public bool isPlayerFinishedInteracting;
         private TimeSpan lastAttack;
         private TimeSpan attackDelay;
+        Door doorToOpen;
 
         public Player(
             Engine game,
@@ -32,7 +32,6 @@ namespace App
             isAttacking = false;
             bag = new List<string>();
             isPlayerInteracting = false;
-            isPlayerFinishedInteracting = false;
 
             Vector3 newPosition = position;
             Vector3 newSize = new Vector3(35f, 190f, 35f);
@@ -89,7 +88,6 @@ namespace App
                     if (((Door)(door)).IsMouseOverObject())
                     {
                         OnMouseLeftButtonPressed(() => OpenDoor(((Door)(door))));
-
                     }
                 }
 
@@ -230,18 +228,14 @@ namespace App
 
         protected void OnOpenDoor()
         {
-            AnimatedObject playertModel = (AnimatedObject)children["playerModel"];
-            AnimationPlayer player= playertModel.PlayClip("interakcja");
+            AnimatedObject playerModel = (AnimatedObject)children["playerModel"];
+            AnimationPlayer player= playerModel.PlayClip("interakcja");
             player.Looping = false;
             if (player.Position >= player.Duration)
             {
-                isPlayerInteracting = false;                                                       
+                isPlayerInteracting = false;
+                doorToOpen.TryToOpenDoor();
             }
-            if (!isPlayerInteracting)
-            {
-                isPlayerFinishedInteracting = true;
-            }
-
         }
 
         private void FixSpeedOfMovingDiagonally(Vector3 vector)
@@ -375,15 +369,9 @@ namespace App
 
         private void OpenDoor(Door door)
         {
-            rotateInDirection(Vector3.Subtract(door.Position, this.position), false);
+            doorToOpen = door;
+            rotateInDirection(Vector3.Subtract(doorToOpen.Position, this.position), false);
             isPlayerInteracting = true;
-            OnOpenDoor();
-            if (!isPlayerInteracting && isPlayerFinishedInteracting)
-            {
-                door.TryToOpenDoor();
-                isPlayerFinishedInteracting = false;                                
-            }
-            
         }
 
         private void RemoveOpponentsFromScene(List<string> opponentsToRemove)
