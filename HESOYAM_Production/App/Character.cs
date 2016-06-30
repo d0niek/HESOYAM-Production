@@ -136,7 +136,7 @@ namespace App
             { IsInteracting = true; }            
             AnimationPlayer opponent = this.PlayClip("interakcja");
             opponent.Looping = false;
-            if (opponent.Position >= (opponent.Duration)/3.0f)
+            if (opponent.Position >= (opponent.Duration) / 2.0f)
             {
                 IsInteracting = false;
                 IsFinishedInteracting = true;

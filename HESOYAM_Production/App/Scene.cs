@@ -80,6 +80,8 @@ namespace App
                 buildCupboard(pos, (int) color.B, "key");
             } else if (color.R == 185 && color.G == 62) {
                 buildCupboard(pos, (int) color.B, "first aid kit");
+            } else if (color.R == 185 && color.G == 63){
+                buildCupboard(pos, (int)color.B, "weapon");
             } else if (color.R == 185 && color.G == 99) {
                 buildCupboard(pos, (int) color.B, "");
             } else if (color.R == 185 && color.G == 163) {
@@ -97,7 +99,7 @@ namespace App
             } else if (color.R == 75 && color.G == 25) {
                 insertRangedOpponentCharacter(game.Models["lekarz"], pos, (int) color.B, "lekarz");//Ranged zolnierz
             } else if (color.R == 25 && color.G == 57) {
-                insertMeleeOpponentCharacter(game.Models["lekarz"], pos, (int) color.B, "lekarz");
+                insertMeleeOpponentCharacter(game.Models["zolnierz"], pos, (int) color.B, "zolnierz");
             }
         }
 
