@@ -23,6 +23,7 @@ namespace App
         protected TimeSpan lastShoot;
         protected TimeSpan shootDelay;
         Door doorToOpen;
+        private float shootHeight = 120f;
 
         public Player(
             Engine game,
@@ -412,7 +413,7 @@ namespace App
             if (lastShoot + shootDelay < time)
             {
                 lastShoot = time;
-                (new Projectile(game, new Vector3(position.X, position.Y + 120f, position.Z), direction, 15f).isPlayerShooting) = true;
+                (new Projectile(game, new Vector3(position.X, position.Y + shootHeight, position.Z), direction, 15f).isPlayerShooting) = true;
             }
         }
 
@@ -429,8 +430,9 @@ namespace App
                 }
             } else
             {
-                Vector3 opponentDelta = Matrix.CreateFromYawPitchRoll(((IGameElement)children["playerModel"]).rotation.Y, 0, 0).Backward;
-                //opponentDelta.Normalize();
+                Vector3 cursorPosition = game.Hud.FindWhereClicked(shootHeight);
+                Vector3 opponentDelta = Vector3.Subtract(cursorPosition, position);
+                opponentDelta.Normalize();
                 shoot(opponentDelta, gameTime.TotalGameTime);
 
             }

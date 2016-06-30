@@ -232,13 +232,16 @@ namespace App
             return null;
         }
 
-        public Vector3 FindWhereClicked()
+        public Vector3 FindWhereClicked(float offset = 0f)
         {
             MouseState ms = this.game.InputState.Mouse.CurrentMouseState;
             Vector3 nearScreenPoint = new Vector3(ms.X, ms.Y, 0);
             Vector3 farScreenPoint = new Vector3(ms.X, ms.Y, 1);
             Vector3 nearWorldPoint = game.GraphicsDevice.Viewport.Unproject(nearScreenPoint, game.Camera.ProjectionMatrix, game.Camera.ViewMatrix, Matrix.Identity);
             Vector3 farWorldPoint = game.GraphicsDevice.Viewport.Unproject(farScreenPoint, game.Camera.ProjectionMatrix, game.Camera.ViewMatrix, Matrix.Identity);
+
+            farWorldPoint.Y -= offset;
+            nearWorldPoint.Y -= offset;
 
             Vector3 direction = farWorldPoint - nearWorldPoint;
 
