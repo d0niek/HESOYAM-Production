@@ -37,7 +37,7 @@ namespace App
             isAttacking = false;
             bag = new List<string>();
             isPlayerInteracting = false;
-            isHavingGun = true;
+            isHavingGun = false;
 
             Vector3 newPosition = position;
             Vector3 newSize = new Vector3(35f, 190f, 35f);
@@ -104,10 +104,14 @@ namespace App
             }
 
             MouseState mouseState = new MouseState();
-            if(game.InputState.IsNewRightMouseClick(out mouseState))
+            if(game.Player.bag.Contains("weapon"))
             {
-                game.Player.isHavingGun = !game.Player.isHavingGun;
+                if (game.InputState.IsNewRightMouseClick(out mouseState))
+                {
+                    game.Player.isHavingGun = !game.Player.isHavingGun;
+                }
             }
+            
 
             if(isPlayerInteracting)
             {
@@ -260,8 +264,18 @@ namespace App
 
         new protected void OnIdle()
         {
-            AnimatedObject playerModel = (AnimatedObject)children["playerModel"];
-            playerModel.PlayClip("postawa").Looping = true;
+            if(!isHavingGun)
+            {
+                AnimatedObject playerModel = (AnimatedObject)children["playerModel"];
+                playerModel.PlayClip("postawa").Looping = true;
+            }
+            else
+            {
+                AnimatedObject playerModel = (AnimatedObject)children["playerModel"];
+                playerModel.PlayClip("celowanie").Looping = true;
+            }
+
+            
         }
 
         new protected void OnDead()
@@ -296,7 +310,7 @@ namespace App
             AnimatedObject playerModel = (AnimatedObject)children["playerModel"];
             AnimationPlayer player = playerModel.PlayClip("interakcja");
             player.Looping = false;
-            if(player.Position >= player.Duration / 3.0f)
+            if (player.Position >= player.Duration / 2.0f)
             {
                 isPlayerInteracting = false;
                 doorToOpen.TryToOpenDoor();
