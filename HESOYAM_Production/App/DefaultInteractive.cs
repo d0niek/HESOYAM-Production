@@ -19,5 +19,10 @@ namespace HESOYAM_Production.App
             options.Add("Move here");
             return options;
         }
+
+        public string performAction(string action)
+        {
+            return null;
+        }
     }
 }

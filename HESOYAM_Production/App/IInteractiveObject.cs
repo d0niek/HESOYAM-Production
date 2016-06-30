@@ -3,9 +3,9 @@ using System.Collections.Generic;
 
 namespace App
 {
-
     public interface IInteractiveObject
     {
         List<String> GetOptionsToInteract();
+        string performAction(string action);
     }
 }

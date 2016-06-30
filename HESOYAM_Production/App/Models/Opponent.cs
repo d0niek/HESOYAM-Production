@@ -117,6 +117,11 @@ namespace App.Models
             return options;
         }
 
+        public string performAction(string action)
+        {
+            return null;
+        }
+
         #endregion
     }
 }
