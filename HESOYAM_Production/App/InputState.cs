@@ -253,7 +253,7 @@ namespace App
             PlayerIndex playerIndex;
             return IsKeyPressed( Keys.S, controllingPlayer, out playerIndex );
         }
-
+        
         public bool IsZoomOut( PlayerIndex? controllingPlayer )
         {
             PlayerIndex playerIndex;

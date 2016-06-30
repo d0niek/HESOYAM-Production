@@ -78,8 +78,8 @@ namespace App
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
-            
 
+            
             if (IsDead()) {
                 OnDead();
                 return;
@@ -99,6 +99,12 @@ namespace App
                     }
                 }
 
+            }
+
+            MouseState mouseState = new MouseState();
+            if (game.InputState.IsNewRightMouseClick(out mouseState))
+            {
+                game.Player.isHavingGun = !game.Player.isHavingGun;
             }
 
             if (isPlayerInteracting)
@@ -185,7 +191,7 @@ namespace App
                 vector.X += 10;
             }
 
-            return vector;
+           return vector;
         }
 
         protected void OnMove(Vector3 moveVector)
@@ -258,16 +264,17 @@ namespace App
             if (!isHavingGun)
             {
                 AnimationPlayer player = playerModel.PlayClip("cios_piesc");
+                player.Looping = false;
+                System.Console.WriteLine("czas animacji " + player.Duration);
+                if (player.Position >= player.Duration)
+                isAttacking = false;
             }
             else
             {
                 AnimationPlayer player = playerModel.PlayClip("bron_piesc");
+                player.Looping = false;
             }
-            
-            player.Looping = false;
-            System.Console.WriteLine("czas animacji " + player.Duration);
-            if (player.Position >= player.Duration)
-                isAttacking = false;
+                  
         }
 
         protected void OnOpenDoor()
