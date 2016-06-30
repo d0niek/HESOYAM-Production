@@ -80,7 +80,7 @@ namespace App.Models
                 isChasing = true;
             }
 
-            if((playerDistance <= shootDistance) && (playerDistance > dangerDistance))
+            if((playerDistance <= shootDistance) && (playerDistance > dangerDistance) && playerVisible)
             {
                 isShooting = true;
                 OnIdle2();
@@ -96,6 +96,12 @@ namespace App.Models
                 this.rotateInDirection(playerDelta, true);
                 shoot(playerDelta, gameTime.TotalGameTime);
                 isShooting = false;
+                return;
+            }
+
+            if (IsInteracting)
+            {
+                OnInteraction();
                 return;
             }
 
@@ -215,7 +221,15 @@ namespace App.Models
                 {
                     if (this.colliders["main"].CollidesWith(door.colliders["main"]))
                     {
-                        ((Door)(door)).OpenDoor();
+                        Vector3 doorDelta = Vector3.Subtract(((Door)(door)).Position, position);
+                        doorDelta.Normalize();
+                        this.rotateInDirection(doorDelta, true);
+                        OnInteraction();
+                        if (this.IsFinishedInteracting)
+                        {
+                            ((Door)(door)).OpenDoor();
+                            this.IsFinishedInteracting = false;
+                        }
                     }
 
 

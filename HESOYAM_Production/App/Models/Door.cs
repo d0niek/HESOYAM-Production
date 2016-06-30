@@ -48,11 +48,11 @@ namespace App.Models
                 return;
             }
 
-            if (IsCollisionWithPlayer() && IsMouseOverObject())
-            {
-                OnMouseLeftButtonClick(TryToOpenDoor);
-
-            }
+         //   if (IsCollisionWithPlayer() && IsMouseOverObject())
+         //   {
+         //       OnMouseLeftButtonClick(TryToOpenDoor);
+         //
+         //   }
         }
 
         private bool IsCollisionWithPlayer()
@@ -61,7 +61,7 @@ namespace App.Models
         }
 
        
-        private void TryToOpenDoor()
+        public void TryToOpenDoor()
         {
             if (isLock) {
                 TryToUnlockDoor();
@@ -72,7 +72,11 @@ namespace App.Models
 
         public void OpenDoor()
         {
-            OpenOrCloseDoor();
+            isOpen = !isOpen;
+            String modelDoor = isOpen ? "drzwi_otwarte" : "drzwi";
+
+            model = game.Models[modelDoor];
+            modelCut = game.Models[modelDoor + "_przyciete"];
         }
 
         private void TryToUnlockDoor()
@@ -92,9 +96,9 @@ namespace App.Models
         {
             isOpen = !isOpen;
             String modelDoor = isOpen ? "drzwi_otwarte" : "drzwi";
-
             model = game.Models[modelDoor];
             modelCut = game.Models[modelDoor + "_przyciete"];
+                                
         }
 
         #region IInteractiveOptions implementation

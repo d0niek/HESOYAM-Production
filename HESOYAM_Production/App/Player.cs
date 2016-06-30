@@ -15,6 +15,8 @@ namespace App
         float cameraAngle;
         bool isAttacking;
         List<string> bag;
+        bool isPlayerInteracting;
+        public bool isPlayerFinishedInteracting;
         private TimeSpan lastAttack;
         private TimeSpan attackDelay;
 
@@ -29,6 +31,8 @@ namespace App
             this.cameraAngle = cameraAngle;
             isAttacking = false;
             bag = new List<string>();
+            isPlayerInteracting = false;
+            isPlayerFinishedInteracting = false;
 
             Vector3 newPosition = position;
             Vector3 newSize = new Vector3(35f, 190f, 35f);
@@ -75,6 +79,25 @@ namespace App
             }
             if (isAttacking) {
                 OnAttack();
+                return;
+            }
+
+            foreach (IGameObject door in game.Scene.children["Doors"].children.Values)
+            {
+                if (this.colliders["main"].CollidesWith(door.colliders["main"]))
+                {
+                    if (((Door)(door)).IsMouseOverObject())
+                    {
+                        OnMouseLeftButtonPressed(() => OpenDoor(((Door)(door))));
+
+                    }
+                }
+
+            }
+
+            if (isPlayerInteracting)
+            {
+                OnOpenDoor();
                 return;
             }
             
@@ -205,6 +228,22 @@ namespace App
                 isAttacking = false;
         }
 
+        protected void OnOpenDoor()
+        {
+            AnimatedObject playertModel = (AnimatedObject)children["playerModel"];
+            AnimationPlayer player= playertModel.PlayClip("interakcja");
+            player.Looping = false;
+            if (player.Position >= player.Duration)
+            {
+                isPlayerInteracting = false;                                                       
+            }
+            if (!isPlayerInteracting)
+            {
+                isPlayerFinishedInteracting = true;
+            }
+
+        }
+
         private void FixSpeedOfMovingDiagonally(Vector3 vector)
         {
             if (vector.X == 0f) {
@@ -280,6 +319,7 @@ namespace App
             return vector;
         }
 
+
         private Vector3 CheckSensors(Collider collider, Vector3 vector)
         {
             if (colliders["right"].CollidesWith(collider)) {
@@ -313,6 +353,16 @@ namespace App
                 return false;
         }
 
+        private bool IsCollisionWithDoors(Door door)
+        {
+            if (door.colliders.ContainsKey("main") && game.Scene.Player.colliders.ContainsKey("main"))
+            {
+                return game.Scene.Player.colliders["main"].CollidesWith(door.colliders["main"]);
+            }
+            else
+                return false;
+        }
+
         private void AttackOpponent(Opponent opponent, GameTime gameTime)
         {
             rotateInDirection(Vector3.Subtract(opponent.position, this.position), false);
@@ -321,6 +371,19 @@ namespace App
                 opponent.ReduceLife(34f);
                 lastAttack = gameTime.TotalGameTime;
             }
+        }
+
+        private void OpenDoor(Door door)
+        {
+            rotateInDirection(Vector3.Subtract(door.Position, this.position), false);
+            isPlayerInteracting = true;
+            OnOpenDoor();
+            if (!isPlayerInteracting && isPlayerFinishedInteracting)
+            {
+                door.TryToOpenDoor();
+                isPlayerFinishedInteracting = false;                                
+            }
+            
         }
 
         private void RemoveOpponentsFromScene(List<string> opponentsToRemove)

@@ -164,20 +164,23 @@ namespace App.Models
                     targetDelta = checkSensors(collider, targetDelta);
                 }
             }
-
+            
             foreach (IGameObject door in game.Scene.children["Doors"].children.Values)
             {
                 if (!((Door)(door)).IsOpen)
                 {
                     if (this.colliders["main"].CollidesWith(door.colliders["main"]))
                     {
-                        IsInteracting = true;
+                        Vector3 doorDelta = Vector3.Subtract(((Door)(door)).Position, position);
+                        doorDelta.Normalize();
+                        this.rotateInDirection(doorDelta, true);
                         OnInteraction();
                         if (this.IsFinishedInteracting)
                         {
                             ((Door)(door)).OpenDoor();
                             this.IsFinishedInteracting = false;
                         }
+                        
                     }
 
                     
