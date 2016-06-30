@@ -5,6 +5,7 @@ using System;
 using App.Collisions;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework.Input;
+using HESOYAM_Production.App;
 
 namespace App.Models
 {
@@ -16,6 +17,8 @@ namespace App.Models
         private GameObject targetedObject;
         private TimeSpan lastAttack;
         private TimeSpan attackDelay;
+        private LinkedList<Tuple<int, int>> newPath;
+        //private List<Emitter> emitterPath;
 
         public Teammate(
             Engine game,
@@ -54,6 +57,7 @@ namespace App.Models
             targetedObject = this;
             lastAttack = TimeSpan.Zero;
             attackDelay = new TimeSpan(0, 0, 0, 0, 870);
+            //emitterPath = new List<Emitter>();
         }
 
         private Vector3 checkSensors(Collider collider, Vector3 vector)
@@ -94,7 +98,7 @@ namespace App.Models
 
         private void onMoveToCommand()
         {
-            String[] sceneInteractiveObjectsToLoop = { "Interactive", "Doors", "Opponents"};
+            String[] sceneInteractiveObjectsToLoop = { "Interactive", "Doors", "Opponents" };
 
             foreach(String interactiveObjectsToLoop in sceneInteractiveObjectsToLoop)
             {
@@ -149,12 +153,20 @@ namespace App.Models
             }
             else if(Math.Abs(nextTarget.X - position.X) < 20f && Math.Abs(nextTarget.Z - position.Z) < 20f)
             {
-                LinkedList<Tuple<int, int>> newPath = game.Scene.movement.getPathToTarget(
+                newPath = game.Scene.movement.getPathToTarget(
                                                           position,
                                                           targetedObject.position);
                 if(newPath != null && newPath.Count > 0)
                 {
+                    /*foreach(Emitter i in emitterPath)
+                    {
+                        game.Components.Remove(i);
+                    }
+                    emitterPath.Clear();*/
+
                     LinkedListNode<Tuple<int, int>> candidateNode = newPath.Last;
+                    bool nextTargetFound = false;
+
                     do
                     {
                         Vector3 candidatePosition = game.Scene.movement.coordsToPosition(candidateNode.Value);
@@ -163,9 +175,28 @@ namespace App.Models
                         candidateDelta.Normalize();
                         if(isVisible(candidateDelta, candidateDistance))
                         {
-                            nextTarget = candidatePosition;
-                            break;
+                            if(!nextTargetFound)
+                            {
+                                nextTarget = candidatePosition;
+                                nextTargetFound = true; 
+                            }
                         }
+
+                        /*Emitter newEmitter = new Emitter(game, candidatePosition);
+                        newEmitter.amountPerRelase = 1;
+                        newEmitter.emitDelay = new TimeSpan(0, 0, 0, 0, 300);
+                        Particle customParticle = new Particle();
+                        customParticle.acceleration = 1.0f;
+                        if(candidateNode.Previous != null)
+                        {
+                            Vector3 translation = Vector3.Subtract(candidatePosition, game.Scene.movement.coordsToPosition(candidateNode.Previous.Value));
+                            translation.Normalize();
+                            translation = Vector3.Multiply(translation, 1.0f);
+                            customParticle.translation = translation;
+                        }
+                        newEmitter.customParticle = customParticle;
+                        emitterPath.Add(newEmitter);*/
+
                         candidateNode = candidateNode.Previous;
                     } while(candidateNode != null);
                 }

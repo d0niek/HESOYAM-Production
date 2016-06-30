@@ -12,7 +12,6 @@ namespace HESOYAM_Production.App
     public class Particles : GameObject
     {
         private List<Particle> particleList;
-        private float halfSize = 5f;
         private Random random;
 
         public Particles(Engine game) : base(game, "", null)
@@ -50,8 +49,8 @@ namespace HESOYAM_Production.App
                 t1.Normalize();
                 Vector3 t2 = Vector3.Cross(direction, t1);
                 t2.Normalize();
-                t1 = Vector3.Multiply(t1, halfSize);
-                t2 = Vector3.Multiply(t2, halfSize);
+                t1 = Vector3.Multiply(t1, i.halfSize);
+                t2 = Vector3.Multiply(t2, i.halfSize);
 
                 verts[0].Position = Vector3.Add(i.position, -t1);
                 verts[1].Position = Vector3.Add(i.position, t2);
@@ -72,6 +71,11 @@ namespace HESOYAM_Production.App
             }
         }
 
+        public void addParticle(Vector3 position, Particle customParticle, TimeSpan creationTime)
+        {
+            particleList.Add(new Particle(position, creationTime, customParticle));
+        }
+
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
@@ -89,9 +93,11 @@ namespace HESOYAM_Production.App
             }
         }
 
-        public void addParticle(Vector3 position , TimeSpan creationTime)
+        public Particle addParticle(Vector3 position, TimeSpan creationTime)
         {
-            particleList.Add(new Particle(position, creationTime, random));
+            Particle newParticle = new Particle(position, creationTime, random);
+            particleList.Add(newParticle);
+            return newParticle;
         }
     }
 }

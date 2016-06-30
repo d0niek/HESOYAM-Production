@@ -13,6 +13,7 @@ namespace HESOYAM_Production.App
         public TimeSpan lastEmitTime;
         public TimeSpan emitDelay;
         public int amountPerRelase;
+        public Particle customParticle;
 
         public Emitter(Engine game, Vector3 position) : base(game, "", null)
         {
@@ -33,7 +34,14 @@ namespace HESOYAM_Production.App
                 {
                     for(int i = 0; i < amountPerRelase; i++)
                     {
-                        game.Particles.addParticle(position, gameTime.TotalGameTime); 
+                        if(customParticle == null)
+                        {
+                            game.Particles.addParticle(position, gameTime.TotalGameTime);
+                        }
+                        else
+                        {
+                            game.Particles.addParticle(position, customParticle, gameTime.TotalGameTime);
+                        }
                     }
                     lastEmitTime = gameTime.TotalGameTime; 
                 }
