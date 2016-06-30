@@ -117,7 +117,14 @@ namespace App
                 return null;
             //if(isObstacleAt(targetCoords))
                 //return null;
-            bool[,] visited = new bool[obstacleMap.GetLength(0), obstacleMap.GetLength(1)];
+            int[,] visited = new int[obstacleMap.GetLength(0), obstacleMap.GetLength(1)];
+            for(int x = 0; x < visited.GetLength(0); x++)
+            {
+                for(int y = 0; y < visited.GetLength(1); y++)
+                {
+                    visited[x, y] = int.MaxValue;
+                }
+            }
             SortedDictionary<int, LinkedList<LinkedList<Tuple<int, int>>>> bestFound = new SortedDictionary<int, LinkedList<LinkedList<Tuple<int, int>>>>();
 
             LinkedList<Tuple<int, int>> currentPath = new LinkedList<Tuple<int, int>>();
@@ -140,7 +147,7 @@ namespace App
                 }
 
                 Tuple<int, int> currentCoords = currentPath.Last.Value;
-                visited[currentCoords.Item1, currentCoords.Item2] = true;
+                visited[currentCoords.Item1, currentCoords.Item2] = currentPath.Count;
                 if(currentCoords.Equals(targetCoords))
                 {
                     return currentPath;
@@ -150,11 +157,11 @@ namespace App
                     Tuple<int, int> currentStep = step(currentCoords, i);
                     if(!isObstacleAt(currentStep) || currentStep.Equals(targetCoords))
                     {
-                        if(!visited[currentStep.Item1, currentStep.Item2])
+                        LinkedList<Tuple<int, int>> newPath = new LinkedList<Tuple<int, int>>(currentPath);
+                        newPath.AddLast(currentStep);
+                        currentDistance = distance(currentStep, targetCoords);
+                        if(visited[currentStep.Item1, currentStep.Item2] > newPath.Count)
                         {
-                            LinkedList<Tuple<int, int>> newPath = new LinkedList<Tuple<int, int>>(currentPath);
-                            newPath.AddLast(currentStep);
-                            currentDistance = distance(currentStep, targetCoords);
                             if(!bestFound.ContainsKey(currentDistance))
                             {
                                 bestFound[currentDistance] = new LinkedList<LinkedList<Tuple<int, int>>>();
