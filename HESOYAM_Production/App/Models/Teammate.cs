@@ -96,21 +96,10 @@ namespace App.Models
 
         }
 
-        private void onMoveToCommand()
+        public void onMoveToCommand(GameObject interactiveObject)
         {
-            String[] sceneInteractiveObjectsToLoop = { "Interactive", "Doors", "Opponents" };
-
-            foreach(String interactiveObjectsToLoop in sceneInteractiveObjectsToLoop)
-            {
-                foreach(GameObject interactive in game.Scene.children[interactiveObjectsToLoop].children.Values)
-                {
-                    if(interactive.IsMouseOverObject())
-                    {
-                        nextTarget = position;
-                        targetedObject = interactive;
-                    }
-                }
-            }
+            nextTarget = position;
+            targetedObject = interactiveObject;
         }
 
         public override void Update(GameTime gameTime)
@@ -118,13 +107,6 @@ namespace App.Models
             base.Update(gameTime);
             if(!game.PlayMode)
             {
-                if(active)
-                {
-                    if(game.InputState.Mouse.CurrentMouseState.RightButton.Equals(ButtonState.Pressed))
-                    {
-                        onMoveToCommand();
-                    }
-                }
                 return;
             }
 
@@ -178,7 +160,7 @@ namespace App.Models
                             if(!nextTargetFound)
                             {
                                 nextTarget = candidatePosition;
-                                nextTargetFound = true; 
+                                nextTargetFound = true;
                             }
                         }
 

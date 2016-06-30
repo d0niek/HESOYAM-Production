@@ -4,6 +4,8 @@ using System;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 using App.Models;
+using Microsoft.Xna.Framework.Input;
+using HESOYAM_Production.App;
 
 namespace App
 {
@@ -209,7 +211,12 @@ namespace App
                                                  game.Scene.children[interactiveObjectsToLoop].children
                                              );
 
-                if (highlightObject != null) {
+                if(highlightObject == null)
+                {
+                    //highlightObject = new DefaultInteractive(game, FindWhereClicked());
+                }
+                if(highlightObject != null)
+                {
                     DrawStringCloseToMouse(highlightObject.name);
                     OnMouseLeftButtonClick(() => SetObjectToInteractForDrawMenu(highlightObject));
                     return;
@@ -229,6 +236,22 @@ namespace App
             }
 
             return null;
+        }
+
+        private Vector3 FindWhereClicked()
+        {
+            MouseState ms = this.game.InputState.Mouse.CurrentMouseState;
+            Vector3 nearScreenPoint = new Vector3(ms.X, ms.Y, 0);
+            Vector3 farScreenPoint = new Vector3(ms.X, ms.Y, 1);
+            Vector3 nearWorldPoint = game.GraphicsDevice.Viewport.Unproject(nearScreenPoint, game.Camera.ProjectionMatrix, game.Camera.ViewMatrix, Matrix.Identity);
+            Vector3 farWorldPoint = game.GraphicsDevice.Viewport.Unproject(farScreenPoint, game.Camera.ProjectionMatrix, game.Camera.ViewMatrix, Matrix.Identity);
+
+            Vector3 direction = farWorldPoint - nearWorldPoint;
+
+            float zFactor = -nearWorldPoint.Y / direction.Y;
+            Vector3 zeroWorldPoint = nearWorldPoint + direction * zFactor;
+
+            return zeroWorldPoint;
         }
 
         private void SetObjectToInteractForDrawMenu(GameObject gameObject)
@@ -325,8 +348,7 @@ namespace App
 
         private void ClickOnMenuOption(String option)
         {
-            String objectName = objectToInteract.name.Split('_')[0];
-            Console.WriteLine("Tutaj chyba Wasza kolej\nna wywołanie opcji " + option + " dla obiektu " + objectName);
+            (selectedTeammate as Teammate).onMoveToCommand(objectToInteract);
         }
 
         private void DrawMessage(GameTime gameTime)
