@@ -293,6 +293,7 @@ namespace App
                 game.TimeToInteract = true;
             } else {
                 menuFramePos = Rectangle.Empty;
+                game.TimeToInteract = false;
             }
         }
 
@@ -375,6 +376,7 @@ namespace App
             if(!option.Equals("Cancel"))
                 (selectedTeammate as Teammate).onMoveToCommand(objectToInteract, option);
             objectToInteract = null;
+            game.TimeToInteract = false;
         }
 
         private void DrawMessage(GameTime gameTime)

@@ -72,6 +72,21 @@ namespace App.Models
             return options;
         }
 
+        public string performAction(string action)
+        {
+            if(action != null)
+            {
+                if(action.Equals("Take content"))
+                {
+                    string toReturn = (string)item.Clone();
+                    item = "";
+                    MoveCupboardFromInteractiveObjectToOther();
+                    return toReturn;  
+                }
+            }
+            return null;
+        }
+
         #endregion
     }
 }

@@ -112,6 +112,17 @@ namespace App.Models
             return options;
         }
 
+        public string performAction(string action)
+        {
+            if(action != null)
+            {
+                if(action.Equals("Open") || action.Equals("Close"))
+                {
+                    TryToOpenDoor();
+                }
+            }
+            return null;
+        }
         #endregion
     }
 }

@@ -18,6 +18,8 @@ namespace App.Models
         private TimeSpan lastAttack;
         private TimeSpan attackDelay;
         private LinkedList<Tuple<int, int>> newPath;
+        List<string> bag;
+        private string nextAction;
         //private List<Emitter> emitterPath;
 
         public Teammate(
@@ -57,6 +59,8 @@ namespace App.Models
             targetedObject = this;
             lastAttack = TimeSpan.Zero;
             attackDelay = new TimeSpan(0, 0, 0, 0, 870);
+            nextAction = null;
+            bag = new List<string>();
             //emitterPath = new List<Emitter>();
         }
 
@@ -100,6 +104,7 @@ namespace App.Models
         {
             nextTarget = position;
             targetedObject = interactiveObject;
+            nextAction = option;
         }
 
         public override void Update(GameTime gameTime)
@@ -132,6 +137,16 @@ namespace App.Models
                 || Math.Abs(targetedObject.position.X - position.X) < 20f && Math.Abs(targetedObject.position.Z - position.Z) < 20f)
             {
                 nextTarget = position;
+                if(nextAction != null && !nextAction.Trim().Equals("") && targetedObject is IInteractiveObject)
+                {
+                    string actionReturn = ((IInteractiveObject)targetedObject).performAction(nextAction);
+                    if(actionReturn != null && !actionReturn.Trim().Equals(""))
+                    {
+                        bag.Add(actionReturn);
+                        game.Hud.Message = "A teammate has obtained a " + actionReturn;
+                    }
+                    nextAction = null;
+                }
             }
             else if(Math.Abs(nextTarget.X - position.X) < 20f && Math.Abs(nextTarget.Z - position.Z) < 20f)
             {
@@ -204,7 +219,7 @@ namespace App.Models
                 }
             }
 
-            if(targetDelta.Length() < 2f)
+            if(targetDelta.Length() < 10f)
             {
                 OnTeammateIdle();
                 return;
