@@ -24,9 +24,8 @@ namespace App.Models
         ) : base(game, name, model, position, rotation, scale)
         {
             {
-                shootDistance = 400.0f;
+                shootDistance = 500.0f;
                 isShooting = false;
-
             }
         }
 
@@ -42,7 +41,7 @@ namespace App.Models
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
-            if (!game.PlayMode)
+            if (!game.PlayMode || game.Player.IsDead())
             {
                 return;
             }
@@ -86,7 +85,7 @@ namespace App.Models
 
             if (isShooting)
             {
-                this.rotateInDirection(playerDelta);
+                this.rotateInDirection(playerDelta, true);
                 shoot(playerDelta, gameTime.TotalGameTime);
                 isShooting = false;
                 return;
@@ -168,7 +167,7 @@ namespace App.Models
             float targetDistance = targetDelta.Length();
             targetDelta.Normalize();
 
-            rotateInDirection(targetDelta);
+            rotateInDirection(targetDelta, true);
 
             if (targetDelta.Length() > 0f && targetDistance > 10f)
             {

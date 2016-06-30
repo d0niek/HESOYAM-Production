@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 using System;
 using App.Collisions;
+using HESOYAM_Production.App;
 
 namespace App
 {
@@ -21,7 +22,7 @@ namespace App
             Vector3? scale = null
         ) : base(game, name, model, position, rotation, scale)
         {
-            speed = 10.0f;
+            speed = 5.0f;
             direction = default(Vector3);
             game.AddComponent(this);
         }
@@ -38,8 +39,10 @@ namespace App
             rotation = new Vector3(-(float)Math.Atan2(direction.X, direction.Z) + (float)Math.PI / 2, 0f, -(float)Math.PI / 2);
             game.AddComponent(this);
             AddCollider("back", new Collider(game, position, new Vector3(10f, 10f, 10f), Vector3.Zero));
-            AddCollider("front", new Collider(game, new Vector3(position.X + (50f * direction.X), position.Y, position.Z + (50f * direction.Z)), new Vector3(10f, 10f, 10f), Vector3.Zero));
+            Vector3 front = new Vector3(position.X + (50f * direction.X), position.Y, position.Z + (50f * direction.Z));
+            AddCollider("front", new Collider(game, front, new Vector3(10f, 10f, 10f), Vector3.Zero));
             AddCollidersToGame();
+            AddChild(new Emitter(game, front));
         }
 
         public override void Draw(GameTime gameTime)
@@ -68,6 +71,8 @@ namespace App
         {
             foreach(Collider colliderToRemove in colliders.Values)
                 game.Components.Remove(colliderToRemove);
+            foreach(IGameComponent child in children.Values)
+                game.Components.Remove(child);
             game.Components.Remove(this);
         }
 

@@ -6,6 +6,7 @@ using App;
 using System.IO;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework.Content;
+using HESOYAM_Production.App;
 
 namespace HESOYAM_Production
 {
@@ -22,6 +23,7 @@ namespace HESOYAM_Production
         Dictionary<String, Texture2D> textures;
         GraphicsDeviceManager graphics;
         HUD hud;
+        Particles particles;
         Camera camera;
         Player player;
         Scene scene;
@@ -60,6 +62,12 @@ namespace HESOYAM_Production
 
         public HUD Hud {
             get { return hud; }
+            private set { }
+        }
+
+        public Particles Particles
+        {
+            get { return particles; }
             private set { }
         }
 
@@ -126,6 +134,7 @@ namespace HESOYAM_Production
                 rootDir + "/Content/Map/scene_2"
             );
             hud = new HUD(this);
+            particles = new Particles(this);
 
             Vector3 cameraMove = new Vector3(-500.0f, 500.0f, 500.0f);
             float cameraAngle = (float) (Math.Atan2(cameraMove.X, cameraMove.Z));
@@ -307,7 +316,10 @@ namespace HESOYAM_Production
 
             base.Draw(gameTime);
 
+            spriteBatch.Begin();
             this.hud.Draw(gameTime);
+            particles.Draw();
+            spriteBatch.End();
         }
 
         static float GameTimeFloat(GameTime gameTime)

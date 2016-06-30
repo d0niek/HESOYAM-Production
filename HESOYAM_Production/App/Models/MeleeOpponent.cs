@@ -29,7 +29,7 @@ namespace App.Models
         {
             base.Update(gameTime);
 
-            if(!game.PlayMode)
+            if(!game.PlayMode || game.Player.IsDead())
             {
                 return;
             }
@@ -39,7 +39,7 @@ namespace App.Models
             if(attackedCharacter != null) attackedCharacterDelta = Vector3.Subtract(attackedCharacter.position, position);
             if(IsAttacking)
             {
-                this.rotateInDirection(attackedCharacterDelta);
+                this.rotateInDirection(attackedCharacterDelta, true);
                 OnAttack();
 
                 if(!this.colliders["main"].CollidesWith(attackedCharacter.colliders["main"])) IsAttacking = false;
@@ -175,7 +175,7 @@ namespace App.Models
             float targetDistance = targetDelta.Length();
             targetDelta.Normalize();
 
-            rotateInDirection(targetDelta);
+            rotateInDirection(targetDelta, true);
 
             if(targetDelta.Length() > 0f && targetDistance > 10f)
             {

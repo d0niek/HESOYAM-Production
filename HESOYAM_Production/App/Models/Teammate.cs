@@ -92,16 +92,6 @@ namespace App.Models
 
         }
 
-        void rotateInDirection(Vector3 direction)
-        {
-            float rotationY = (float)Math.Atan2(direction.X, direction.Z);
-
-            if(Math.Abs(this.rotation.Y - rotationY) > 0.01f)
-            {
-                this.rotation = new Vector3(0, rotationY, 0);
-            }
-        }
-
         private void onMoveToCommand()
         {
             String[] sceneInteractiveObjectsToLoop = { "Interactive", "Doors", "Opponents"};
@@ -226,7 +216,7 @@ namespace App.Models
             targetDelta = checkSensors(game.Scene.Player.colliders["main"], targetDelta);
             targetDelta.Normalize();
 
-            rotateInDirection(targetDelta);
+            rotateInDirection(targetDelta, true);
 
             if(targetDelta.Length() > 0f)
             {
@@ -238,7 +228,7 @@ namespace App.Models
         private void AttackOpponent(Opponent opponent, GameTime gameTime)
         {
             opponent.trigger(this);
-            rotateInDirection(Vector3.Subtract(opponent.position, this.position));
+            rotateInDirection(Vector3.Subtract(opponent.position, this.position), true);
             if(lastAttack + attackDelay < gameTime.TotalGameTime)
             {
                 OnAttack();
