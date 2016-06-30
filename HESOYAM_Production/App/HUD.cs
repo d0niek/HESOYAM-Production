@@ -206,21 +206,25 @@ namespace App
         {
             String[] sceneInteractiveObjectsToLoop = { "Doors", "Interactive", "Opponents", "ExitDoors" };
 
+            GameObject highlightObject = null;
+
             foreach (String interactiveObjectsToLoop in sceneInteractiveObjectsToLoop) {
-                GameObject highlightObject = LoopObjectsAndHighlightObjectUnderMouse(
+                highlightObject = LoopObjectsAndHighlightObjectUnderMouse(
                                                  game.Scene.children[interactiveObjectsToLoop].children
                                              );
-
-                if(highlightObject == null)
-                {
-                    highlightObject = new DefaultInteractive(game, FindWhereClicked());
-                }
                 if(highlightObject != null)
                 {
-                    DrawStringCloseToMouse(highlightObject.name);
-                    OnMouseLeftButtonClick(() => SetObjectToInteractForDrawMenu(highlightObject));
-                    return;
+                    break;
                 }
+            }
+            if(highlightObject == null)
+            {
+                highlightObject = new DefaultInteractive(game, FindWhereClicked());
+            }
+            if(highlightObject != null)
+            {
+                DrawStringCloseToMouse(highlightObject.name);
+                OnMouseLeftButtonClick(() => SetObjectToInteractForDrawMenu(highlightObject));
             }
         }
 
@@ -313,7 +317,8 @@ namespace App
         private void DrawOptionsInMenu(Rectangle menuFramePosition)
         {
             IInteractiveObject interactiveObject = (IInteractiveObject) objectToInteract;
-            String[] options = interactiveObject.GetOptionsToInteract();
+            List<String> options = interactiveObject.GetOptionsToInteract();
+            options.Add("Cancel");
             const int shift = 25;
             int loop = 1;
 
@@ -348,7 +353,8 @@ namespace App
 
         private void ClickOnMenuOption(String option)
         {
-            (selectedTeammate as Teammate).onMoveToCommand(objectToInteract);
+            if(!option.Equals("Cancel"))
+                (selectedTeammate as Teammate).onMoveToCommand(objectToInteract, option);
             objectToInteract = null;
         }
 

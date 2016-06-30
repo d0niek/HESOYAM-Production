@@ -13,9 +13,10 @@ namespace HESOYAM_Production.App
         public DefaultInteractive(Engine game, Vector3 position) : base(game, "defaultInteractive", position)
         { }
 
-        public String[] GetOptionsToInteract()
+        public List<String> GetOptionsToInteract()
         {
-            String[] options = { "Move here" };
+            List<String> options = new List<String>();
+            options.Add("Move here");
             return options;
         }
     }

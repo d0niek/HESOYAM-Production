@@ -96,7 +96,7 @@ namespace App.Models
 
         }
 
-        public void onMoveToCommand(GameObject interactiveObject)
+        public void onMoveToCommand(GameObject interactiveObject, String option)
         {
             nextTarget = position;
             targetedObject = interactiveObject;

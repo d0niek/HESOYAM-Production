@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using HESOYAM_Production;
 using System;
+using System.Collections.Generic;
 
 namespace App.Models
 {
@@ -99,10 +100,10 @@ namespace App.Models
 
         #region IInteractiveOptions implementation
 
-        public String[] GetOptionsToInteract()
+        public List<String> GetOptionsToInteract()
         {
-            String[] options = { "", "asd" };
-            options[0] = isOpen ? "Close" : "Open";
+            List<String> options = new List<String>();
+            options.Add(isOpen ? "Close" : "Open");
 
             return options;
         }
