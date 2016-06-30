@@ -52,7 +52,7 @@ namespace App
                 SelectTeammate();
             }
 
-            SelectInteractiveObject();
+            if(objectToInteract == null) SelectInteractiveObject();
             DrawMenuToInteractWithObject();
 
             DrawMessage(gameTime);
@@ -213,7 +213,7 @@ namespace App
 
                 if(highlightObject == null)
                 {
-                    //highlightObject = new DefaultInteractive(game, FindWhereClicked());
+                    highlightObject = new DefaultInteractive(game, FindWhereClicked());
                 }
                 if(highlightObject != null)
                 {
@@ -238,7 +238,7 @@ namespace App
             return null;
         }
 
-        private Vector3 FindWhereClicked()
+        public Vector3 FindWhereClicked()
         {
             MouseState ms = this.game.InputState.Mouse.CurrentMouseState;
             Vector3 nearScreenPoint = new Vector3(ms.X, ms.Y, 0);
@@ -349,6 +349,7 @@ namespace App
         private void ClickOnMenuOption(String option)
         {
             (selectedTeammate as Teammate).onMoveToCommand(objectToInteract);
+            objectToInteract = null;
         }
 
         private void DrawMessage(GameTime gameTime)

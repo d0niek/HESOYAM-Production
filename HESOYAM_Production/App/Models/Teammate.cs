@@ -267,8 +267,9 @@ namespace App.Models
         private void renderPath(Vector3 source, Vector3 destination)
         {
             Vector3 delta = Vector3.Subtract(destination, source);
+            Vector3 flatDelta = new Vector3(delta.X, 0f, delta.Z);
 
-            if(delta.Length() > 150f && newPath != null)
+            if(flatDelta.Length() > 150f && newPath != null)
             {
                 BasicEffect effect = new BasicEffect(GraphicsDevice);
 
