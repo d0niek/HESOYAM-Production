@@ -12,6 +12,8 @@ namespace App
         float life;
         float maxLife;
         bool isAttacking;
+        private bool isInteracting;
+        private bool isFinishedInteracting;
 
         public float Life {
             get { return life; }
@@ -28,6 +30,18 @@ namespace App
             set { isAttacking = value; }
         }
 
+        public bool IsInteracting
+        {
+            get { return isInteracting; }
+            set { isInteracting = value; }
+        }
+
+        public bool IsFinishedInteracting
+        {
+            get { return isFinishedInteracting; }
+            set { isFinishedInteracting = value; }
+        }
+
         public Character(
             Engine game,
             String name,
@@ -40,6 +54,9 @@ namespace App
             maxLife = 100f;
             life = maxLife;
             isAttacking = false;
+            isInteracting = false;
+            isFinishedInteracting = false;
+
         }
 
         public Character(
@@ -111,6 +128,18 @@ namespace App
         protected void OnAttack()
         {
             this.PlayClip("cios_piesc").Looping = true;
+        }
+
+        protected void OnInteraction()
+        {
+            AnimationPlayer opponent = this.PlayClip("interakcja");
+            opponent.Looping = false;
+            if (opponent.Position >= opponent.Duration)
+            {
+                IsInteracting = false;
+                IsFinishedInteracting = true;
+            }              
+
         }
 
         #endregion
