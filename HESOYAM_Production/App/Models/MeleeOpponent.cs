@@ -51,6 +51,12 @@ namespace App.Models
                 return;
             }
 
+            if(IsInteracting)
+            {
+                OnInteraction();
+                return;
+            }
+
             if(this.IsDead())
             {
                 OnDead();
@@ -159,7 +165,31 @@ namespace App.Models
                 }
             }
 
-            foreach(IGameObject opponent in game.Scene.children["Opponents"].children.Values)
+            foreach (IGameObject door in game.Scene.children["Doors"].children.Values)
+            {
+                if (!((Door)(door)).IsOpen)
+                {
+                    if (this.colliders["main"].CollidesWith(door.colliders["main"]))
+                    {
+                        IsInteracting = true;
+                        OnInteraction();
+                        if (this.IsFinishedInteracting)
+                        {
+                            ((Door)(door)).OpenDoor();
+                            this.IsFinishedInteracting = false;
+                        }
+                    }
+
+                    
+                  // foreach (Collider collider in door.colliders.Values)
+                  // {
+                  //     targetDelta = checkSensors(collider, targetDelta);
+                  // }
+                }
+               
+            }            
+           
+            foreach (IGameObject opponent in game.Scene.children["Opponents"].children.Values)
             {
                 if(opponent != this && opponent.colliders.ContainsKey("main"))
                     targetDelta = checkSensors(opponent.colliders["main"], targetDelta);

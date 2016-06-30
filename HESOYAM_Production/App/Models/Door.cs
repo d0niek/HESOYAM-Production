@@ -13,7 +13,7 @@ namespace App.Models
 
         public bool IsOpen {
             get { return isOpen; }
-            private set { }
+            set { isOpen = value; }
         }
 
         public Door(
@@ -31,14 +31,27 @@ namespace App.Models
             isOpen = false;
         }
 
+        public Vector3 Position
+        {
+            get { return position; }
+        }
+
+        public Vector3 Rotation
+        {
+            get { return rotation; }
+        }
+
         public override void Update(GameTime gameTime)
         {
-            if (!game.PlayMode) {
+            if (!game.PlayMode)
+            {
                 return;
             }
 
-            if (IsCollisionWithPlayer() && IsMouseOverObject()) {
+            if (IsCollisionWithPlayer() && IsMouseOverObject())
+            {
                 OnMouseLeftButtonClick(TryToOpenDoor);
+
             }
         }
 
@@ -47,6 +60,7 @@ namespace App.Models
             return colliders["main"].CollidesWith(game.Scene.Player.colliders["main"]);
         }
 
+       
         private void TryToOpenDoor()
         {
             if (isLock) {
@@ -54,6 +68,11 @@ namespace App.Models
             } else {
                 OpenOrCloseDoor();
             }
+        }
+
+        public void OpenDoor()
+        {
+            OpenOrCloseDoor();
         }
 
         private void TryToUnlockDoor()
@@ -67,6 +86,7 @@ namespace App.Models
 
             game.Hud.Message = message;
         }
+
 
         protected virtual void OpenOrCloseDoor()
         {

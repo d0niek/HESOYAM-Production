@@ -11,7 +11,9 @@ namespace App.Models
     class RangedOpponent : Opponent
     {
         private float shootDistance;
+        private float dangerDistance;
         bool isShooting;
+        bool isRunningAway;
         
         public RangedOpponent(
 
@@ -25,7 +27,9 @@ namespace App.Models
         {
             {
                 shootDistance = 500.0f;
+                dangerDistance = 250.0f;
                 isShooting = false;
+                isRunningAway = false;
             }
         }
 
@@ -76,11 +80,15 @@ namespace App.Models
                 isChasing = true;
             }
 
-            if(playerDistance <= shootDistance)
+            if((playerDistance <= shootDistance) && (playerDistance > dangerDistance))
             {
                 isShooting = true;
                 OnIdle2();
-                // brak animacji idle dla broni
+            }
+
+            if(playerDistance <= dangerDistance)
+            {
+                //isRunningAway = true;
             }
 
             if (isShooting)
@@ -90,6 +98,44 @@ namespace App.Models
                 isShooting = false;
                 return;
             }
+
+            if (isRunningAway)
+            {
+                if (Math.Abs(nextTarget.X - position.X) < 20f && Math.Abs(nextTarget.Z - position.Z) < 20f)
+                {
+                    LinkedList<Tuple<int, int>> newPath = game.Scene.movement.getPathToTarget(
+                                                              position,
+                                                              game.Player.position);
+                    if (newPath != null && newPath.Count > 0)
+                    {
+                        LinkedListNode<Tuple<int, int>> candidateNode = newPath.Last;
+                        do
+                        {
+                            Vector3 candidatePosition = game.Scene.movement.coordsToPosition(candidateNode.Value);
+                            Vector3 candidateDelta = Vector3.Subtract(candidatePosition, position);
+                            float candidateDistance = candidateDelta.Length();
+                            candidateDelta.Normalize();
+                            if (isVisible(candidateDelta, candidateDistance))
+                            {
+                                nextTarget = candidatePosition;
+                                break;
+                            }
+                            candidateNode = candidateNode.Previous;
+                            if (candidateNode == null)
+                            {
+                                nextTarget = position;
+                                break;
+                            }
+                        } while (true);
+                    }
+                    else
+                    {
+                        isChasing = false;
+                        OnIdle();
+                    }
+                }
+            }
+        
 
              if (isChasing)
             {
@@ -161,6 +207,24 @@ namespace App.Models
             {
                 if (opponent != this && opponent.colliders.ContainsKey("main"))
                     targetDelta = checkSensors(opponent.colliders["main"], targetDelta);
+            }
+
+            foreach (IGameObject door in game.Scene.children["Doors"].children.Values)
+            {
+                if (!((Door)(door)).IsOpen)
+                {
+                    if (this.colliders["main"].CollidesWith(door.colliders["main"]))
+                    {
+                        ((Door)(door)).OpenDoor();
+                    }
+
+
+                    // foreach (Collider collider in door.colliders.Values)
+                    // {
+                    //     targetDelta = checkSensors(collider, targetDelta);
+                    // }
+                }
+
             }
 
             targetDelta = checkSensors(game.Scene.Player.colliders["main"], targetDelta);
