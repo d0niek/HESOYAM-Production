@@ -52,6 +52,7 @@
   <ItemGroup>
     <Compile Include="App\Collisions\BoundingBoxRenderer.cs" />
     <Compile Include="App\Collisions\Collider.cs" />
+    <Compile Include="App\DefaultInteractive.cs" />
     <Compile Include="App\Emitter.cs" />
     <Compile Include="App\Models\MeleeOpponent.cs" />
     <Compile Include="App\Models\RangedOpponent.cs" />

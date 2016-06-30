@@ -109,9 +109,11 @@ namespace App.Models
 
         #region IInteractiveOptions implementation
 
-        public String[] GetOptionsToInteract()
+        public List<String> GetOptionsToInteract()
         {
-            String[] options = { "Attack" };
+            List<String> options = new List<String>();
+            options.Add("Attack");
+
             return options;
         }
 

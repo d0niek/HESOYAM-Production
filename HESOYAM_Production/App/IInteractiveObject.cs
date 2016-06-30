@@ -1,10 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace App
 {
 
     public interface IInteractiveObject
     {
-        String[] GetOptionsToInteract();
+        List<String> GetOptionsToInteract();
     }
 }

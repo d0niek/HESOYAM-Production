@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 using System;
+using System.Collections.Generic;
 
 namespace App.Models
 {
@@ -63,9 +64,11 @@ namespace App.Models
 
         #region IInteractiveOptions implementation
 
-        public String[] GetOptionsToInteract()
+        public List<String> GetOptionsToInteract()
         {
-            String[] options = { "Take the contents of" };
+            List<String> options = new List<String>();
+            options.Add("Take content");
+
             return options;
         }
 
