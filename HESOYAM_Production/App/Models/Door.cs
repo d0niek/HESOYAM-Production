@@ -93,6 +93,12 @@ namespace App.Models
             game.Hud.Message = message;
         }
 
+        public void forceUnlcok()
+        {
+            this.OpenOrCloseDoor();
+            game.Hud.Message = "You unlocked the door";
+            isLock = false;
+        }
 
         protected virtual void OpenOrCloseDoor()
         {
@@ -121,6 +127,7 @@ namespace App.Models
                 {
                     TryToOpenDoor();
                 }
+                if(isLock) return "Locked";
             }
             return null;
         }

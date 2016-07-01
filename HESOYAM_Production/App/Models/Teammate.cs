@@ -187,6 +187,11 @@ namespace App.Models
                         {
                             persist = true;
                         }
+                        else if(actionReturn.Equals("Locked"))
+                        {
+                            if(bag.Contains("key"))
+                                ((Door)targetedObject).forceUnlcok();
+                        }
                         else
                         {
                             bag.Add(actionReturn);
