@@ -23,10 +23,14 @@ namespace App
         String message;
         TimeSpan messageStart;
         TimeSpan messageDelay;
+        bool firstUpdate;
+        const int padding = 10;
 
-        public String Message {
+        public String Message
+        {
             private get { return ""; }
-            set {
+            set
+            {
                 message = value;
                 messageStart = TimeSpan.Zero;
             }
@@ -40,6 +44,15 @@ namespace App
             this.message = "";
             this.messageStart = TimeSpan.Zero;
             this.messageDelay = new TimeSpan(0, 0, 5);
+
+            int i = 2;
+
+            foreach(Teammate teammate in teammates.Values)
+            {
+                avatars.Add(new Avatar(teammate, "avatar_" + i, padding, 40 + i * 50 + (i - 1) * padding));
+                i--;
+            }
+            firstUpdate = true;
         }
 
         public void Draw(GameTime gameTime)
@@ -48,7 +61,8 @@ namespace App
             DrawFotterBar();
             DrawPlayPauseButton();
 
-            if (!game.PlayMode) {
+            if(!game.PlayMode)
+            {
                 SelectTeammate();
             }
 
@@ -65,26 +79,36 @@ namespace App
 
         private void DrawAvatars()
         {
-            const int padding = 10;
-            int i = 2;
-
-            Avatar avatar = new Avatar(game.Player, "avatar_bohater", padding, padding);
-            DrawAvatar(avatar);
-
-            foreach (Teammate teammate in teammates.Values) {
-                avatar = new Avatar(teammate, "avatar_" + i, padding, 40 + i * 50 + (i - 1) * padding);
-                avatars.Add(avatar);
+            if(firstUpdate)
+            {
+                avatars.Add(new Avatar(game.Player, "avatar_bohater", padding, padding));
+                firstUpdate = false;
+            }
+            foreach(Avatar avatar in avatars)
+            {
                 DrawAvatar(avatar);
-                i--;
             }
         }
 
         private void DrawAvatar(Avatar avatar)
         {
-            if (avatar.Character == selectedTeammate) {
+            if(avatar.Character == selectedTeammate)
+            {
                 DrawAvatarBorder(avatar, "active");
-            } else if (avatar.Character == hoverTeammate) {
+                avatar.Character.setActive(true);
+            }
+            else
+            {
+                avatar.Character.setActive(false);
+            }
+            if(avatar.Character == hoverTeammate)
+            {
                 DrawAvatarBorder(avatar, "hover");
+                avatar.Character.Hover = true;
+            }
+            else
+            {
+                avatar.Character.Hover = false;
             }
 
             game.spriteBatch.Draw(game.Textures[avatar.TextureName], avatar.GetAvatarRectangle(), Color.White);
@@ -103,7 +127,7 @@ namespace App
             Rectangle rec = new Rectangle(x, avatar.Y, 5, 50);
             game.spriteBatch.Draw(game.Textures["life_background"], rec, Color.White);
 
-            int y = (int) (avatar.Character.Life * 50 / avatar.Character.MaxLife);
+            int y = (int)(avatar.Character.Life * 50 / avatar.Character.MaxLife);
             rec = new Rectangle(x, avatar.Y + (50 - y), 5, y);
             game.spriteBatch.Draw(game.Textures["life"], rec, Color.White);
         }
@@ -123,7 +147,8 @@ namespace App
         {
             String buttonTexture = game.PlayMode ? "pause_button" : "play_button";
 
-            if (rec.Contains(game.InputState.Mouse.GetMouseLocation())) {
+            if(rec.Contains(game.InputState.Mouse.GetMouseLocation()))
+            {
                 buttonTexture += "_hover";
                 OnMouseLeftButtonClick(game.TogglePlayMode);
             }
@@ -143,32 +168,35 @@ namespace App
 
         private void SelectTeammate()
         {
-            foreach (GameObject teammate in teammates.Values) {
-                if (teammate.IsMouseOverObject()) {
+            bool noTeammate = true;
+            foreach(GameObject teammate in teammates.Values)
+            {
+                //teammate.Hover = false;
+                if(teammate.IsMouseOverObject())
+                {
                     HighlightTeammateAndCheckIfUserClickLeftButton(teammate);
                     DrawStringCloseToMouse(teammate.name);
-                    return;
+                    noTeammate = false;
                 }
-
-                teammate.Hover = false;
             }
 
-            foreach (Avatar avatar in avatars) {
-                if (avatar.GetAvatarRectangle().Contains(game.InputState.Mouse.GetMouseLocation())) {
+            foreach(Avatar avatar in avatars)
+            {
+                if(avatar.GetAvatarRectangle().Contains(game.InputState.Mouse.GetMouseLocation()))
+                {
                     HighlightTeammateAndCheckIfUserClickLeftButton(avatar.Character);
                     DrawStringCloseToMouse(avatar.Character.name);
-                    return;
+                    noTeammate = false;
                 }
-
-                avatar.Character.Hover = false;
             }
 
-            hoverTeammate = null;
+            if(noTeammate)
+                hoverTeammate = null;
         }
 
         private void HighlightTeammateAndCheckIfUserClickLeftButton(GameObject teammate)
         {
-            teammate.Hover = true;
+            //teammate.Hover = true;
             hoverTeammate = teammate;
 
             OnMouseLeftButtonClick(() => UpdateSelectedTeammateAndSetCameraOnHim(teammate));
@@ -176,20 +204,24 @@ namespace App
 
         private void UpdateSelectedTeammateAndSetCameraOnHim(GameObject teammate)
         {
-            if (selectedTeammate != teammate) {
+            if(selectedTeammate != teammate)
+            {
                 ResetSelectedTeammate();
 
                 teammate.setActive(true);
                 selectedTeammate = teammate;
-            } else {
+            }
+            else {
                 SetCameraOnTeammate(teammate);
             }
         }
 
         public void ResetSelectedTeammate()
         {
-            if (selectedTeammate != null) {
+            if(selectedTeammate != null)
+            {
                 selectedTeammate.setActive(false);
+                selectedTeammate.Hover = false;
             }
 
             selectedTeammate = null;
@@ -216,7 +248,8 @@ namespace App
                 return;
             }
 
-            foreach (String interactiveObjectsToLoop in sceneInteractiveObjectsToLoop) {
+            foreach(String interactiveObjectsToLoop in sceneInteractiveObjectsToLoop)
+            {
                 highlightObject = LoopObjectsAndHighlightObjectUnderMouse(
                                                  game.Scene.children[interactiveObjectsToLoop].children
                                              );
@@ -238,8 +271,10 @@ namespace App
 
         private GameObject LoopObjectsAndHighlightObjectUnderMouse(Dictionary<String, IGameObject> gameObjects)
         {
-            foreach (GameObject interactive in gameObjects.Values) {
-                if (interactive.IsMouseOverObject()) {
+            foreach(GameObject interactive in gameObjects.Values)
+            {
+                if(interactive.IsMouseOverObject())
+                {
                     interactive.Hover = true;
                     return interactive;
                 }
@@ -287,19 +322,22 @@ namespace App
 
         private void SetObjectToInteractForDrawMenu(GameObject gameObject)
         {
-            if (selectedTeammate != null) {
+            if(selectedTeammate != null)
+            {
                 objectToInteract = gameObject;
             }
         }
 
         private void DrawMenuToInteractWithObject()
         {
-            if (objectToInteract != null) {
+            if(objectToInteract != null)
+            {
                 Rectangle framePosition = DrawMenuFrameWithTitle();
                 DrawOptionsInMenu(framePosition);
 
                 game.TimeToInteract = true;
-            } else {
+            }
+            else {
                 menuFramePos = Rectangle.Empty;
                 game.TimeToInteract = false;
             }
@@ -317,7 +355,8 @@ namespace App
 
         private Rectangle GetMenuPosition()
         {
-            if (menuFramePos == Rectangle.Empty || objectToInteract != menuForObject) {
+            if(menuFramePos == Rectangle.Empty || objectToInteract != menuForObject)
+            {
                 menuFramePos = new Rectangle(
                     game.InputState.Mouse.GetMouseLocation().X + 20,
                     game.InputState.Mouse.GetMouseLocation().Y + 20,
@@ -344,13 +383,14 @@ namespace App
 
         private void DrawOptionsInMenu(Rectangle menuFramePosition)
         {
-            IInteractiveObject interactiveObject = (IInteractiveObject) objectToInteract;
+            IInteractiveObject interactiveObject = (IInteractiveObject)objectToInteract;
             List<String> options = interactiveObject.GetOptionsToInteract();
             options.Add("Cancel");
             const int shift = 25;
             int loop = 1;
 
-            foreach (String option in options) {
+            foreach(String option in options)
+            {
                 Vector2 pos = new Vector2(menuFramePosition.X + 25, menuFramePosition.Y + 13 + (loop * shift));
                 DrawBackgroundUnderMenuOption(pos, option);
                 game.spriteBatch.DrawString(
@@ -366,14 +406,15 @@ namespace App
 
         private void DrawBackgroundUnderMenuOption(Vector2 optionPosition, String option)
         {
-            Rectangle rec = new  Rectangle(
-                                (int) optionPosition.X,
-                                (int) optionPosition.Y,
+            Rectangle rec = new Rectangle(
+                                (int)optionPosition.X,
+                                (int)optionPosition.Y,
                                 200,
                                 20
                             );
 
-            if (rec.Contains(game.InputState.Mouse.GetMouseLocation())) {
+            if(rec.Contains(game.InputState.Mouse.GetMouseLocation()))
+            {
                 game.spriteBatch.Draw(game.Textures["option_background"], rec, Color.White);
                 OnMouseLeftButtonClick(() => ClickOnMenuOption(option));
             }
@@ -391,10 +432,12 @@ namespace App
         {
             SetMessageStartTime(gameTime);
 
-            if (message != "" && messageStart + messageDelay > gameTime.TotalGameTime) {
+            if(message != "" && messageStart + messageDelay > gameTime.TotalGameTime)
+            {
                 Vector2 pos = DrawBackgroundForMessage();
                 game.spriteBatch.DrawString(game.Fonts["Open Sans"], message, pos, Color.White);
-            } else {
+            }
+            else {
                 message = "";
                 messageStart = TimeSpan.Zero;
             }
@@ -402,7 +445,8 @@ namespace App
 
         private void SetMessageStartTime(GameTime gameTime)
         {
-            if (message != "" && messageStart == TimeSpan.Zero) {
+            if(message != "" && messageStart == TimeSpan.Zero)
+            {
                 messageStart = gameTime.TotalGameTime;
             }
         }
@@ -411,13 +455,13 @@ namespace App
         {
             Vector2 messageSize = game.Fonts["Open Sans"].MeasureString(message);
             const int padding = 15;
-            int x = (game.GraphicsDevice.Viewport.Width / 2) - (int) (messageSize.X / 2) - padding;
+            int x = (game.GraphicsDevice.Viewport.Width / 2) - (int)(messageSize.X / 2) - padding;
             const int y = 50;
             Rectangle rec = new Rectangle(
                                 x,
                                 y,
-                                (int) messageSize.X + padding * 2,
-                                (int) messageSize.Y + padding * 2
+                                (int)messageSize.X + padding * 2,
+                                (int)messageSize.Y + padding * 2
                             );
             game.spriteBatch.Draw(game.Textures["message_background"], rec, Color.White);
 
@@ -438,7 +482,7 @@ namespace App
                                       game.InputState.Mouse.GetMouseLocation().Y + 20
                                   );
 
-                game.spriteBatch.DrawString(game.Fonts["Open Sans"], text, pos, Color.DarkOrange); 
+                game.spriteBatch.DrawString(game.Fonts["Open Sans"], text, pos, Color.DarkOrange);
             }
         }
     }

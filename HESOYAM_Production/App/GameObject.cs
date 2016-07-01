@@ -32,7 +32,7 @@ namespace App
 
         public bool Hover
         {
-            private get;
+            protected get;
             set;
         }
 

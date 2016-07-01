@@ -205,6 +205,19 @@ namespace App.Animation
                         beffect.Projection = this.game.Camera.ProjectionMatrix;
                         beffect.EnableDefaultLighting();
                         beffect.PreferPerPixelLighting = true;
+
+                        if(active)
+                        {
+                            beffect.AmbientLightColor = new Vector3(0, 0, 255);
+                        }
+                        else if(Hover)
+                        {
+                            beffect.AmbientLightColor = new Vector3(0, 255, 0);
+                        }
+                        else
+                        {
+                            beffect.AmbientLightColor = Vector3.Zero;
+                        }
                     }
 
                     if (effect is SkinnedEffect) {
@@ -220,8 +233,20 @@ namespace App.Animation
                         //seffect.EnableDefaultLighting();
                         seffect.PreferPerPixelLighting = true;
                         seffect.SetBoneTransforms(skeleton);
-                    }
 
+                        if(active)
+                        {
+                            seffect.AmbientLightColor = new Vector3(0, 0, 255);
+                        }
+                        else if(Hover)
+                        {
+                            seffect.AmbientLightColor = new Vector3(0, 255, 0);
+                        }
+                        else
+                        {
+                            seffect.AmbientLightColor = Vector3.Zero;
+                        }
+                    }
 
                     this.DrawTexture(effect);
                 }
