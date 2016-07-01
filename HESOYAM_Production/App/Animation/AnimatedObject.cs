@@ -152,6 +152,8 @@ namespace App.Animation
             if (player != null && this.game.PlayMode) {
                 player.Update(gameTime);
             }
+
+            if(game.PlayMode) Hover = false;
         }
 
         #endregion
