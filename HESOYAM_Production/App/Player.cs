@@ -120,6 +120,22 @@ namespace App
 
             if(!game.PlayMode)
             {
+                if(IsMouseOverObject())
+                {
+                    string message = "Your inventory:";
+                    if(bag.Count > 0)
+                    {
+                        foreach(string i in bag)
+                        {
+                            message += "\n" + i;
+                        }
+                    }
+                    else
+                    {
+                        message += "\nempty";
+                    }
+                    game.Hud.Message = message;
+                }
                 return;
             }
 
