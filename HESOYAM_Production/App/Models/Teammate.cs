@@ -18,6 +18,8 @@ namespace App.Models
         private TimeSpan lastAttack;
         private TimeSpan attackDelay;
         private LinkedList<Tuple<int, int>> newPath;
+        List<string> bag;
+        private string nextAction;
         //private List<Emitter> emitterPath;
 
         public Teammate(
@@ -54,9 +56,11 @@ namespace App.Models
         {
             speed = 5.0f;
             nextTarget = position;
-            targetedObject = this;
+            targetedObject = new GameObject(game, "", position);
             lastAttack = TimeSpan.Zero;
             attackDelay = new TimeSpan(0, 0, 0, 0, 870);
+            nextAction = null;
+            bag = new List<string>();
             //emitterPath = new List<Emitter>();
         }
 
@@ -100,6 +104,7 @@ namespace App.Models
         {
             nextTarget = position;
             targetedObject = interactiveObject;
+            nextAction = option;
         }
 
         public override void Update(GameTime gameTime)
@@ -132,6 +137,44 @@ namespace App.Models
                 || Math.Abs(targetedObject.position.X - position.X) < 20f && Math.Abs(targetedObject.position.Z - position.Z) < 20f)
             {
                 nextTarget = position;
+                if(nextAction != null && !nextAction.Trim().Equals("") && targetedObject is IInteractiveObject)
+                {
+                    string actionReturn = ((IInteractiveObject)targetedObject).performAction(nextAction);
+                    bool persist = false;
+                    if(actionReturn != null && !actionReturn.Trim().Equals(""))
+                    {
+                        if(actionReturn.Equals("Accepted"))
+                        {
+                            if(bag.Count == 0)
+                            {
+                                game.Hud.Message = "No items to pass!";
+                            }
+                            else
+                            {
+                                string givenItems = "";
+                                foreach(string item in bag)
+                                {
+                                    game.Player.addItemToBag(item);
+                                    givenItems += item + " ";
+                                }
+                                game.Hud.Message = "A teammate gave you: " + givenItems;
+                                bag.Clear();
+                            }
+                        }
+                        else if(actionReturn.Equals("Chase"))
+                        {
+                            persist = true;
+                        }
+                        else
+                        {
+                            bag.Add(actionReturn);
+                            game.Hud.Message = "A teammate has obtained a " + actionReturn; 
+                        }
+                    }
+                    nextAction = null;
+                    if(!persist)
+                        targetedObject = new GameObject(game, "", position);
+                }
             }
             else if(Math.Abs(nextTarget.X - position.X) < 20f && Math.Abs(nextTarget.Z - position.Z) < 20f)
             {
@@ -204,7 +247,7 @@ namespace App.Models
                 }
             }
 
-            if(targetDelta.Length() < 2f)
+            if(targetDelta.Length() < 10f)
             {
                 OnTeammateIdle();
                 return;

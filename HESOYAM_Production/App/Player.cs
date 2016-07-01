@@ -11,7 +11,7 @@ using App.Models;
 namespace App
 {
 
-    public class Player : Character
+    public class Player : Character, IInteractiveObject
     {
         float cameraAngle;
         bool isAttacking;
@@ -45,8 +45,7 @@ namespace App
 
             AddCollider("hitbox", new Collider(game, newPosition, newSize, Vector3.Zero));
 
-            newPosition.Y += 30;
-            newSize = new Vector3(100f, 250f, 100f);
+            newSize = new Vector3(100f, 190f, 100f);
             AddCollider("main", new Collider(game, newPosition, newSize, Vector3.Zero));
 
             newPosition = position;
@@ -293,7 +292,6 @@ namespace App
             {
                 AnimationPlayer player = playerModel.PlayClip("cios_piesc");
                 player.Looping = false;
-                System.Console.WriteLine("czas animacji " + player.Duration);
                 if(player.Position >= player.Duration)
                     isAttacking = false;
             }
@@ -571,6 +569,26 @@ namespace App
                 IncreaseLife(50f);
                 bag.Remove("first aid kit");
             }
+        }
+
+        public List<string> GetOptionsToInteract()
+        {
+            List<string> options = new List<string>();
+            options.Add("Give items");
+            options.Add("Follow");
+            return options;
+        }
+
+        public string performAction(string action)
+        {
+            if(action != null)
+            {
+                if(action.Equals("Give items"))
+                    return "Accepted";
+                else if(action.Equals("Follow"))
+                    return "Chase";
+            }
+            return null;
         }
     }
 }

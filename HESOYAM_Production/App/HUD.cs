@@ -208,6 +208,14 @@ namespace App
 
             GameObject highlightObject = null;
 
+            if(game.Player.IsMouseOverObject())
+            {
+                highlightObject = game.Player;
+                DrawStringCloseToMouse(highlightObject.name);
+                OnMouseLeftButtonClick(() => SetObjectToInteractForDrawMenu(highlightObject));
+                return;
+            }
+
             foreach (String interactiveObjectsToLoop in sceneInteractiveObjectsToLoop) {
                 highlightObject = LoopObjectsAndHighlightObjectUnderMouse(
                                                  game.Scene.children[interactiveObjectsToLoop].children
@@ -293,6 +301,7 @@ namespace App
                 game.TimeToInteract = true;
             } else {
                 menuFramePos = Rectangle.Empty;
+                game.TimeToInteract = false;
             }
         }
 
@@ -375,6 +384,7 @@ namespace App
             if(!option.Equals("Cancel"))
                 (selectedTeammate as Teammate).onMoveToCommand(objectToInteract, option);
             objectToInteract = null;
+            game.TimeToInteract = false;
         }
 
         private void DrawMessage(GameTime gameTime)

@@ -117,6 +117,18 @@ namespace App.Models
             return options;
         }
 
+        public string performAction(string action)
+        {
+            if(action != null)
+            {
+                if(action.Equals("Attack"))
+                {
+                    return "Chase";
+                }
+            }
+            return null;
+        }
+
         #endregion
     }
 }
