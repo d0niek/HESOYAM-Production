@@ -328,7 +328,7 @@ namespace App
                                             new Vector3(0f, (float) (rotationY * Math.PI / 2), 0f)
                                         );
 
-            addColider(gameObject);
+            addColider(gameObject, 100f, 190f, 100f);
 
             return gameObject;
         }

@@ -56,7 +56,7 @@ namespace App.Models
         {
             speed = 5.0f;
             nextTarget = position;
-            targetedObject = this;
+            targetedObject = new GameObject(game, "", position);
             lastAttack = TimeSpan.Zero;
             attackDelay = new TimeSpan(0, 0, 0, 0, 870);
             nextAction = null;
@@ -140,12 +140,40 @@ namespace App.Models
                 if(nextAction != null && !nextAction.Trim().Equals("") && targetedObject is IInteractiveObject)
                 {
                     string actionReturn = ((IInteractiveObject)targetedObject).performAction(nextAction);
+                    bool persist = false;
                     if(actionReturn != null && !actionReturn.Trim().Equals(""))
                     {
-                        bag.Add(actionReturn);
-                        game.Hud.Message = "A teammate has obtained a " + actionReturn;
+                        if(actionReturn.Equals("Accepted"))
+                        {
+                            if(bag.Count == 0)
+                            {
+                                game.Hud.Message = "No items to pass!";
+                            }
+                            else
+                            {
+                                string givenItems = "";
+                                foreach(string item in bag)
+                                {
+                                    game.Player.addItemToBag(item);
+                                    givenItems += item + " ";
+                                }
+                                game.Hud.Message = "A teammate gave you: " + givenItems;
+                                bag.Clear();
+                            }
+                        }
+                        else if(actionReturn.Equals("Chase"))
+                        {
+                            persist = true;
+                        }
+                        else
+                        {
+                            bag.Add(actionReturn);
+                            game.Hud.Message = "A teammate has obtained a " + actionReturn; 
+                        }
                     }
                     nextAction = null;
+                    if(!persist)
+                        targetedObject = new GameObject(game, "", position);
                 }
             }
             else if(Math.Abs(nextTarget.X - position.X) < 20f && Math.Abs(nextTarget.Z - position.Z) < 20f)
