@@ -66,7 +66,7 @@ namespace App
         private void DrawAvatars()
         {
             const int padding = 10;
-            int i = 1;
+            int i = 2;
 
             Avatar avatar = new Avatar(game.Player, "avatar_bohater", padding, padding);
             DrawAvatar(avatar);
@@ -75,7 +75,7 @@ namespace App
                 avatar = new Avatar(teammate, "avatar_" + i, padding, 40 + i * 50 + (i - 1) * padding);
                 avatars.Add(avatar);
                 DrawAvatar(avatar);
-                i++;
+                i--;
             }
         }
 
