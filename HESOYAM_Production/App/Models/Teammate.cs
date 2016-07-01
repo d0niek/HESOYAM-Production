@@ -302,9 +302,9 @@ namespace App.Models
                 {
                     if (((Door)(door)).isLock)
                     {
-                        if(this.bag.Contains("key"))
+                        if(this.colliders["main"].CollidesWith(door.colliders["main"]))
                         {
-                            if (this.colliders["main"].CollidesWith(door.colliders["main"]))
+                            if (this.bag.Contains("key"))
                             {
                                 Vector3 doorDelta = Vector3.Subtract(((Door)(door)).Position, position);
                                 doorDelta.Normalize();
@@ -318,10 +318,13 @@ namespace App.Models
                                     ((Door)(door)).OpenDoor();
                                     this.IsFinishedInteracting = false;
                                 }
-
+                            }
+                            else
+                            {
+                                targetDelta = checkSensors(door.colliders["main"], targetDelta);
+                                game.Hud.Message = "Door is Locked";
                             }
                         }
-                        
                     }
                     else
                     {
@@ -340,25 +343,28 @@ namespace App.Models
                         }
                     }
                         
-
-
-                    // foreach (Collider collider in door.colliders.Values)
-                    // {
-                    //     targetDelta = checkSensors(collider, targetDelta);
-                    // }
+                    //foreach (Collider collider in door.colliders.Values)
+                    //{
+                    //    targetDelta = checkSensors(collider, targetDelta);
+                    //}
                 }
 
             }
 
             targetDelta = checkSensors(game.Scene.Player.colliders["main"], targetDelta);
+            float targetLength = targetDelta.Length();
             targetDelta.Normalize();
 
             rotateInDirection(targetDelta, true);
 
-            if(targetDelta.Length() > 0f)
+            if(targetLength > 10f)
             {
                 moveInDirection(targetDelta);
                 OnMove();
+            }
+            else
+            {
+                OnIdle();
             }
         }
 
