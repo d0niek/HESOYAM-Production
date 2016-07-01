@@ -208,6 +208,14 @@ namespace App
 
             GameObject highlightObject = null;
 
+            if(game.Player.IsMouseOverObject())
+            {
+                highlightObject = game.Player;
+                DrawStringCloseToMouse(highlightObject.name);
+                OnMouseLeftButtonClick(() => SetObjectToInteractForDrawMenu(highlightObject));
+                return;
+            }
+
             foreach (String interactiveObjectsToLoop in sceneInteractiveObjectsToLoop) {
                 highlightObject = LoopObjectsAndHighlightObjectUnderMouse(
                                                  game.Scene.children[interactiveObjectsToLoop].children

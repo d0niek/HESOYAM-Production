@@ -10,7 +10,7 @@ namespace HESOYAM_Production.App
 {
     class DefaultInteractive : GameObject, IInteractiveObject
     {
-        public DefaultInteractive(Engine game, Vector3 position) : base(game, "defaultInteractive", position)
+        public DefaultInteractive(Engine game, Vector3 position) : base(game, "ground", position)
         { }
 
         public List<String> GetOptionsToInteract()
