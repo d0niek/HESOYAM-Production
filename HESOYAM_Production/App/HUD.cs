@@ -431,12 +431,15 @@ namespace App
 
         private void DrawStringCloseToMouse(String text)
         {
-            Vector2 pos = new Vector2(
-                              game.InputState.Mouse.GetMouseLocation().X + 20,
-                              game.InputState.Mouse.GetMouseLocation().Y + 20
-                          );
+            if(Program.debugMode)
+            {
+                Vector2 pos = new Vector2(
+                                      game.InputState.Mouse.GetMouseLocation().X + 20,
+                                      game.InputState.Mouse.GetMouseLocation().Y + 20
+                                  );
 
-            game.spriteBatch.DrawString(game.Fonts["Open Sans"], text, pos, Color.DarkOrange);
+                game.spriteBatch.DrawString(game.Fonts["Open Sans"], text, pos, Color.DarkOrange); 
+            }
         }
     }
 }

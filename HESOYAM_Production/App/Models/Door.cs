@@ -85,7 +85,7 @@ namespace App.Models
             String message = "Need key to open the door";
             if (game.Player.hasItemInBag("key")) {
                 this.OpenOrCloseDoor();
-                message = "The door is unlocked";
+                message = "You unlocked the door";
                 isLock = false;
             }
 
