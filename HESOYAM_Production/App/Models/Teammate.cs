@@ -20,6 +20,7 @@ namespace App.Models
         private LinkedList<Tuple<int, int>> newPath;
         List<string> bag;
         private string nextAction;
+        public bool isActive;
         //private List<Emitter> emitterPath;
 
         public Teammate(
@@ -61,6 +62,7 @@ namespace App.Models
             attackDelay = new TimeSpan(0, 0, 0, 0, 870);
             nextAction = null;
             bag = new List<string>();
+            isActive = false;
             //emitterPath = new List<Emitter>();
         }
 
@@ -193,6 +195,11 @@ namespace App.Models
                             {
                                 ((Door)targetedObject).forceUnlcok();
                                 bag.Remove("key");
+                            } else
+                                if (bag.Contains("key2"))
+                            {
+                                ((Door)targetedObject).forceUnlcok();
+                                bag.Remove("key2");
                             }
                         }
                         else
