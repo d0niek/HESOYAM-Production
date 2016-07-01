@@ -9,13 +9,14 @@ namespace App.Models
 
     class Door : Wall, IInteractiveObject
     {
-        bool isLock;
+        public bool isLock;
         protected bool isOpen;
 
         public bool IsOpen {
             get { return isOpen; }
             set { isOpen = value; }
         }
+
 
         public Door(
             Engine game,

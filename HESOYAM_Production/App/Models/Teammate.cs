@@ -137,7 +137,13 @@ namespace App.Models
                 return;
             }
 
-            foreach(Collider collider in colliders.Values)
+            if (IsInteracting)
+            {
+                OnInteraction();
+                return;
+            }
+
+            foreach (Collider collider in colliders.Values)
             {
                 collider.drawColor = Color.GreenYellow;
             }
@@ -283,6 +289,60 @@ namespace App.Models
                 {
                     targetDelta = checkSensors(collider, targetDelta);
                 }
+            }
+
+            foreach (IGameObject door in game.Scene.children["Doors"].children.Values)
+            {
+                if (!((Door)(door)).IsOpen)
+                {
+                    if (((Door)(door)).isLock)
+                    {
+                        if(this.bag.Contains("key"))
+                        {
+                            if (this.colliders["main"].CollidesWith(door.colliders["main"]))
+                            {
+                                Vector3 doorDelta = Vector3.Subtract(((Door)(door)).Position, position);
+                                doorDelta.Normalize();
+                                this.rotateInDirection(doorDelta, true);
+                                OnInteraction();
+                                if (this.IsFinishedInteracting)
+                                {
+                                    ((Door)(door)).isLock = false;
+                                    String message = "Teammate unlocked the door";
+                                    game.Hud.Message = message;
+                                    ((Door)(door)).OpenDoor();
+                                    this.IsFinishedInteracting = false;
+                                }
+
+                            }
+                        }
+                        
+                    }
+                    else
+                    {
+                        if (this.colliders["main"].CollidesWith(door.colliders["main"]))
+                        {
+                            Vector3 doorDelta = Vector3.Subtract(((Door)(door)).Position, position);
+                            doorDelta.Normalize();
+                            this.rotateInDirection(doorDelta, true);
+                            OnInteraction();
+                            if (this.IsFinishedInteracting)
+                            {
+                                ((Door)(door)).OpenDoor();
+                                this.IsFinishedInteracting = false;
+                            }
+
+                        }
+                    }
+                        
+
+
+                    // foreach (Collider collider in door.colliders.Values)
+                    // {
+                    //     targetDelta = checkSensors(collider, targetDelta);
+                    // }
+                }
+
             }
 
             targetDelta = checkSensors(game.Scene.Player.colliders["main"], targetDelta);
