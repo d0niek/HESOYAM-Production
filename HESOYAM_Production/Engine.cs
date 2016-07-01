@@ -130,8 +130,8 @@ namespace HESOYAM_Production
 
             scene = new Scene(
                 this,
-                "Scene_2",
-                rootDir + "/Content/Map/scene_2"
+                "Scene_3",
+                rootDir + "/Content/Map/scene_3"
             );
             hud = new HUD(this);
             particles = new Particles(this);

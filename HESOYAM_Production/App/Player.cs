@@ -18,6 +18,7 @@ namespace App
         List<string> bag;
         bool isHavingGun;
         bool isPlayerInteracting;
+        public bool isKey2Droped;
         private TimeSpan lastAttack;
         private TimeSpan attackDelay;
         protected TimeSpan lastShoot;
@@ -38,6 +39,7 @@ namespace App
             bag = new List<string>();
             isPlayerInteracting = false;
             isHavingGun = false;
+            isKey2Droped = false;
 
             Vector3 newPosition = position;
             Vector3 newSize = new Vector3(35f, 190f, 35f);

@@ -78,6 +78,8 @@ namespace App
                 buildLamp(game.Models["lampa"], pos, (int) color.B);
             } else if (color.R == 185 && color.G == 61) {
                 buildCupboard(pos, (int) color.B, "key");
+            } else if (color.R == 185 && color.G == 64) {
+                buildCupboard(pos, (int)color.B, "key2");
             } else if (color.R == 185 && color.G == 62) {
                 buildCupboard(pos, (int) color.B, "first aid kit");
             } else if (color.R == 185 && color.G == 63){
@@ -88,6 +90,10 @@ namespace App
                 buildOther(game.Models["biurko"], pos, (int) color.B);
             } else if (color.R == 46 && color.G == 163) {
                 buildOther(game.Models["krzeslo"], pos, (int) color.B);
+            } else if (color.R == 46 && color.G == 180)  {
+                buildOther(game.Models["wozek"], pos, (int)color.B);
+            } else if (color.R == 46 && color.G == 190)  {
+                buildOther(game.Models["wazon"], pos, (int)color.B);
             } else if (color.R == 250 && color.G == 250) {
                 insertPlayerCharacter(pos, (int) color.B);
             } else if (color.R == 250 && color.G == 200) {

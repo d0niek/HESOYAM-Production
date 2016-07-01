@@ -101,6 +101,14 @@ namespace App.Models
                 message = "You unlocked the door";
                 isLock = false;
                 game.Player.removeItemFromBag("key");
+            } else
+            if (game.Player.hasItemInBag("key2"))
+            {
+                this.OpenOrCloseDoor();
+                message = "You unlocked the door";
+                isLock = false;
+                game.Player.removeItemFromBag("key2");
+                game.Player.isKey2Droped = true;
             }
 
             game.Hud.Message = message;
