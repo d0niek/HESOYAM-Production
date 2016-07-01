@@ -112,6 +112,22 @@ namespace App.Models
             base.Update(gameTime);
             if(!game.PlayMode)
             {
+                if(Hover)
+                {
+                    string message = "Highlighted teammate's inventory:";
+                    if(bag.Count > 0)
+                    {
+                        foreach(string i in bag)
+                        {
+                            message += "\n" + i;
+                        }
+                    }
+                    else
+                    {
+                        message += "\nempty";
+                    }
+                    game.Hud.Message = message;
+                }
                 return;
             }
 
