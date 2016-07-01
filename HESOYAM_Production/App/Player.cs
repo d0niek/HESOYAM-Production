@@ -578,6 +578,11 @@ namespace App
             return bag.Contains(item);
         }
 
+        public void removeItemFromBag(String item)
+        {
+            bag.Remove(item);
+        }
+
         public void checkIfFirstAidKit()
         {
             if(hasItemInBag("first aid kit"))

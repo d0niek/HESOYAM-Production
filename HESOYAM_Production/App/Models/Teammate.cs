@@ -190,7 +190,10 @@ namespace App.Models
                         else if(actionReturn.Equals("Locked"))
                         {
                             if(bag.Contains("key"))
+                            {
                                 ((Door)targetedObject).forceUnlcok();
+                                bag.Remove("key");
+                            }
                         }
                         else
                         {
@@ -317,6 +320,7 @@ namespace App.Models
                                     game.Hud.Message = message;
                                     ((Door)(door)).OpenDoor();
                                     this.IsFinishedInteracting = false;
+                                    bag.Remove("key");
                                 }
                             }
                             else

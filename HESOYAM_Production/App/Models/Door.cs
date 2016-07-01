@@ -72,6 +72,18 @@ namespace App.Models
             }
         }
 
+        public void TryToOpenDoorTeammate()
+        {
+            if(isLock)
+            {
+                game.Hud.Message = "Need key to open the door";
+            }
+            else
+            {
+                OpenOrCloseDoor();
+            }
+        }
+
         public void OpenDoor()
         {
             isOpen = !isOpen;
@@ -88,6 +100,7 @@ namespace App.Models
                 this.OpenOrCloseDoor();
                 message = "You unlocked the door";
                 isLock = false;
+                game.Player.removeItemFromBag("key");
             }
 
             game.Hud.Message = message;
@@ -125,7 +138,7 @@ namespace App.Models
             {
                 if(action.Equals("Open") || action.Equals("Close"))
                 {
-                    TryToOpenDoor();
+                    TryToOpenDoorTeammate();
                 }
                 if(isLock) return "Locked";
             }
