@@ -1,0 +1,25 @@
+<map id="App.Animation.AnimationPlayer" name="App.Animation.AnimationPlayer">
+<area shape="rect" id="node2" href="$classApp_1_1Animation_1_1AnimatedObject.html" title="An encloser for an XNA model that we will use that includes support for bones, animation, and some manipulations. " alt="" coords="989,544,1195,571"/>
+<area shape="rect" id="node11" href="$classApp_1_1Animation_1_1AnimatedObject.html" title="An encloser for an XNA model that we will use that includes support for bones, animation, and some manipulations. " alt="" coords="2182,563,2299,589"/>
+<area shape="rect" id="node17" href="$classApp_1_1Scene.html" title="App.Scene" alt="" coords="1321,512,1407,539"/>
+<area shape="rect" id="node3" href="$classApp_1_1GameObject.html" title="GameObject" alt="" coords="1842,475,1941,501"/>
+<area shape="rect" id="node16" href="$classApp_1_1Wall.html" title="Wall" alt="" coords="2216,475,2265,501"/>
+<area shape="rect" id="node19" href="$classApp_1_1Camera.html" title="App.Camera" alt="" coords="2192,253,2289,280"/>
+<area shape="rect" id="node20" href="$classHESOYAM__Production_1_1App_1_1Particles.html" title="HESOYAM_Production.App.Particles" alt="" coords="2121,424,2360,451"/>
+<area shape="rect" id="node23" href="$classApp_1_1GameObject.html" title="App.GameObject" alt="" coords="1829,325,1953,352"/>
+<area shape="rect" id="node5" href="$interfaceApp_1_1IGameElement.html" title="IGameElement" alt="" coords="1585,461,1695,488"/>
+<area shape="rect" id="node6" href="$interfaceApp_1_1IGameObject.html" title="IGameObject" alt="" coords="1589,383,1691,409"/>
+<area shape="rect" id="node7" href="$classHESOYAM__Production_1_1Engine.html" title="This is the main type for your game. " alt="" coords="1539,201,1741,228"/>
+<area shape="rect" id="node22" href="$classApp_1_1HUD.html" title="App.HUD" alt="" coords="2203,121,2279,148"/>
+<area shape="rect" id="node9" href="$classApp_1_1Player.html" title="App.Player" alt="" coords="2667,395,2753,421"/>
+<area shape="rect" id="node10" href="$classApp_1_1Character.html" title="Character" alt="" coords="2432,563,2513,589"/>
+<area shape="rect" id="node12" href="$classApp_1_1Animation_1_1ModelExtra.html" title="Class that contains additional information attached to the model and shared with the runtime..." alt="" coords="675,640,853,667"/>
+<area shape="rect" id="node13" href="$interfaceApp_1_1ICharacter.html" title="ICharacter" alt="" coords="2199,613,2283,640"/>
+<area shape="rect" id="node14" href="$interfaceApp_1_1IInteractiveObject.html" title="IInteractiveObject" alt="" coords="2179,373,2303,400"/>
+<area shape="rect" id="node15" href="$classApp_1_1Models_1_1Door.html" title="App.Models.Door" alt="" coords="2409,424,2536,451"/>
+<area shape="rect" id="node18" href="$classApp_1_1Movement.html" title="App.Movement" alt="" coords="1037,493,1147,520"/>
+<area shape="rect" id="node21" href="$classApp_1_1InputState.html" title="Helper for reading input from keyboard, gamepad, and touch input. This class tracks both the current ..." alt="" coords="1311,176,1417,203"/>
+<area shape="rect" id="node24" href="$classApp_1_1Animation_1_1AnimationClip.html" title="An animation clip is a set of keyframes with associated bones. " alt="" coords="5,521,197,548"/>
+<area shape="rect" id="node25" href="$classApp_1_1Animation_1_1AnimationPlayer_1_1BoneInfo.html" title="Information about a bone we are animating. This class connects a bone in the clip to a bone in the mo..." alt="" coords="339,581,549,622"/>
+<area shape="rect" id="node26" href="$classApp_1_1Animation_1_1Bone.html" title="Bones in this model are represented by this class, which allows a bone to have more detail associatd ..." alt="" coords="30,613,173,640"/>
+</map>

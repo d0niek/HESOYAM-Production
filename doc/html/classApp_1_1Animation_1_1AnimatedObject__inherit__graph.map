@@ -1,0 +1,11 @@
+<map id="App.Animation.AnimatedObject" name="App.Animation.AnimatedObject">
+<area shape="rect" id="node6" href="$classApp_1_1Character.html" title="App.Character" alt="" coords="339,229,446,256"/>
+<area shape="rect" id="node2" href="$classApp_1_1GameObject.html" title="GameObject" alt="" coords="343,80,442,107"/>
+<area shape="rect" id="node4" href="$interfaceApp_1_1IGameElement.html" title="IGameElement" alt="" coords="337,5,448,32"/>
+<area shape="rect" id="node5" href="$interfaceApp_1_1IGameObject.html" title="IGameObject" alt="" coords="473,5,574,32"/>
+<area shape="rect" id="node7" href="$classApp_1_1Models_1_1Opponent.html" title="App.Models.Opponent" alt="" coords="133,304,287,331"/>
+<area shape="rect" id="node10" href="$classApp_1_1Models_1_1Teammate.html" title="App.Models.Teammate" alt="" coords="311,304,474,331"/>
+<area shape="rect" id="node11" href="$classApp_1_1Player.html" title="App.Player" alt="" coords="499,304,585,331"/>
+<area shape="rect" id="node8" href="$classApp_1_1Models_1_1MeleeOpponent.html" title="App.Models.MeleeOpponent" alt="" coords="5,379,196,405"/>
+<area shape="rect" id="node9" href="$classApp_1_1Models_1_1RangedOpponent.html" title="App.Models.RangedOpponent" alt="" coords="220,379,421,405"/>
+</map>

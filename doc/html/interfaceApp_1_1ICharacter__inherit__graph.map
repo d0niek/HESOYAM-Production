@@ -1,0 +1,8 @@
+<map id="App.ICharacter" name="App.ICharacter">
+<area shape="rect" id="node2" href="$classApp_1_1Character.html" title="App.Character" alt="" coords="339,80,446,107"/>
+<area shape="rect" id="node3" href="$classApp_1_1Models_1_1Opponent.html" title="App.Models.Opponent" alt="" coords="133,155,287,181"/>
+<area shape="rect" id="node6" href="$classApp_1_1Models_1_1Teammate.html" title="App.Models.Teammate" alt="" coords="311,155,474,181"/>
+<area shape="rect" id="node7" href="$classApp_1_1Player.html" title="App.Player" alt="" coords="499,155,585,181"/>
+<area shape="rect" id="node4" href="$classApp_1_1Models_1_1MeleeOpponent.html" title="App.Models.MeleeOpponent" alt="" coords="5,229,196,256"/>
+<area shape="rect" id="node5" href="$classApp_1_1Models_1_1RangedOpponent.html" title="App.Models.RangedOpponent" alt="" coords="220,229,421,256"/>
+</map>
