@@ -3765,3 +3765,9 @@
 /processorParam:TextureFormat=Color
 /build:Textures/redParticle.png
 
+#begin Effects/efekt.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:Effects/efekt.fx
+

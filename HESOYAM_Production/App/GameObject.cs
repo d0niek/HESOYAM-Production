@@ -301,6 +301,7 @@ namespace App
 
         protected void DrawModel(Model model)
         {
+			Console.WriteLine(this.name);
             // Copy any parent transforms.
             Matrix[] transforms = new Matrix[model.Bones.Count];
             model.CopyAbsoluteBoneTransformsTo(transforms);
@@ -345,6 +346,35 @@ namespace App
                 mesh.Draw();
             }
         }
+
+		protected void DrawModelWithEffect(Model model) {
+			Console.WriteLine(this.name);
+
+			// Copy any parent transforms.
+			Matrix[] transforms = new Matrix[model.Bones.Count];
+			model.CopyAbsoluteBoneTransformsTo(transforms);
+
+			// Draw the model. A model can have multiple meshes, so loop.
+			foreach (ModelMesh mesh in model.Meshes) {
+				// This is where the mesh orientation is set, as well
+				// as our camera and projection.
+
+				foreach (ModelMeshPart part in mesh.MeshParts) {
+					part.Effect = this.game.efekt;
+					this.game.efekt.Parameters["World"].SetValue(transforms[mesh.ParentBone.Index]
+					* Matrix.CreateRotationY(this.rotation.Y)
+					* Matrix.CreateRotationX(this.rotation.X)
+					* Matrix.CreateRotationZ(this.rotation.Z)
+					* Matrix.CreateScale(this.scale)
+					* Matrix.CreateTranslation(this.position));
+					this.game.efekt.Parameters["View"].SetValue(this.game.Camera.ViewMatrix);
+					this.game.efekt.Parameters["Projection"].SetValue(this.game.Camera.ProjectionMatrix);
+				}
+
+				// Draw the mesh, using the effects set above.
+				mesh.Draw();
+			}
+		}
 
         protected void DrawTexture(BasicEffect effect)
         {

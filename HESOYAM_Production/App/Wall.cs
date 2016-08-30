@@ -10,12 +10,12 @@ namespace App
         protected Model modelCut;
 
         public Texture2D TextureNormal {
-            private get;
+            get;
             set;
         }
 
         public Texture2D TextureCut {
-            private get;
+            get;
             set;
         }
 
@@ -43,7 +43,7 @@ namespace App
             }
         }
 
-        private bool isWallCoversCameraLookAt()
+        protected bool isWallCoversCameraLookAt()
         {
             const int distance = 400;
             Vector3 cameraLookAtPosition = game.Camera.CameraLookAt;

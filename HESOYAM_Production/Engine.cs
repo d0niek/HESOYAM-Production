@@ -27,6 +27,7 @@ namespace HESOYAM_Production
         Camera camera;
         Player player;
         Scene scene;
+		public Effect efekt;
 
         public SpriteBatch spriteBatch;
 
@@ -107,9 +108,9 @@ namespace HESOYAM_Production
         protected override void Initialize()
         {
             IsMouseVisible = true;
-            graphics.IsFullScreen = true;
-            graphics.PreferredBackBufferWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
-            graphics.PreferredBackBufferHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
+            graphics.IsFullScreen = false;
+            //graphics.PreferredBackBufferWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
+            //graphics.PreferredBackBufferHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
             base.Initialize();
         }
 
@@ -127,6 +128,8 @@ namespace HESOYAM_Production
             LoadModels("Models", models);
             LoadModels("Animation", models);
             LoadTextures();
+
+			efekt = Content.Load<Effect>("Effects/efekt");
 
             scene = new Scene(
                 this,

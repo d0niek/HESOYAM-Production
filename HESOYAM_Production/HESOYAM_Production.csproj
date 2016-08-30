@@ -54,6 +54,7 @@
     <Compile Include="App\Collisions\Collider.cs" />
     <Compile Include="App\DefaultInteractive.cs" />
     <Compile Include="App\Emitter.cs" />
+    <Compile Include="App\Models\MirrorDoor.cs" />
     <Compile Include="App\Models\MeleeOpponent.cs" />
     <Compile Include="App\Models\RangedOpponent.cs" />
     <Compile Include="App\Movement.cs" />
@@ -88,6 +89,7 @@
     <Compile Include="App\IInteractiveObject.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Content\Effects\efekt.fx" />
     <None Include="Icon.png" />
     <None Include="Content\Models\biurko.FBX" />
     <None Include="Content\Models\butla_z_gazem.FBX" />

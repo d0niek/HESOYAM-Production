@@ -68,6 +68,8 @@ namespace App
                 buildWindow(pos, (int) color.B);
             } else if (color.R == 0 && color.G == 255) {
                 buildDoor(pos, (int) color.B, false);
+            } else if (color.R == 10 && color.G == 255) {
+                buildMirrorDoor(pos, (int) color.B, false);
             } else if (color.R == 1 && color.G == 255) {
                 buildDoor(pos, (int) color.B, true);
             } else if (color.R == 164 && color.G == 255) {
@@ -151,6 +153,25 @@ namespace App
             Door door = new Door(
                             game,
                             "Door_" + pos.X + "x" + pos.Y,
+                            game.Models["drzwi"],
+                            game.Models["drzwi_przyciete"],
+                            isLock,
+                            new Vector3(pos.X * wallShift, 0f, pos.Y * wallShift),
+                            new Vector3(0f, (float) (rotationY * Math.PI / 2), 0f)
+                        );
+            door.TextureNormal = game.Textures["drzwi_tekstura"];
+            door.TextureCut = game.Textures["modul_tekstura"];
+
+            addColider(door);
+
+            children["Doors"].AddChild(door);
+        }
+
+		private void buildMirrorDoor(Vector2 pos, int rotationY, bool isLock)
+        {
+            MirrorDoor door = new MirrorDoor(
+                            game,
+                            "MirrorDoor_" + pos.X + "x" + pos.Y,
                             game.Models["drzwi"],
                             game.Models["drzwi_przyciete"],
                             isLock,
