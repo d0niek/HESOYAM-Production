@@ -40,7 +40,7 @@ namespace App.Animation
         /// </summary>
         public List<Bone> Bones { get { return bones; } }
 
-        public Dictionary<String, AnimationClip> Clips { get; }
+        public Dictionary<String, AnimationClip> Clips { get; set; }
 
         #endregion
 
