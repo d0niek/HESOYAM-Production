@@ -68,8 +68,6 @@ namespace App
                 buildWindow(pos, (int) color.B);
             } else if (color.R == 0 && color.G == 255) {
                 buildDoor(pos, (int) color.B, false);
-            } else if (color.R == 10 && color.G == 255) {
-                buildMirrorDoor(pos, (int) color.B, false);
             } else if (color.R == 1 && color.G == 255) {
                 buildDoor(pos, (int) color.B, true);
             } else if (color.R == 164 && color.G == 255) {
@@ -92,6 +90,8 @@ namespace App
                 buildOther(game.Models["biurko"], pos, (int) color.B);
             } else if (color.R == 46 && color.G == 163) {
                 buildOther(game.Models["krzeslo"], pos, (int) color.B);
+            } else if (color.R == 74 && color.G == 115) {
+                buildHelikopter(pos);
             } else if (color.R == 46 && color.G == 180)  {
                 buildOther(game.Models["wozek"], pos, (int)color.B);
             } else if (color.R == 46 && color.G == 190)  {
@@ -117,7 +117,7 @@ namespace App
                             game,
                             "Wall_" + pos.X + "x" + pos.Y,
                             game.Models["sciana"],
-                            game.Models["modul_przyciete"],
+                            game.Models["sciana_alpha"],
                             new Vector3(pos.X * wallShift, 0f, pos.Y * wallShift)
                         );
             wall.TextureNormal = game.Textures["sciana_tekstura"];
@@ -129,13 +129,32 @@ namespace App
             movement.addObstacle((int) pos.X, (int) pos.Y);
         }
 
+		private void buildHelikopter(Vector2 pos)
+        {
+            Helikopter helikotper = new Helikopter(
+                            game,
+                            "Helikopter_" + pos.X + "x" + pos.Y,
+                            game.Models["helikopter"],
+                            new Vector3(pos.X * wallShift, 0f, pos.Y * wallShift),
+							Vector3.Zero,
+							new Vector3(100f, 100f, 100f)
+                        );
+
+            helikotper.setTexture(game.Textures["HelicopterTexture"]);
+
+            addColider(helikotper);
+
+            children["Others"].AddChild(helikotper);
+            movement.addObstacle((int) pos.X, (int) pos.Y);
+        }
+
         private void buildWindow(Vector2 pos, int rotationY)
         {
-            Wall window = new Wall(
+            Window window = new Window(
                               game,
                               "Window_" + pos.X + "x" + pos.Y,
                               game.Models["okno"],
-                              game.Models["modul_przyciete"],
+                              game.Models["okno_alpha"],
                               new Vector3(pos.X * wallShift, 0f, pos.Y * wallShift),
                               new Vector3(0f, (float) (rotationY * Math.PI / 2), 0f)
                           );
@@ -154,26 +173,7 @@ namespace App
                             game,
                             "Door_" + pos.X + "x" + pos.Y,
                             game.Models["drzwi"],
-                            game.Models["drzwi_przyciete"],
-                            isLock,
-                            new Vector3(pos.X * wallShift, 0f, pos.Y * wallShift),
-                            new Vector3(0f, (float) (rotationY * Math.PI / 2), 0f)
-                        );
-            door.TextureNormal = game.Textures["drzwi_tekstura"];
-            door.TextureCut = game.Textures["modul_tekstura"];
-
-            addColider(door);
-
-            children["Doors"].AddChild(door);
-        }
-
-		private void buildMirrorDoor(Vector2 pos, int rotationY, bool isLock)
-        {
-            MirrorDoor door = new MirrorDoor(
-                            game,
-                            "MirrorDoor_" + pos.X + "x" + pos.Y,
-                            game.Models["drzwi"],
-                            game.Models["drzwi_przyciete"],
+                            game.Models["drzwi_alpha"],
                             isLock,
                             new Vector3(pos.X * wallShift, 0f, pos.Y * wallShift),
                             new Vector3(0f, (float) (rotationY * Math.PI / 2), 0f)

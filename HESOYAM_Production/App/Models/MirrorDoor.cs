@@ -26,13 +26,30 @@ namespace App.Models
 
 		public override void Draw(GameTime gameTime)
         {
-            if (isWallCoversCameraLookAt()) {
+            if (isSegmentCoversCameraLookAt()) {
                 setTexture(TextureCut);
                 DrawModelWithEffect(modelCut);
             } else {
                 setTexture(TextureNormal);
                 DrawModelWithEffect(model);
             }
+        }
+
+		public override void OpenDoor()
+        {
+            isOpen = !isOpen;
+            String modelDoor = isOpen ? "lustrzane_drzwi_otwarte" : "lustrzane_drzwi";
+
+            model = game.Models[modelDoor];
+            modelCut = game.Models[modelDoor + "_przyciete"];
+        }
+
+		protected override void OpenOrCloseDoor()
+        {
+            isOpen = !isOpen;
+            String modelDoor = isOpen ? "lustrzane_drzwi_otwarte" : "lustrzane_drzwi";
+            model = game.Models[modelDoor];
+            modelCut = game.Models[modelDoor + "_przyciete"];
         }
 	}
 }

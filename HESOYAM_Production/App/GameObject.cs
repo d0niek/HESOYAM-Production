@@ -301,11 +301,6 @@ namespace App
 
         protected void DrawModel(Model model)
         {
-			Console.WriteLine(this.name);
-            // Copy any parent transforms.
-            Matrix[] transforms = new Matrix[model.Bones.Count];
-            model.CopyAbsoluteBoneTransformsTo(transforms);
-
             // Draw the model. A model can have multiple meshes, so loop.
             foreach(ModelMesh mesh in model.Meshes)
             {
@@ -313,14 +308,16 @@ namespace App
                 // as our camera and projection.
                 foreach(BasicEffect effect in mesh.Effects)
                 {
-                    effect.LightingEnabled = true; // turn on the lighting subsystem.
-                    effect.DirectionalLight0.DiffuseColor = new Vector3(0.8f, 0.8f, 0.7f); // a red light
-                    effect.DirectionalLight0.Direction = new Vector3(1, -0.5f, -1);  // coming along the x-axis
-                    effect.DirectionalLight0.SpecularColor = new Vector3(0.5f, 0.5f, 0.5f); // with green highlights
-                    effect.AmbientLightColor = new Vector3(0f, 0, 0);
-                    effect.EmissiveColor = this.emisiveColor;
+                    //effect.LightingEnabled = true; // turn on the lighting subsystem.
+					effect.EnableDefaultLighting();
+					effect.PreferPerPixelLighting = true;
+                    //effect.DirectionalLight0.DiffuseColor = new Vector3(0.8f, 0.8f, 0.7f); // a red light
+                    //effect.DirectionalLight0.Direction = new Vector3(1, -0.5f, -1);  // coming along the x-axis
+                    //effect.DirectionalLight0.SpecularColor = new Vector3(0.5f, 0.5f, 0.5f); // with green highlights
+                    //effect.AmbientLightColor = new Vector3(0f, 0, 0);
+                    //effect.EmissiveColor = this.emisiveColor;
 
-                    effect.World = transforms[mesh.ParentBone.Index]
+                    effect.World = mesh.ParentBone.Transform
                     * Matrix.CreateRotationY(this.rotation.Y)
                     * Matrix.CreateRotationX(this.rotation.X)
                     * Matrix.CreateRotationZ(this.rotation.Z)
@@ -348,12 +345,6 @@ namespace App
         }
 
 		protected void DrawModelWithEffect(Model model) {
-			Console.WriteLine(this.name);
-
-			// Copy any parent transforms.
-			Matrix[] transforms = new Matrix[model.Bones.Count];
-			model.CopyAbsoluteBoneTransformsTo(transforms);
-
 			// Draw the model. A model can have multiple meshes, so loop.
 			foreach (ModelMesh mesh in model.Meshes) {
 				// This is where the mesh orientation is set, as well
@@ -361,14 +352,19 @@ namespace App
 
 				foreach (ModelMeshPart part in mesh.MeshParts) {
 					part.Effect = this.game.efekt;
-					this.game.efekt.Parameters["World"].SetValue(transforms[mesh.ParentBone.Index]
+					this.game.efekt.Parameters["World"].SetValue(mesh.ParentBone.Transform
 					* Matrix.CreateRotationY(this.rotation.Y)
 					* Matrix.CreateRotationX(this.rotation.X)
 					* Matrix.CreateRotationZ(this.rotation.Z)
 					* Matrix.CreateScale(this.scale)
 					* Matrix.CreateTranslation(this.position));
 					this.game.efekt.Parameters["View"].SetValue(this.game.Camera.ViewMatrix);
+					this.game.efekt.Parameters["ViewVector"].SetValue(this.game.Camera.ViewVector);
 					this.game.efekt.Parameters["Projection"].SetValue(this.game.Camera.ProjectionMatrix);
+					this.game.efekt.Parameters["ModelTexture"].SetValue(this.texture);
+
+					Matrix worldInverseTransposeMatrix = Matrix.Transpose(Matrix.Invert(this.game.efekt.Parameters["World"].GetValueMatrix()));
+					this.game.efekt.Parameters["WorldInverseTranspose"].SetValue(worldInverseTransposeMatrix);
 				}
 
 				// Draw the mesh, using the effects set above.

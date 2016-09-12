@@ -7,7 +7,7 @@ using System.Collections.Generic;
 namespace App.Models
 {
 
-    class Door : Wall, IInteractiveObject
+    class Door : Segment, IInteractiveObject
     {
         public bool isLock;
         protected bool isOpen;
@@ -84,13 +84,13 @@ namespace App.Models
             }
         }
 
-        public void OpenDoor()
+        public virtual void OpenDoor()
         {
             isOpen = !isOpen;
             String modelDoor = isOpen ? "drzwi_otwarte" : "drzwi";
 
             model = game.Models[modelDoor];
-            modelCut = game.Models[modelDoor + "_przyciete"];
+            modelCut = game.Models[modelDoor + "_alpha"];
         }
 
         private void TryToUnlockDoor()
@@ -126,8 +126,7 @@ namespace App.Models
             isOpen = !isOpen;
             String modelDoor = isOpen ? "drzwi_otwarte" : "drzwi";
             model = game.Models[modelDoor];
-            modelCut = game.Models[modelDoor + "_przyciete"];
-                                
+            modelCut = game.Models[modelDoor + "_alpha"];
         }
 
         #region IInteractiveOptions implementation
