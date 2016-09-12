@@ -308,50 +308,24 @@ namespace App
             // Draw the model. A model can have multiple meshes, so loop.
             foreach(ModelMesh mesh in model.Meshes)
             {
-                // This is where the mesh orientation is set, as well
-                // as our camera and projection.
-                foreach(BasicEffect effect in mesh.Effects)
+                foreach(ModelMeshPart part in mesh.MeshParts)
                 {
-                    effect.LightingEnabled = true; // turn on the lighting subsystem.
-                    effect.DirectionalLight0.DiffuseColor = new Vector3(0.8f, 0.8f, 0.7f); // a red light
-                    effect.DirectionalLight0.Direction = new Vector3(1, -0.5f, -1);  // coming along the x-axis
-                    effect.DirectionalLight0.SpecularColor = new Vector3(0.5f, 0.5f, 0.5f); // with green highlights
-                    effect.AmbientLightColor = new Vector3(0f, 0, 0);
-                    effect.EmissiveColor = this.emisiveColor;
+                    Effect lighting = game.Shaders["Test"];
+                    part.Effect = lighting;
 
-                    effect.World = transforms[mesh.ParentBone.Index]
+                    Matrix world = transforms[mesh.ParentBone.Index]
                     * Matrix.CreateRotationY(this.rotation.Y)
                     * Matrix.CreateRotationX(this.rotation.X)
                     * Matrix.CreateRotationZ(this.rotation.Z)
                     * Matrix.CreateScale(this.scale)
                     * Matrix.CreateTranslation(this.position);
-                    effect.View = this.game.Camera.ViewMatrix;
-                    effect.Projection = this.game.Camera.ProjectionMatrix;
 
-                    // Tmp effect to highlight object under mouse
-                    if(active)
-                    {
-                        effect.AmbientLightColor = new Vector3(0, 0, 255);
-                    }
-                    else if(Hover)
-                    {
-                        effect.AmbientLightColor = new Vector3(0, 255, 0);
-                    }
-
-                    this.DrawTexture(effect);
+                    lighting.Parameters["World"].SetValue(world);
+                    lighting.Parameters["View"].SetValue(game.Camera.ViewMatrix);
+                    lighting.Parameters["Projection"].SetValue(game.Camera.ProjectionMatrix);
+                    lighting.Parameters["ModelTexture"].SetValue(texture);
                 }
-
-                // Draw the mesh, using the effects set above.
                 mesh.Draw();
-            }
-        }
-
-        protected void DrawTexture(BasicEffect effect)
-        {
-            if(this.texture != null)
-            {
-                //effect.TextureEnabled = true;
-                effect.Texture = this.texture;
             }
         }
 
