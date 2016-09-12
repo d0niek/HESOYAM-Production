@@ -12,7 +12,7 @@ namespace App.Animation
     /// An encloser for an XNA model that we will use that includes support for
     /// bones, animation, and some manipulations.
     /// </summary>
-    public class AnimatedObject: GameObject
+    public class AnimatedObject : GameObject
     {
         #region Fields
 
@@ -40,7 +40,7 @@ namespace App.Animation
         /// </summary>
         public List<Bone> Bones { get { return bones; } }
 
-        public Dictionary<String,AnimationClip> Clips { get;}
+        public Dictionary<String, AnimationClip> Clips { get; }
 
         #endregion
 
@@ -54,8 +54,8 @@ namespace App.Animation
             Engine game,
             string name,
             Model model,
-            Vector3 position = default(Vector3), 
-            Vector3 rotation = default(Vector3), 
+            Vector3 position = default(Vector3),
+            Vector3 rotation = default(Vector3),
             Vector3? scale = null
         ) : base(game, name, model, position, rotation, scale)
         {
@@ -68,8 +68,8 @@ namespace App.Animation
         public AnimatedObject(
             Engine game,
             string name,
-            Vector3 position = default(Vector3), 
-            Vector3 rotation = default(Vector3), 
+            Vector3 position = default(Vector3),
+            Vector3 rotation = default(Vector3),
             Vector3? scale = null
         ) : base(game, name, position, rotation, scale)
         {
@@ -88,7 +88,8 @@ namespace App.Animation
         protected void ObtainBones()
         {
             bones.Clear();
-            foreach (ModelBone bone in model.Bones) {
+            foreach(ModelBone bone in model.Bones)
+            {
                 // Create the bone object and add to the heirarchy
                 Bone newBone = new Bone(
                                    bone.Name,
@@ -107,8 +108,9 @@ namespace App.Animation
         /// <returns></returns>
         public Bone FindBone(string name)
         {
-            foreach (Bone bone in Bones) {
-                if (bone.Name == name)
+            foreach(Bone bone in Bones)
+            {
+                if(bone.Name == name)
                     return bone;
             }
 
@@ -126,7 +128,8 @@ namespace App.Animation
         /// <returns>The player that will play this clip</returns>
         public AnimationPlayer PlayClip(AnimationClip clip)
         {
-            if (this.player != null && this.player.Clip == clip) {
+            if(this.player != null && this.player.Clip == clip)
+            {
                 return this.player;
             }
 
@@ -149,7 +152,8 @@ namespace App.Animation
         /// <param name="gameTime"></param>
         public override void Update(GameTime gameTime)
         {
-            if (player != null && this.game.PlayMode) {
+            if(player != null && this.game.PlayMode)
+            {
                 player.Update(gameTime);
             }
 
@@ -168,13 +172,14 @@ namespace App.Animation
         /// <param name="world">A world matrix to place the model</param>
         public override void Draw(GameTime gameTime)
         {
-            
-            if (model == null)
+
+            if(model == null)
                 return;
 
             Matrix[] boneTransforms = new Matrix[bones.Count];
 
-            for (int i = 0; i < bones.Count; i++) {
+            for(int i = 0; i < bones.Count; i++)
+            {
                 Bone bone = bones[i];
                 bone.ComputeAbsoluteTransform();
 
@@ -187,97 +192,41 @@ namespace App.Animation
 
             Matrix[] skeleton = new Matrix[modelExtra.Skeleton.Count];
 
-            for (int s = 0; s < modelExtra.Skeleton.Count; s++) {
+            for(int s = 0; s < modelExtra.Skeleton.Count; s++)
+            {
                 Bone bone = bones[modelExtra.Skeleton[s]];
                 skeleton[s] = bone.SkinTransform * bone.AbsoluteTransform;
             }
 
             // Draw the model.
-            foreach (ModelMesh modelMesh in model.Meshes) {
-                foreach (Effect effect in modelMesh.Effects) {
-                    if (effect is BasicEffect) {
-                        BasicEffect beffect = effect as BasicEffect;
-                        beffect.World = boneTransforms[modelMesh.ParentBone.Index]
-                    * Matrix.CreateRotationY(this.rotation.Y)
-                    * Matrix.CreateRotationX(this.rotation.X)
-                    * Matrix.CreateRotationZ(this.rotation.Z)
-                    * Matrix.CreateScale(this.scale)
-                    * Matrix.CreateTranslation(this.position);;
-                        beffect.View = this.game.Camera.ViewMatrix;
-                        beffect.Projection = this.game.Camera.ProjectionMatrix;
-                        beffect.EnableDefaultLighting();
-                        beffect.PreferPerPixelLighting = true;
+            foreach(ModelMesh mesh in model.Meshes)
+            {
+                foreach(ModelMeshPart part in mesh.MeshParts)
+                {
+                    Effect lighting = game.Shaders["Test"];
+                    part.Effect = lighting;
 
-                        if(active)
-                        {
-                            beffect.AmbientLightColor = new Vector3(0, 0, 255);
-                        }
-                        else if(Hover)
-                        {
-                            beffect.AmbientLightColor = new Vector3(0, 255, 0);
-                        }
-                        else
-                        {
-                            beffect.AmbientLightColor = Vector3.Zero;
-                        }
-                    }
-
-                    if (effect is SkinnedEffect) {
-                        SkinnedEffect seffect = effect as SkinnedEffect;
-                        seffect.World = boneTransforms[modelMesh.ParentBone.Index]
+                    Matrix world = boneTransforms[mesh.ParentBone.Index]
                     * Matrix.CreateRotationY(this.rotation.Y)
                     * Matrix.CreateRotationX(this.rotation.X)
                     * Matrix.CreateRotationZ(this.rotation.Z)
                     * Matrix.CreateScale(this.scale)
                     * Matrix.CreateTranslation(this.position);
-                        seffect.View = this.game.Camera.ViewMatrix;
-                        seffect.Projection = this.game.Camera.ProjectionMatrix;
-                        //seffect.EnableDefaultLighting();
-                        seffect.PreferPerPixelLighting = true;
-                        seffect.SetBoneTransforms(skeleton);
 
-                        if(active)
-                        {
-                            seffect.AmbientLightColor = new Vector3(0, 0, 255);
-                        }
-                        else if(Hover)
-                        {
-                            seffect.AmbientLightColor = new Vector3(0, 255, 0);
-                        }
-                        else
-                        {
-                            seffect.AmbientLightColor = Vector3.Zero;
-                        }
-                    }
-
-                    this.DrawTexture(effect);
+                    lighting.Parameters["World"].SetValue(world);
+                    lighting.Parameters["View"].SetValue(game.Camera.ViewMatrix);
+                    lighting.Parameters["Projection"].SetValue(game.Camera.ProjectionMatrix);
+                    lighting.Parameters["ModelTexture"].SetValue(texture);
+                    Vector3 viewVector = game.Camera.ViewMatrix.Forward;
+                    viewVector.Normalize();
+                    lighting.Parameters["ViewVector"].SetValue(viewVector);
+                    Matrix worldInverseTransposeMatrix = Matrix.Transpose(Matrix.Invert(world));
+                    lighting.Parameters["WorldInverseTranspose"].SetValue(worldInverseTransposeMatrix);
                 }
-
-                modelMesh.Draw();
+                mesh.Draw();
             }
         }
-
-        protected void DrawTexture(Effect effect)
-        {
-            if (this.texture != null) {
-                if (effect is BasicEffect) {
-                    BasicEffect beffect = effect as BasicEffect;
-                    beffect.TextureEnabled = true;
-                    beffect.Texture = this.texture;
-                }
-                if (effect is SkinnedEffect) {
-                    SkinnedEffect seffect = effect as SkinnedEffect;
-                    seffect.Texture = this.texture;
-                    seffect.EmissiveColor = new Vector3(0.7f,0.7f,0.7f);
-                }
-            }
-        }
-
-
         #endregion
 
     }
 }
-
-
-

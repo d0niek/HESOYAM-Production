@@ -21,12 +21,14 @@ namespace HESOYAM_Production
         Dictionary<String, SpriteFont> fonts;
         Dictionary<String, Model> models;
         Dictionary<String, Texture2D> textures;
+        Dictionary<String, Effect> shaders;
         GraphicsDeviceManager graphics;
         HUD hud;
         Particles particles;
         Camera camera;
         Player player;
         Scene scene;
+        RenderTarget2D renderTarget;
 
         public SpriteBatch spriteBatch;
 
@@ -47,6 +49,12 @@ namespace HESOYAM_Production
 
         public Dictionary<String, Texture2D> Textures {
             get { return textures; }
+            private set { }
+        }
+
+        public Dictionary<String, Effect> Shaders
+        {
+            get { return shaders; }
             private set { }
         }
 
@@ -92,10 +100,11 @@ namespace HESOYAM_Production
 
             Content.RootDirectory = "Content";
             PlayMode = true;
-            rootDir = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName;
+            rootDir = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.Parent.FullName;
             fonts = new Dictionary<String, SpriteFont>();
             models = new Dictionary<String, Model>();
             textures = new Dictionary<String, Texture2D>();
+            shaders = new Dictionary<String, Effect>();
         }
 
         /// <summary>
@@ -107,9 +116,10 @@ namespace HESOYAM_Production
         protected override void Initialize()
         {
             IsMouseVisible = true;
-            graphics.IsFullScreen = true;
+            graphics.IsFullScreen = true;            
             graphics.PreferredBackBufferWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
             graphics.PreferredBackBufferHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
+            //graphics.ApplyChanges();
             base.Initialize();
         }
 
@@ -127,6 +137,7 @@ namespace HESOYAM_Production
             LoadModels("Models", models);
             LoadModels("Animation", models);
             LoadTextures();
+            LoadShaders();
 
             scene = new Scene(
                 this,
@@ -149,6 +160,14 @@ namespace HESOYAM_Production
 
             Components.Add(player);
             Components.Add(camera);
+
+            renderTarget = new RenderTarget2D(
+                GraphicsDevice,
+                GraphicsDevice.PresentationParameters.BackBufferWidth,
+                GraphicsDevice.PresentationParameters.BackBufferHeight,
+                false,
+                GraphicsDevice.PresentationParameters.BackBufferFormat,
+                DepthFormat.Depth24);
         }
 
         private void LoadFonts()
@@ -226,6 +245,33 @@ namespace HESOYAM_Production
                 textures.Add(name, texture);
             } catch (ContentLoadException) {
                 Console.WriteLine("Texture '" + name + "' does not exists in Content.mgcb");
+            }
+        }
+
+        private void LoadShaders()
+        {
+            String shadersDir = rootDir + "/Content/Shaders";
+
+            String[] files = Directory.GetFiles(shadersDir);
+            foreach(String file in files)
+            {
+                String name = file.Remove(0, shadersDir.Length + 1).Replace(".fx", "");
+
+                LoadShader(name);
+            }
+        }
+
+        private void LoadShader(String name)
+        {
+            try
+            {
+                Effect shader = Content.Load<Effect>("Shaders/" + name);
+
+                shaders.Add(name, shader);
+            }
+            catch(ContentLoadException)
+            {
+                Console.WriteLine("Shader '" + name + "' does not exists in Content.mgcb");
             }
         }
 
@@ -310,16 +356,19 @@ namespace HESOYAM_Production
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            graphics.GraphicsDevice.Clear(Color.CornflowerBlue);
-
-            GraphicsDevice.DepthStencilState = DepthStencilState.Default;
-
+            GraphicsDevice.SetRenderTarget(renderTarget);
+            GraphicsDevice.Clear(Color.CornflowerBlue);
             base.Draw(gameTime);
-
-            spriteBatch.Begin();
+            GraphicsDevice.SetRenderTarget(null);
+            shaders["Trip"].Parameters["time"].SetValue((float)gameTime.TotalGameTime.TotalMilliseconds / 100);
+            spriteBatch.Begin(0, BlendState.AlphaBlend, SamplerState.PointWrap, DepthStencilState.Default, RasterizerState.CullNone);
+            //spriteBatch.Begin(0, BlendState.Opaque, SamplerState.PointWrap, DepthStencilState.Default, RasterizerState.CullNone, shaders["Trip"]);
+            //spriteBatch.Begin(0, BlendState.Opaque, SamplerState.PointWrap, DepthStencilState.Default, RasterizerState.CullNone, shaders["Greyscale"]);
+            spriteBatch.Draw(renderTarget, new Rectangle(0, 0, 800, 480), Color.White);
             this.hud.Draw(gameTime);
-            particles.Draw();
             spriteBatch.End();
+
+
         }
 
         static float GameTimeFloat(GameTime gameTime)

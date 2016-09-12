@@ -350,7 +350,7 @@ namespace App
         {
             if(this.texture != null)
             {
-                effect.TextureEnabled = true;
+                //effect.TextureEnabled = true;
                 effect.Texture = this.texture;
             }
         }

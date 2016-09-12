@@ -1,8 +1,0 @@
-<map id="App.Models.ExitDoor" name="App.Models.ExitDoor">
-<area shape="rect" id="node2" href="$classApp_1_1Models_1_1Door.html" title="Door" alt="" coords="301,229,353,256"/>
-<area shape="rect" id="node3" href="$classApp_1_1Wall.html" title="Wall" alt="" coords="247,155,297,181"/>
-<area shape="rect" id="node4" href="$classApp_1_1GameObject.html" title="GameObject" alt="" coords="223,80,321,107"/>
-<area shape="rect" id="node6" href="$interfaceApp_1_1IGameElement.html" title="IGameElement" alt="" coords="217,5,327,32"/>
-<area shape="rect" id="node7" href="$interfaceApp_1_1IGameObject.html" title="IGameObject" alt="" coords="352,5,453,32"/>
-<area shape="rect" id="node8" href="$interfaceApp_1_1IInteractiveObject.html" title="IInteractiveObject" alt="" coords="321,155,445,181"/>
-</map>

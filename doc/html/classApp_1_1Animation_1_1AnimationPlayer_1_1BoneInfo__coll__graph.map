@@ -1,4 +1,0 @@
-<map id="App.Animation.AnimationPlayer.BoneInfo" name="App.Animation.AnimationPlayer.BoneInfo">
-<area shape="rect" id="node2" href="$classApp_1_1Animation_1_1AnimationClip.html" title="An animation clip is a set of keyframes with associated bones. " alt="" coords="5,5,197,32"/>
-<area shape="rect" id="node3" href="$classApp_1_1Animation_1_1Bone.html" title="Bones in this model are represented by this class, which allows a bone to have more detail associatd ..." alt="" coords="222,5,365,32"/>
-</map>
