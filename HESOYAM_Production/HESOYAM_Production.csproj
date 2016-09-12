@@ -69,6 +69,7 @@
     <Compile Include="App\Player.cs" />
     <Compile Include="App\Projectile.cs" />
     <Compile Include="App\Scene.cs" />
+    <Compile Include="App\Skybox.cs" />
     <Compile Include="App\Util\Mouse.cs" />
     <Compile Include="App\Wall.cs" />
     <Compile Include="Engine.cs" />

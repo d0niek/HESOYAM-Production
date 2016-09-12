@@ -138,6 +138,8 @@ namespace HESOYAM_Production
             LoadModels("Animation", models);
             LoadTextures();
             LoadShaders();
+            Skybox skybox = new Skybox(this, "Textures/Sunset", Content);
+            Components.Add(skybox);
 
             scene = new Scene(
                 this,
