@@ -8,11 +8,17 @@ namespace App
     public class Camera : GameObject
     {
         Vector3 playModePosition;
+		Vector3 viewVector;
         Matrix viewMatrix;
         Matrix projectionMatrix;
 
         public Vector3 PlayModePosition {
             get { return playModePosition; }
+            private set { }
+        }
+
+		public Vector3 ViewVector {
+            get { return viewVector; }
             private set { }
         }
 
@@ -72,6 +78,8 @@ namespace App
                 this.playModePosition = this.position;
             }
 
+			this.viewVector = Vector3.Transform(this.CameraLookAt - this.position, Matrix.CreateRotationY(0));
+            this.viewVector.Normalize();
             this.viewMatrix = Matrix.CreateLookAt(this.position, this.CameraLookAt, Vector3.Up);
             this.projectionMatrix = Matrix.CreatePerspectiveFieldOfView(
                 MathHelper.ToRadians(45.0f),

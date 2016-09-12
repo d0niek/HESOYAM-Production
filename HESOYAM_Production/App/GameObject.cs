@@ -346,6 +346,35 @@ namespace App
             }
         }
 
+		protected void DrawModelWithEffect(Model model)
+		{
+			// Draw the model. A model can have multiple meshes, so loop.
+			foreach (ModelMesh mesh in model.Meshes) {
+				// This is where the mesh orientation is set, as well
+				// as our camera and projection.
+
+				foreach (ModelMeshPart part in mesh.MeshParts) {
+					part.Effect = this.game.Shaders["alpha"];
+					part.Effect.Parameters["World"].SetValue(mesh.ParentBone.Transform
+					* Matrix.CreateRotationY(this.rotation.Y)
+					* Matrix.CreateRotationX(this.rotation.X)
+					* Matrix.CreateRotationZ(this.rotation.Z)
+					* Matrix.CreateScale(this.scale)
+					* Matrix.CreateTranslation(this.position));
+					part.Effect.Parameters["View"].SetValue(this.game.Camera.ViewMatrix);
+					part.Effect.Parameters["ViewVector"].SetValue(this.game.Camera.ViewVector);
+					part.Effect.Parameters["Projection"].SetValue(this.game.Camera.ProjectionMatrix);
+					part.Effect.Parameters["ModelTexture"].SetValue(this.texture);
+
+					Matrix worldInverseTransposeMatrix = Matrix.Transpose(Matrix.Invert(part.Effect.Parameters["World"].GetValueMatrix()));
+					part.Effect.Parameters["WorldInverseTranspose"].SetValue(worldInverseTransposeMatrix);
+				}
+
+				// Draw the mesh, using the effects set above.
+				mesh.Draw();
+			}
+		}
+
         protected void DrawTexture(BasicEffect effect)
         {
             if(this.texture != null)

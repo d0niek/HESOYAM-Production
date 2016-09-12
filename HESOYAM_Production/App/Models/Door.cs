@@ -7,7 +7,7 @@ using System.Collections.Generic;
 namespace App.Models
 {
 
-    class Door : Wall, IInteractiveObject
+    class Door : Segment, IInteractiveObject
     {
         public bool isLock;
         protected bool isOpen;
@@ -22,12 +22,12 @@ namespace App.Models
             Engine game,
             string name,
             Model model,
-            Model transparentModel,
+            Model modelAlpha,
             bool isLock,
             Vector3 position = default(Vector3),
             Vector3 rotation = default(Vector3),
             Vector3? scale = null
-        ) : base(game, name, model, transparentModel, position, rotation, scale)
+        ) : base(game, name, model, modelAlpha, position, rotation, scale)
         {
             this.isLock = isLock;
             isOpen = false;
@@ -90,7 +90,7 @@ namespace App.Models
             String modelDoor = isOpen ? "drzwi_otwarte" : "drzwi";
 
             model = game.Models[modelDoor];
-            modelCut = game.Models[modelDoor + "_przyciete"];
+            modelCut = game.Models[modelDoor + "_alpha"];
         }
 
         private void TryToUnlockDoor()
@@ -126,7 +126,7 @@ namespace App.Models
             isOpen = !isOpen;
             String modelDoor = isOpen ? "drzwi_otwarte" : "drzwi";
             model = game.Models[modelDoor];
-            modelCut = game.Models[modelDoor + "_przyciete"];
+            modelCut = game.Models[modelDoor + "_alpha"];
                                 
         }
 

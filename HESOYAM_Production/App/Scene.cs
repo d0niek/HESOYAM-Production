@@ -115,7 +115,7 @@ namespace App
                             game,
                             "Wall_" + pos.X + "x" + pos.Y,
                             game.Models["sciana"],
-                            game.Models["modul_przyciete"],
+                            game.Models["sciana_alpha"],
                             new Vector3(pos.X * wallShift, 0f, pos.Y * wallShift)
                         );
             wall.TextureNormal = game.Textures["sciana_tekstura"];
@@ -129,11 +129,11 @@ namespace App
 
         private void buildWindow(Vector2 pos, int rotationY)
         {
-            Wall window = new Wall(
+            Window window = new Window(
                               game,
                               "Window_" + pos.X + "x" + pos.Y,
                               game.Models["okno"],
-                              game.Models["modul_przyciete"],
+                              game.Models["okno_alpha"],
                               new Vector3(pos.X * wallShift, 0f, pos.Y * wallShift),
                               new Vector3(0f, (float) (rotationY * Math.PI / 2), 0f)
                           );
@@ -152,7 +152,7 @@ namespace App
                             game,
                             "Door_" + pos.X + "x" + pos.Y,
                             game.Models["drzwi"],
-                            game.Models["drzwi_przyciete"],
+                            game.Models["drzwi_alpha"],
                             isLock,
                             new Vector3(pos.X * wallShift, 0f, pos.Y * wallShift),
                             new Vector3(0f, (float) (rotationY * Math.PI / 2), 0f)
