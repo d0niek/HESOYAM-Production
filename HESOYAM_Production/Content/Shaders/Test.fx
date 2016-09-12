@@ -3,6 +3,7 @@ float4x4 View;
 float4x4 Projection;
 
 float3 lightDirection = normalize(float3(-1, 1, 0));
+float4 ambient = float4(0.2, 0.2, 0.2, 1);
 
 Texture2D ModelTexture;
 
@@ -46,7 +47,7 @@ float4 PixelShaderFunction(PixelShaderInput input) : COLOR
 	float4 textureColor = ModelTexture.Sample(textureSampler, input.TextureUV);
 	float3 i = mul(input.Normal, lightDirection);
 	float4 lightMultiplier = float4(i.x, i.y, i.z, 1);
-	return textureColor * lightMultiplier;
+	return saturate((textureColor * lightMultiplier) + (textureColor * ambient));
 }
 
 technique Textured

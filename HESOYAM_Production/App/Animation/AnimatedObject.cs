@@ -217,11 +217,6 @@ namespace App.Animation
                     lighting.Parameters["View"].SetValue(game.Camera.ViewMatrix);
                     lighting.Parameters["Projection"].SetValue(game.Camera.ProjectionMatrix);
                     lighting.Parameters["ModelTexture"].SetValue(texture);
-                    //Vector3 viewVector = game.Camera.ViewMatrix.Forward;
-                    //viewVector.Normalize();
-                    //lighting.Parameters["ViewVector"].SetValue(viewVector);
-                    //Matrix worldInverseTransposeMatrix = Matrix.Transpose(Matrix.Invert(world));
-                    //lighting.Parameters["WorldInverseTranspose"].SetValue(worldInverseTransposeMatrix);
                 }
                 mesh.Draw();
             }

@@ -158,7 +158,7 @@ namespace App
                             new Vector3(0f, (float) (rotationY * Math.PI / 2), 0f)
                         );
             door.TextureNormal = game.Textures["drzwi_tekstura"];
-            door.TextureCut = game.Textures["modul_tekstura"];
+            door.TextureCut = game.Textures["drzwi_tekstura"];
 
             addColider(door);
 

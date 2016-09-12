@@ -141,8 +141,8 @@ namespace HESOYAM_Production
 
             scene = new Scene(
                 this,
-                "Scene_3",
-                rootDir + "/Content/Map/scene_3"
+                "Scene_4",
+                rootDir + "/Content/Map/scene_4"
             );
             hud = new HUD(this);
             particles = new Particles(this);
@@ -367,8 +367,6 @@ namespace HESOYAM_Production
             spriteBatch.Draw(renderTarget, new Rectangle(0, 0, 800, 480), Color.White);
             this.hud.Draw(gameTime);
             spriteBatch.End();
-
-
         }
 
         static float GameTimeFloat(GameTime gameTime)
