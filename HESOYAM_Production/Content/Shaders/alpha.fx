@@ -56,13 +56,6 @@ struct VertexShaderOutput
 
 VertexShaderOutput MainVS(in VertexShaderInput input)
 {
-	//VertexShaderOutput output = (VertexShaderOutput)0;
-
-	//output.Position = mul(input.Position, WorldViewProjection);
-	//output.Color = input.Color;
-
-	//return output;
-
 	VertexShaderOutput output = (VertexShaderOutput)0;
 
 	float4 worldPosition = mul(input.Position, World);

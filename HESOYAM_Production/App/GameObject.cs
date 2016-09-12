@@ -328,8 +328,7 @@ namespace App
                 mesh.Draw();
             }
         }
-
-<<<<<<< HEAD
+		
 		protected void DrawModelWithEffect(Model model)
 		{
 			// Draw the model. A model can have multiple meshes, so loop.
@@ -367,9 +366,7 @@ namespace App
                 effect.Texture = this.texture;
             }
         }
-
-=======
->>>>>>> ffc770807e1e4beeec1b54617967a1d77098c758
+		
         public void setActive(bool active)
         {
             this.active = active;
