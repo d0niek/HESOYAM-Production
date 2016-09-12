@@ -6,6 +6,7 @@ float3 lightDirection = normalize(float3(-1, 1, 0));
 float4 ambient = float4(0.2, 0.2, 0.2, 1);
 
 Texture2D ModelTexture;
+Texture2D BumpMap;
 
 SamplerState textureSampler
 {
@@ -45,7 +46,10 @@ PixelShaderInput VertexShaderFunction(VertexShaderInput input)
 float4 PixelShaderFunction(PixelShaderInput input) : COLOR
 {
 	float4 textureColor = ModelTexture.Sample(textureSampler, input.TextureUV);
-	float3 i = mul(input.Normal, lightDirection);
+	float4 bump = BumpMap.Sample(textureSampler, input.TextureUV);
+	float3 bumpedNormal = input.Normal + bump;
+	bumpedNormal = normalize(bumpedNormal);
+	float3 i = mul(bumpedNormal, lightDirection);
 	float4 lightMultiplier = float4(i.x, i.y, i.z, 1);
 	return saturate((textureColor * lightMultiplier) + (textureColor * ambient));
 }

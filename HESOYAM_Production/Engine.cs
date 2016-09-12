@@ -364,8 +364,8 @@ namespace HESOYAM_Production
             GraphicsDevice.SetRenderTarget(null);
             shaders["Trip"].Parameters["time"].SetValue((float)gameTime.TotalGameTime.TotalMilliseconds / 100);
             spriteBatch.Begin(0, BlendState.AlphaBlend, SamplerState.PointWrap, DepthStencilState.Default, RasterizerState.CullNone);
-            //spriteBatch.Begin(0, BlendState.Opaque, SamplerState.PointWrap, DepthStencilState.Default, RasterizerState.CullNone, shaders["Trip"]);
-            //spriteBatch.Begin(0, BlendState.Opaque, SamplerState.PointWrap, DepthStencilState.Default, RasterizerState.CullNone, shaders["Greyscale"]);
+            //spriteBatch.Begin(0, BlendState.AlphaBlend, SamplerState.PointWrap, DepthStencilState.Default, RasterizerState.CullNone, shaders["Trip"]);
+            //spriteBatch.Begin(0, BlendState.AlphaBlend, SamplerState.PointWrap, DepthStencilState.Default, RasterizerState.CullNone, shaders["Greyscale"]);
             spriteBatch.Draw(renderTarget, new Rectangle(0, 0, 800, 480), Color.White);
             this.hud.Draw(gameTime);
             spriteBatch.End();
