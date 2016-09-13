@@ -119,7 +119,7 @@ namespace App
                             new Vector3(pos.X * wallShift, 0f, pos.Y * wallShift)
                         );
             wall.TextureNormal = game.Textures["sciana_tekstura"];
-            wall.TextureCut = game.Textures["sciana_tekstura"];
+            wall.TextureCut = game.Textures["sciana_tekstura_alpha"];
 
             addColider(wall);
 
@@ -138,7 +138,7 @@ namespace App
                               new Vector3(0f, (float) (rotationY * Math.PI / 2), 0f)
                           );
             window.TextureNormal = game.Textures["okno_tekstura"];
-            window.TextureCut = game.Textures["okno_tekstura"];
+            window.TextureCut = game.Textures["okno_tekstura_alpha"];
 
             addColider(window);
 

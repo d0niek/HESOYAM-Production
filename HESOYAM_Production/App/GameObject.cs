@@ -324,6 +324,7 @@ namespace App
                     lighting.Parameters["View"].SetValue(game.Camera.ViewMatrix);
                     lighting.Parameters["Projection"].SetValue(game.Camera.ProjectionMatrix);
                     lighting.Parameters["ModelTexture"].SetValue(texture);
+                    lighting.Parameters["BumpMap"].SetValue(game.Textures["bumpmap"]);
                 }
                 mesh.Draw();
             }
