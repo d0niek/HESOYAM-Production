@@ -1,25 +1,26 @@
 ﻿using HESOYAM_Production;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
+using System;
 
 namespace App
 {
 
-    public class Wall : GameObject
+    abstract public class Segment : GameObject
     {
         protected Model modelCut;
 
         public Texture2D TextureNormal {
-            private get;
+            get;
             set;
         }
 
         public Texture2D TextureCut {
-            private get;
+            get;
             set;
         }
 
-        public Wall(
+        public Segment(
             Engine game,
             string name,
             Model model,
@@ -34,16 +35,20 @@ namespace App
 
         public override void Draw(GameTime gameTime)
         {
-            if (isWallCoversCameraLookAt()) {
-                setTexture(TextureCut);
-                DrawModel(modelCut);
-            } else {
-                setTexture(TextureNormal);
-                DrawModel(model);
-            }
-        }
+			try {
+				if (isSegmentCoversCameraLookAt()) {
+					setTexture(TextureCut);
+					DrawModelWithEffect(modelCut);
+				} else {
+					setTexture(TextureNormal);
+					DrawModel(model);
+				}
+			} catch (Exception e) {
+				Console.WriteLine(e);
+			}
+		}
 
-        private bool isWallCoversCameraLookAt()
+        protected bool isSegmentCoversCameraLookAt()
         {
             const int distance = 400;
             Vector3 cameraLookAtPosition = game.Camera.CameraLookAt;

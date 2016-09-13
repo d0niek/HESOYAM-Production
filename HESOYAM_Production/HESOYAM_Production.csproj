@@ -63,14 +63,16 @@
     <Compile Include="App\Models\Opponent.cs" />
     <Compile Include="App\Models\RangedOpponent.cs" />
     <Compile Include="App\Models\Teammate.cs" />
+    <Compile Include="App\Models\Window.cs" />
     <Compile Include="App\Movement.cs" />
     <Compile Include="App\Particle.cs" />
     <Compile Include="App\Particles.cs" />
     <Compile Include="App\Player.cs" />
     <Compile Include="App\Projectile.cs" />
     <Compile Include="App\Scene.cs" />
+    <Compile Include="App\Segment.cs" />
     <Compile Include="App\Util\Mouse.cs" />
-    <Compile Include="App\Wall.cs" />
+    <Compile Include="App\Models\Wall.cs" />
     <Compile Include="Engine.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -87,6 +89,7 @@
     <Content Include="Content\Map\scene_1.bmp" />
     <Content Include="Content\Map\scene_2.bmp" />
     <Content Include="Content\Map\scene_3.bmp" />
+    <Content Include="Content\Shaders\alpha.fx" />
     <Content Include="Content\Shaders\Greyscale.fx" />
     <Content Include="Content\Shaders\Test.fx" />
     <Content Include="Content\Shaders\Trip.fx" />

@@ -329,6 +329,39 @@ namespace App
             }
         }
 
+		protected void DrawModelWithEffect(Model model)
+		{
+			// Copy any parent transforms.
+            Matrix[] transforms = new Matrix[model.Bones.Count];
+            model.CopyAbsoluteBoneTransformsTo(transforms);
+
+			// Draw the model. A model can have multiple meshes, so loop.
+			foreach (ModelMesh mesh in model.Meshes) {
+				foreach (ModelMeshPart part in mesh.MeshParts) {
+					Effect alpha = game.Shaders["alpha"];
+                    part.Effect = alpha;
+
+                    Matrix world = transforms[mesh.ParentBone.Index]
+                    * Matrix.CreateRotationY(this.rotation.Y)
+                    * Matrix.CreateRotationX(this.rotation.X)
+                    * Matrix.CreateRotationZ(this.rotation.Z)
+                    * Matrix.CreateScale(this.scale)
+                    * Matrix.CreateTranslation(this.position);
+
+					alpha.Parameters["World"].SetValue(world);
+                    alpha.Parameters["View"].SetValue(game.Camera.ViewMatrix);
+                    alpha.Parameters["Projection"].SetValue(game.Camera.ProjectionMatrix);
+					alpha.Parameters["ModelTexture"].SetValue(texture);
+
+					Matrix worldInverseTransposeMatrix = Matrix.Transpose(Matrix.Invert(world));
+					alpha.Parameters["WorldInverseTranspose"].SetValue(worldInverseTransposeMatrix);
+				}
+
+				// Draw the mesh, using the effects set above.
+				mesh.Draw();
+			}
+		}
+
         public void setActive(bool active)
         {
             this.active = active;
