@@ -361,14 +361,29 @@ namespace HESOYAM_Production
             GraphicsDevice.SetRenderTarget(renderTarget);
             GraphicsDevice.Clear(Color.CornflowerBlue);
             base.Draw(gameTime);
-            GraphicsDevice.SetRenderTarget(null);
+            //GraphicsDevice.SetRenderTarget(null);
             shaders["Trip"].Parameters["time"].SetValue((float)gameTime.TotalGameTime.TotalMilliseconds / 100);
-            spriteBatch.Begin(0, BlendState.AlphaBlend, SamplerState.PointWrap, DepthStencilState.Default, RasterizerState.CullNone);
-            //spriteBatch.Begin(0, BlendState.AlphaBlend, SamplerState.PointWrap, DepthStencilState.Default, RasterizerState.CullNone, shaders["Trip"]);
-            //spriteBatch.Begin(0, BlendState.AlphaBlend, SamplerState.PointWrap, DepthStencilState.Default, RasterizerState.CullNone, shaders["Greyscale"]);
-            spriteBatch.Draw(renderTarget, new Rectangle(0, 0, 800, 480), Color.White);
-            this.hud.Draw(gameTime);
-            spriteBatch.End();
+            if(PlayMode)
+            {
+                GraphicsDevice.SetRenderTarget(null);
+                spriteBatch.Begin(0, BlendState.AlphaBlend, SamplerState.PointWrap, DepthStencilState.Default, RasterizerState.CullNone);
+                spriteBatch.Draw(renderTarget, new Rectangle(0, 0, 800, 480), Color.White);
+                this.hud.Draw(gameTime);
+                spriteBatch.End();
+                
+            }
+            else
+            {
+                spriteBatch.Begin(0, BlendState.AlphaBlend, SamplerState.PointWrap, DepthStencilState.Default, RasterizerState.CullNone);
+                this.hud.Draw(gameTime);
+                spriteBatch.End();
+                GraphicsDevice.SetRenderTarget(null);
+                //spriteBatch.Begin(0, BlendState.AlphaBlend, SamplerState.PointWrap, DepthStencilState.Default, RasterizerState.CullNone, shaders["Trip"]);
+                spriteBatch.Begin(0, BlendState.AlphaBlend, SamplerState.PointWrap, DepthStencilState.Default, RasterizerState.CullNone, shaders["Greyscale"]);
+                spriteBatch.Draw(renderTarget, new Rectangle(0, 0, 800, 480), Color.White);
+                spriteBatch.End();
+            }
+            
         }
 
         static float GameTimeFloat(GameTime gameTime)
